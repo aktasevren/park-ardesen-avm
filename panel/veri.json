@@ -1,6 +1,6 @@
 {
   "surum": 1,
-  "guncelleme": "2026-08-24T21:00:00.158Z",
+  "guncelleme": "2026-08-24T20:59:59.080Z",
   "site": {
     "ad": "Park Ardeşen AVM",
     "telefon": "0464 715 30 30",
@@ -44,31 +44,13 @@
   ],
   "magazalar": [
     {
-      "ad": "Yeni mağaza",
-      "slug": "m-1mp940",
-      "kategori": "moda",
-      "kat": "Zemin Kat",
-      "no": "",
+      "ad": "İstanbul Gümrk Store",
+      "slug": "fermar",
+      "kategori": "hizmet",
+      "kat": "1",
+      "no": "2",
       "logo": "",
-      "aciklama": ""
-    },
-    {
-      "ad": "Yeni mağaza",
-      "slug": "m-wxb8go",
-      "kategori": "moda",
-      "kat": "Zemin Kat",
-      "no": "",
-      "logo": "",
-      "aciklama": ""
-    },
-    {
-      "ad": "TEST MAĞAZA",
-      "slug": "m-riaq48",
-      "kategori": "moda",
-      "kat": "Zemin Kat",
-      "no": "1",
-      "logo": "gloria-jeans.png",
-      "aciklama": "TEST"
+      "aciklama": "İndirimli gümrük ürünleri "
     },
     {
       "ad": "LC Waikiki",
@@ -224,7 +206,91 @@
       "aciklama": "AVM girişinde hizmet veren V&K Prestij."
     }
   ],
-  "duyurular": [],
+  "duyurular": [
+    {
+      "id": "d1",
+      "tur": "saat",
+      "onem": "onemli",
+      "baslik": "Bayram boyunca 10:00 – 23:00 açığız",
+      "metin": "Bayramın dört günü boyunca merkezimiz bir saat geç kapanıyor. Market ve yeme-içme katı aynı saatlerde hizmet veriyor.",
+      "baslangic": "2026-08-22",
+      "bitis": "2026-09-05",
+      "yayinda": true,
+      "yerler": [
+        "ust-serit",
+        "duyurular"
+      ],
+      "bagLabel": "Çalışma saatleri",
+      "bagUrl": "bus-schedule/",
+      "gorsel": ""
+    },
+    {
+      "id": "d2",
+      "tur": "acilis",
+      "onem": "normal",
+      "baslik": "Grand Bowling ikinci katta açıldı",
+      "metin": "Bowling salonu, bilardo ve oyun makineleriyle Grand Bowling artık Park Ardeşen AVM 2. katta. Açılışa özel ilk oyun yarı fiyatına.",
+      "baslangic": "2026-08-14",
+      "bitis": "2026-09-18",
+      "yayinda": true,
+      "yerler": [
+        "acilis-penceresi",
+        "duyurular"
+      ],
+      "bagLabel": "Mağazalar",
+      "bagUrl": "shops/",
+      "gorsel": "gorseller/ic-mekan-1.webp"
+    },
+    {
+      "id": "d3",
+      "tur": "cekilis",
+      "onem": "normal",
+      "baslik": "500 TL ve üzeri alışverişe çekiliş hakkı",
+      "metin": "Ay boyunca 500 TL ve üzeri alışveriş yapan ziyaretçilerimiz, ayın son günü yapılacak hediye çeki çekilişine katılıyor. Fişlerinizi zemin kattaki danışma bankosuna getirmeniz yeterli.",
+      "baslangic": "2026-08-19",
+      "bitis": "2026-09-13",
+      "yayinda": true,
+      "yerler": [
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    },
+    {
+      "id": "d4",
+      "tur": "ulasim",
+      "onem": "normal",
+      "baslik": "Otopark girişi geçici olarak yan caddeden",
+      "metin": "Zemin otopark girişinde bakım çalışması sürüyor. Giriş, çalışma tamamlanana kadar yan caddeden sağlanmaktadır.",
+      "baslangic": "2026-08-23",
+      "bitis": "2026-08-30",
+      "yayinda": false,
+      "yerler": [
+        "ust-serit",
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    },
+    {
+      "id": "d5",
+      "tur": "sosyal",
+      "onem": "normal",
+      "baslik": "Kızılay kan bağışı standı zemin katta",
+      "metin": "Türk Kızılayı kan bağışı aracı hafta boyunca merkezimizde. Bağış için kimliğinizi yanınızda bulundurmanız yeterli.",
+      "baslangic": "2026-08-25",
+      "bitis": "2026-09-01",
+      "yayinda": true,
+      "yerler": [
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    }
+  ],
   "kampanyalar": [
     {
       "id": "k1",
