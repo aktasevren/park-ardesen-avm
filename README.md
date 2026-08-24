@@ -98,6 +98,19 @@ Kullanıcı isteğiyle uyarlanamayan orijinal sayfalar **silinmedi**:
 
 Menüden erişilen sayfaların tamamı uyarlandı; bunlar menüde yer almıyor.
 
-## Vercel
+## Depo ve dağıtım
 
-Statik site, build gerektirmez.
+Özel GitHub deposu: <https://github.com/aktasevren/park-ardesen-avm> (`main`)
+
+`.gitignore` ile depo dışında bırakılanlar (diskte duruyorlar):
+
+- `*.log` — `wget.log`, `serve.log`
+- `**/wp-content/uploads/2023/08/Video-for-website-Final.mp4` — klondan gelen 34 MB'lık
+  Dubai tanıtım videosu; hero artık Park Ardeşen fotoğrafı kullandığı için hiçbir
+  sayfadan referans verilmiyor (iki aynada toplam 68 MB).
+
+### Vercel
+
+Statik site, build gerektirmez. Framework: **Other**, build komutu yok, output dizini
+depo kökü. `vercel.json` yalnızca `cleanUrls:false` / `trailingSlash:false` ayarlıyor;
+kök `index.html`, `www.dubaioutletmall.com/index.html`'e yönlendiriyor.
