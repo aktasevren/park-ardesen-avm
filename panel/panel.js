@@ -223,11 +223,17 @@
       kutu((veri.magazalar || []).length, "Mağaza") +
       kutu(b.length, "Boş kiralık birim") +
       "</div>" +
-      kartKabugu("Panel nasıl çalışıyor?", "",
-        "<p><strong>Kaydet</strong> değişiklikleri tarayıcınıza yazar; site aynı " +
-        "tarayıcıda anında güncellenir. Sunum için tek gereken budur.</p>" +
-        "<p><strong>Yayınla</strong> veriyi sunucuya gönderir, herkes için " +
-        "yayımlanır (Vercel dağıtımı ~1 dakika sürer).</p>" +
+      kartKabugu("Kaydet ile Yayınla arasındaki fark", "",
+        "<p><strong>Kaydet</strong> — değişikliği <em>bu tarayıcıya</em> yazar. " +
+        "Siteyi aynı tarayıcıda açtığınızda anında görürsünüz. Her düzenlemeden " +
+        "sonra kendiliğinden çalışır. Sunum için tek gereken budur.</p>" +
+        "<p><strong>Yayınla</strong> — aynı veriyi <em>sunucuya</em> gönderir, " +
+        "böylece siteyi açan <em>herkes</em> görür: başka bilgisayarlar, telefonlar, " +
+        "müşteriler. Veri depoya kaydedilir ve site ~1 dakika içinde yeniden " +
+        "yayımlanır.</p>" +
+        "<p class=\"ipucu\">Yani &ldquo;kaydettim, sitede görüyorum ama Yayınla hata " +
+        "verdi&rdquo; durumunda değişiklik gerçektir &mdash; ama yalnızca sizin " +
+        "tarayıcınızdadır. Başkaları henüz göremez.</p>" +
         "<p><strong>JSON indir / yükle</strong> ile veriyi yedekleyebilir ya da " +
         "başka bir bilgisayara taşıyabilirsiniz.</p>", "") +
       kartKabugu("Adresler", "",
@@ -600,6 +606,28 @@
       e.target.value = "";
     });
 
+    $("#btn-test").addEventListener("click", function () {
+      var d = $("#btn-test");
+      d.disabled = true; d.textContent = "Deneniyor…";
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sifre: girilenSifre || SIFRE, test: true })
+      }).then(function (r) {
+        return r.json().catch(function () {
+          return { hata: "Sunucu yanıtı okunamadı (HTTP " + r.status + ")" };
+        });
+      }).then(function (y) {
+        if (y && y.tamam) bildir(y.mesaj || "Bağlantı çalışıyor.", "basarili");
+        else bildir((y && y.hata) || "Bilinmeyen hata", "hata");
+      }).catch(function () {
+        bildir("Yayınlama uç noktasına ulaşılamadı. Yerelde çalışırken bu normaldir; " +
+               "site Vercel'e alındığında etkinleşir.", "hata");
+      }).then(function () {
+        d.disabled = false; d.textContent = "Bağlantıyı test et";
+      });
+    });
+
     $("#btn-yayinla").addEventListener("click", function () {
       if (!confirm("Veri sunucuya gönderilip herkes için yayımlanacak. Devam edilsin mi?")) return;
       if (kirli) kaydet(true);
@@ -614,11 +642,11 @@
       }).then(function (y) {
         if (y && y.tamam) {
           bildir("Yayımlandı. Vercel dağıtımı ~1 dakika içinde tamamlanır.", "basarili");
-        } else if (y && /şifre/i.test(y.hata || "")) {
+        } else if (y && /şifre hatalı/i.test(y.hata || "")) {
           bildir("Yayımlanamadı: Vercel'deki PANEL_SIFRE değişkeni panel şifresiyle " +
                  "aynı olmalı.", "hata");
         } else {
-          bildir("Yayımlanamadı: " + ((y && y.hata) || "bilinmeyen hata"), "hata");
+          bildir((y && y.hata) || "Yayımlanamadı: bilinmeyen hata", "hata");
         }
       }).catch(function () {
         bildir("Yayınlama uç noktasına ulaşılamadı. Yerelde çalışırken bu normaldir; " +

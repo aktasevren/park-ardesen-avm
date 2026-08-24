@@ -97,13 +97,26 @@ Vercel → Settings → Environment Variables:
 | Değişken | Değer |
 |---|---|
 | `PANEL_SIFRE` | panelin giriş şifresiyle **aynı** olmalı |
-| `GITHUB_TOKEN` | depoya yazma yetkisi olan kişisel erişim jetonu (`repo` kapsamı) |
+| `GITHUB_TOKEN` | depoya yazma yetkisi olan kişisel erişim jetonu |
 | `GITHUB_REPO` | (isteğe bağlı) varsayılan `aktasevren/park-ardesen-avm` |
 | `GITHUB_DAL` | (isteğe bağlı) varsayılan `main` |
 
 Bu değişkenler tanımlanmadan da panel ve site tamamen çalışır; yalnızca "Yayınla"
 düğmesi devre dışı kalır. Şifreyi değiştirmek için `panel/panel.js` içindeki `SIFRE`
 sabitini ve `PANEL_SIFRE` değişkenini birlikte güncelleyin.
+
+**Jeton nasıl üretilir**
+
+- *Klasik jeton* — <https://github.com/settings/tokens/new> · kapsam: **`repo`**
+- *İnce ayarlı jeton* — <https://github.com/settings/personal-access-tokens/new> ·
+  Repository access: **Only select repositories → park-ardesen-avm** ·
+  Permissions → Repository permissions → **Contents: Read and write**
+
+Değişkeni her güncellediğinizde Vercel'de **Redeploy** gerekir; ortam değişkenleri
+yalnızca yeni dağıtımlara uygulanır.
+
+Panelde **Bağlantıyı test et** düğmesi, hiçbir şey yazmadan jetonu ve depo erişimini
+sınar; sorun varsa ne yapılacağını söyler.
 
 ## Mağaza verisi
 

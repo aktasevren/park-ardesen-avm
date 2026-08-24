@@ -13,6 +13,28 @@
    ------------------------------------------------------------------ */
 const DOSYA = "panel/veri.json";
 
+/* GitHub'ın döndürdüğü kodu, panelde doğrudan gösterilebilecek bir
+   yönergeye çeviriyoruz — "Bad credentials" tek başına yol göstermiyor. */
+function aciklaHata(kod, depo, dal) {
+  if (kod === 401) {
+    return "GITHUB_TOKEN geçersiz veya süresi dolmuş (GitHub: Bad credentials). " +
+      "Vercel → Settings → Environment Variables'ta değeri yenileyin; " +
+      "başında/sonunda boşluk veya satır sonu kalmadığından emin olun. " +
+      "Değişkeni güncelledikten sonra yeniden dağıtım (Redeploy) gerekir.";
+  }
+  if (kod === 403) {
+    return "GITHUB_TOKEN'ın bu depoya yazma yetkisi yok. Klasik jetonda 'repo' " +
+      "kapsamı, ince ayarlı jetonda ilgili depo için 'Contents: Read and write' " +
+      "izni gerekiyor.";
+  }
+  if (kod === 404) {
+    return `Depo veya dal bulunamadı: ${depo} (${dal}). GITHUB_REPO ve GITHUB_DAL ` +
+      "değişkenlerini kontrol edin. İnce ayarlı jeton kullanıyorsanız jetonun bu " +
+      "depoya erişim izni verilmiş olmalı.";
+  }
+  return `GitHub isteği başarısız (HTTP ${kod}).`;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -38,12 +60,13 @@ module.exports = async function handler(req, res) {
   if (!govde || govde.sifre !== PANEL_SIFRE) {
     return res.status(401).json({ hata: "Şifre hatalı" });
   }
-  if (!govde.veri || typeof govde.veri !== "object") {
+  const sadeceTest = govde.test === true;
+  if (!sadeceTest && (!govde.veri || typeof govde.veri !== "object")) {
     return res.status(400).json({ hata: "Veri eksik" });
   }
 
-  const icerik = JSON.stringify(govde.veri, null, 2) + "\n";
-  const b64 = Buffer.from(icerik, "utf8").toString("base64");
+  const icerik = sadeceTest ? "" : JSON.stringify(govde.veri, null, 2) + "\n";
+  const b64 = sadeceTest ? "" : Buffer.from(icerik, "utf8").toString("base64");
   const url = `https://api.github.com/repos/${depo}/contents/${DOSYA}`;
   const baslik = {
     Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -59,8 +82,16 @@ module.exports = async function handler(req, res) {
     if (mevcut.ok) {
       sha = (await mevcut.json()).sha;
     } else if (mevcut.status !== 404) {
-      const m = await mevcut.text();
-      return res.status(502).json({ hata: `GitHub okunamadı (${mevcut.status}): ${m.slice(0, 200)}` });
+      return res.status(502).json({ hata: aciklaHata(mevcut.status, depo, dal) });
+    }
+
+    if (sadeceTest) {
+      return res.status(200).json({
+        tamam: true, test: true, depo, dal,
+        mesaj: sha
+          ? `Bağlantı çalışıyor. ${depo} (${dal}) deposundaki ${DOSYA} okundu.`
+          : `Bağlantı çalışıyor. ${DOSYA} henüz yok, ilk yayında oluşturulacak.`
+      });
     }
 
     const zaman = new Date().toISOString().replace("T", " ").slice(0, 16);
@@ -76,8 +107,7 @@ module.exports = async function handler(req, res) {
     });
 
     if (!yaz.ok) {
-      const m = await yaz.text();
-      return res.status(502).json({ hata: `GitHub'a yazılamadı (${yaz.status}): ${m.slice(0, 200)}` });
+      return res.status(502).json({ hata: aciklaHata(yaz.status, depo, dal) });
     }
 
     const sonuc = await yaz.json();

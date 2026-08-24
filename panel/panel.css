@@ -192,7 +192,8 @@ button{font:inherit}
   background:var(--koyu);color:#fff;padding:13px 18px;border-radius:11px;
   box-shadow:0 12px 34px rgba(0,0,0,.28);font-size:14px;
   opacity:0;transform:translateY(10px);transition:all ease .25s;pointer-events:none;
-  max-width:420px;
+  max-width:520px;
+  line-height:1.45;
 }
 .bildirim.acik{opacity:1;transform:none}
 .bildirim.hata{background:var(--kirmizi)}
