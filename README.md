@@ -61,8 +61,11 @@ penceresine dokunmaz.
 
 ## Yönetim paneli
 
-    http://localhost:8001/panel/          (yayında: <site>/panel/)
+    http://localhost:8001/panel/          (yayında: <site>/panel)
     şifre: parkardesen2026
+
+Üst çubuk: **Kaydet** (tarayıcıya — otomatik çalışır), **Siteyi önizle**,
+**Bağlantıyı test et** (jeton/depo sınaması), **Yayınla** (sunucuya).
 
 Panelden yönetilenler:
 
@@ -87,8 +90,6 @@ Okuma sırası: `localStorage['pa-veri']` → `panel/veri.json`. Yani panelde **
 basınca aynı tarayıcıdaki site anında güncellenir (sunum için yeterli). **Yayınla**
 düğmesi veriyi `/api/kaydet` uç noktasına gönderir; o da `panel/veri.json`'u GitHub'a
 commit'ler ve Vercel dağıtımı (~1 dk) herkes için yayımlar.
-
-`JSON indir` / `JSON yükle` ile veri yedeklenebilir veya başka bir bilgisayara taşınabilir.
 
 ### Yayınla için Vercel ayarı
 

@@ -233,9 +233,7 @@
         "yayımlanır.</p>" +
         "<p class=\"ipucu\">Yani &ldquo;kaydettim, sitede görüyorum ama Yayınla hata " +
         "verdi&rdquo; durumunda değişiklik gerçektir &mdash; ama yalnızca sizin " +
-        "tarayıcınızdadır. Başkaları henüz göremez.</p>" +
-        "<p><strong>JSON indir / yükle</strong> ile veriyi yedekleyebilir ya da " +
-        "başka bir bilgisayara taşıyabilirsiniz.</p>", "") +
+        "tarayıcınızdadır. Başkaları henüz göremez.</p>", "") +
       kartKabugu("Adresler", "",
         '<div class="satir"><div class="govde"><strong>Panel</strong><small>' +
           kacis(location.origin + location.pathname.replace(/[^/]*$/, "")) + "</small></div></div>" +
@@ -579,31 +577,6 @@
     $("#btn-onizle").addEventListener("click", function () {
       if (kirli) kaydet(true);
       window.open("/", "_blank");
-    });
-
-    $("#btn-indir").addEventListener("click", function () {
-      var b = new Blob([JSON.stringify(veri, null, 2)], { type: "application/json" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(b);
-      a.download = "veri.json";
-      a.click();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-    });
-
-    $("#btn-yukle").addEventListener("click", function () { $("#dosya").click(); });
-    $("#dosya").addEventListener("change", function (e) {
-      var f = e.target.files[0];
-      if (!f) return;
-      var r = new FileReader();
-      r.onload = function () {
-        try {
-          veri = JSON.parse(r.result);
-          kaydet(true); duzenlenen = null; ciz();
-          bildir("Dosya yüklendi.", "basarili");
-        } catch (err) { bildir("Dosya okunamadı: " + err.message, "hata"); }
-      };
-      r.readAsText(f);
-      e.target.value = "";
     });
 
     $("#btn-test").addEventListener("click", function () {
