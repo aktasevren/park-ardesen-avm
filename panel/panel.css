@@ -28,19 +28,19 @@ body{
 }
 @font-face{
   font-family:"Golos Text";font-weight:400;font-display:swap;
-  src:url("../wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Regular.woff2") format("woff2");
+  src:url("/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Regular.woff2") format("woff2");
 }
 @font-face{
   font-family:"Golos Text";font-weight:500;font-display:swap;
-  src:url("../wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Medium.woff2") format("woff2");
+  src:url("/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Medium.woff2") format("woff2");
 }
 @font-face{
   font-family:"Golos Text";font-weight:600;font-display:swap;
-  src:url("../wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-SemiBold.woff2") format("woff2");
+  src:url("/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-SemiBold.woff2") format("woff2");
 }
 @font-face{
   font-family:"Golos Text";font-weight:700;font-display:swap;
-  src:url("../wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Bold.woff2") format("woff2");
+  src:url("/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Bold.woff2") format("woff2");
 }
 
 h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.25}

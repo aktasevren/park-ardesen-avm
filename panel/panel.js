@@ -168,7 +168,7 @@
   }
   function logoOnizleme(m) {
     if (m && m.logo) {
-      return '<span class="logo"><img src="../pa-assets/markalar/' + kacis(m.logo) + '" alt=""></span>';
+      return '<span class="logo"><img src="/pa-assets/markalar/' + kacis(m.logo) + '" alt=""></span>';
     }
     return '<span class="logo"><span>' + kacis(m ? m.ad : "?") + "</span></span>";
   }
@@ -234,7 +234,7 @@
         '<div class="satir"><div class="govde"><strong>Panel</strong><small>' +
           kacis(location.origin + location.pathname.replace(/[^/]*$/, "")) + "</small></div></div>" +
         '<div class="satir"><div class="govde"><strong>Site</strong><small>' +
-          kacis(new URL("../index.html", location.href).href) +
+          kacis(location.origin + "/") +
           "</small></div></div>" +
         '<p class="ipucu" style="margin-top:12px">Tarayıcıya kaydedilen değişiklikler ' +
         '<strong>yalnızca aynı adres</strong> üzerinde görünür. Siteyi ' +
@@ -572,7 +572,7 @@
 
     $("#btn-onizle").addEventListener("click", function () {
       if (kirli) kaydet(true);
-      window.open("../index.html", "_blank");
+      window.open("/", "_blank");
     });
 
     $("#btn-indir").addEventListener("click", function () {
@@ -638,7 +638,7 @@
     var yerel = null;
     try { yerel = JSON.parse(localStorage.getItem(ANAHTAR) || "null"); } catch (e) {}
     if (yerel) return Promise.resolve(yerel);
-    return fetch("veri.json", { cache: "no-store" }).then(function (r) { return r.json(); });
+    return fetch("/panel/veri.json", { cache: "no-store" }).then(function (r) { return r.json(); });
   }
 
   function ac() {
