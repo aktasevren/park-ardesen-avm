@@ -10,6 +10,7 @@
   "use strict";
 
   var SIFRE = "parkardesen2026";      // panel giriş şifresi
+  var girilenSifre = "";              // yayınlarken sunucuya gönderilen
   var ANAHTAR = "pa-veri";            // site ile ortak localStorage anahtarı
   var API = "/api/kaydet";
 
@@ -607,12 +608,15 @@
       fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sifre: SIFRE, veri: veri })
+        body: JSON.stringify({ sifre: girilenSifre || SIFRE, veri: veri })
       }).then(function (r) {
         return r.json().catch(function () { return { hata: "Sunucu yanıtı okunamadı (HTTP " + r.status + ")" }; });
       }).then(function (y) {
         if (y && y.tamam) {
           bildir("Yayımlandı. Vercel dağıtımı ~1 dakika içinde tamamlanır.", "basarili");
+        } else if (y && /şifre/i.test(y.hata || "")) {
+          bildir("Yayımlanamadı: Vercel'deki PANEL_SIFRE değişkeni panel şifresiyle " +
+                 "aynı olmalı.", "hata");
         } else {
           bildir("Yayımlanamadı: " + ((y && y.hata) || "bilinmeyen hata"), "hata");
         }
@@ -661,7 +665,11 @@
   $("#giris-form").addEventListener("submit", function (e) {
     e.preventDefault();
     if ($("#sifre").value === SIFRE) {
-      try { sessionStorage.setItem("pa-panel", "1"); } catch (err) {}
+      girilenSifre = $("#sifre").value;
+      try {
+        sessionStorage.setItem("pa-panel", "1");
+        sessionStorage.setItem("pa-panel-s", girilenSifre);
+      } catch (err) {}
       ac();
     } else {
       $("#giris-hata").textContent = "Şifre hatalı.";
@@ -669,5 +677,10 @@
     }
   });
 
-  try { if (sessionStorage.getItem("pa-panel") === "1") ac(); } catch (e) {}
+  try {
+    if (sessionStorage.getItem("pa-panel") === "1") {
+      girilenSifre = sessionStorage.getItem("pa-panel-s") || "";
+      ac();
+    }
+  } catch (e) {}
 })();

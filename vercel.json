@@ -1,4 +1,22 @@
 {
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/", "destination": "/www.dubaioutletmall.com/index.html", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/panel", "destination": "/panel/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/panel/veri.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/panel/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
 }

@@ -1,0 +1,7 @@
+# yalnızca yerel geliştirme/üretim araçları — dağıtıma girmesine gerek yok
+_uyarla/
+serve.py
+*.log
+
+# klonun dönüştürülmemiş (İngilizce) yedekleri; yayında erişilebilir olmamalı
+_orijinal/
