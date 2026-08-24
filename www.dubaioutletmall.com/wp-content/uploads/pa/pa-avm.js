@@ -58,6 +58,63 @@
     uygula();
   }
 
+
+  /* --- Menü: dışarı tıklayınca kapansın ------------------------------
+     Tema yalnızca hamburger düğmesi ve menü içindeki çarpı ile kapanmayı
+     destekliyor. Menü açıkken sayfanın geri kalanına yarı saydam bir örtü
+     koyup ona gelen tıklamayı kapatma olarak işliyoruz. Örtü olmadan
+     "dışarı tıklama" altta kalan bağlantıyı tetikleyebiliyor.
+
+     Örtünün görünürlüğünü CSS'teki `.nav-on` ataya bırakmak yerine
+     doğrudan JS'ten sürüyoruz; tema `nav-on` sınıfını <html> üzerinde
+     değiştirdiği için MutationObserver ile takip etmek yeterli ve
+     davranış stil sırasından bağımsız hâle geliyor. */
+  function menuKapatma() {
+    var html = document.documentElement;
+
+    var ortu = document.createElement("div");
+    ortu.className = "pa-menu-ortu";
+    ortu.setAttribute("aria-hidden", "true");
+    document.body.appendChild(ortu);
+
+    function acikMi() { return html.classList.contains("nav-on"); }
+
+    function esitle() {
+      var acik = acikMi();
+      ortu.style.opacity = acik ? "1" : "0";
+      ortu.style.visibility = acik ? "visible" : "hidden";
+      ortu.style.pointerEvents = acik ? "auto" : "none";
+    }
+
+    function kapat() {
+      html.classList.remove("nav-on");
+      var t = document.querySelector(".nav-toggle");
+      if (t) t.classList.remove("on");
+      esitle();
+    }
+
+    esitle();
+    if (window.MutationObserver) {
+      new MutationObserver(esitle).observe(html, {
+        attributes: true, attributeFilter: ["class"]
+      });
+    }
+
+    ortu.addEventListener("click", kapat);
+
+    // örtünün yakalayamadığı alanlar için yedek (ör. sabit başlık şeridi)
+    document.addEventListener("click", function (e) {
+      if (!acikMi()) return;
+      if (e.target.closest(".site-header-open")) return;   // menünün içi
+      if (e.target.closest(".nav-toggle")) return;         // açma düğmesi
+      kapat();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && acikMi()) kapat();
+    });
+  }
+
   /* --- Sayfa içi bağlantı düzeltmeleri -------------------------------
      Klonda kalan ?shop-category=... bağlantılarını mağaza listesine yönlendir. */
   function bagDuzelt() {
@@ -72,5 +129,5 @@
     } else { fn(); }
   }
 
-  hazir(function () { magazaFiltresi(); bagDuzelt(); });
+  hazir(function () { magazaFiltresi(); bagDuzelt(); menuKapatma(); });
 })();

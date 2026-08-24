@@ -74,6 +74,17 @@ V&K Prestij ise AVM dış cephe fotoğrafındaki tabelalardan alındı.
 - Tema başlıklarda `line-height:1` ve `.79` kullanıyor; Türkçe diyakritikler için
   `pa-avm.css` içinde açıldı.
 
+## Tasarıma eklenenler
+
+Orijinal temada menü yalnızca hamburger düğmesi ve içindeki çarpı ile kapanıyordu.
+`pa-avm.js` menü açıkken sayfanın geri kalanına yarı saydam bir örtü (`.pa-menu-ortu`)
+koyuyor: örtüye tıklamak veya <kbd>Esc</kbd> menüyü kapatıyor. Örtü olmadan "dışarı
+tıklama" altta kalan bağlantıyı yanlışlıkla tetikleyebiliyordu.
+
+Örtünün görünürlüğü CSS'teki `.nav-on` ataya bırakılmayıp JS'ten sürülüyor
+(MutationObserver ile `<html>` sınıfı izleniyor); böylece davranış stil sırasından
+bağımsız kalıyor.
+
 ## Klon artıkları (düzeltildi)
 
 Kaynak site Cloudflare **Rocket Loader** kullanıyordu: tüm `<script>` etiketlerinin

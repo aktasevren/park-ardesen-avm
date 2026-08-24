@@ -271,3 +271,22 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
 @media (max-width:767px){
   .site-header:before{width:250px!important;height:48px!important;bottom:-39px!important;margin-left:-125px!important}
 }
+
+/* ---------------- Menü örtüsü ----------------
+   Menü açıkken sayfanın geri kalanını kapatan katman. Hem "dışarı
+   tıklayınca kapansın" davranışını güvenli hâle getiriyor (altta kalan
+   bağlantı yanlışlıkla tetiklenmiyor) hem de açık menüyü öne çıkarıyor.
+   Menü paneli z-index:11; örtü bir altında duruyor. */
+.pa-menu-ortu{
+  position:fixed;
+  inset:0;
+  z-index:10;
+  background:rgba(0,0,0,.38);
+  cursor:pointer;
+  /* görünürlüğü pa-avm.js satır içi olarak sürüyor; burada yalnızca
+     başlangıç durumu ve geçiş var */
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity ease .3s, visibility ease .3s;
+}

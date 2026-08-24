@@ -10,7 +10,8 @@ TABAN = "http://127.0.0.1:8001/"
 HS = os.path.expanduser(
     "~/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell")
 
-PROBE_HEAD = """<script>
+PROBE_HEAD = """<style>*{transition:none!important;animation:none!important}</style>
+<script>
 window.__h=[];
 window.addEventListener('error',function(e){
   var t=e.target||{};
@@ -36,10 +37,18 @@ window.addEventListener('load',function(){
     var lazyKalan=[].slice.call(document.querySelectorAll('img.lazyload')).map(function(i){
       return (i.getAttribute('data-src')||'').split('/').pop();
     });
-    console.log('RAPOR '+JSON.stringify({menu:menuAcik,
-      lazy:lazyKalan.length, lazyOrnek:lazyKalan.slice(0,4),
-      kirik:kirik.slice(0,6), kirikSayi:kirik.length,
-      hata:window.__h}));
+    setTimeout(function(){
+      // menü dışına tıklayınca kapanıyor mu?
+      var x=window.innerWidth-40, y=Math.round(window.innerHeight/2);
+      var alt=document.elementFromPoint(x,y);
+      var ortuYakaladi = !!(alt && alt.classList && alt.classList.contains('pa-menu-ortu'));
+      if(alt) alt.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:x,clientY:y}));
+      var disariKapatti = !document.documentElement.classList.contains('nav-on');
+      console.log('RAPOR '+JSON.stringify({menu:menuAcik, ortu:ortuYakaladi, disari:disariKapatti,
+        lazy:lazyKalan.length, lazyOrnek:lazyKalan.slice(0,4),
+        kirik:kirik.slice(0,6), kirikSayi:kirik.length,
+        hata:window.__h}));
+    },120);
   },900); }
 });
 </script>"""
@@ -91,6 +100,8 @@ def main():
             print("%-24s RAPOR ALINAMADI" % ad); sorunlu += 1; continue
         bayrak = []
         if r["menu"] is not True: bayrak.append("MENÜ AÇILMADI")
+        if r.get("ortu") is not True: bayrak.append("örtü tıklamayı yakalamıyor")
+        if r.get("disari") is not True: bayrak.append("DIŞARI TIKLAYINCA KAPANMIYOR")
         if r["hata"]: bayrak.append("%d hata" % len(r["hata"]))
         if r["kirikSayi"]: bayrak.append("%d KIRIK görsel" % r["kirikSayi"])
         print("%-24s menü:%-5s %s"
