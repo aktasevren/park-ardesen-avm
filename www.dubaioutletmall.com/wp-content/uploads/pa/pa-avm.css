@@ -1,0 +1,273 @@
+/* ------------------------------------------------------------------
+   Park Ardeşen AVM — uyarlama katmanı
+   Tema (Dubai Outlet Mall) CSS'i olduğu gibi duruyor; burada sadece
+   marka/tipografi farklarının gerektirdiği düzeltmeler var.
+   ------------------------------------------------------------------ */
+
+/* Logo ------------------------------------------------------------
+   Orijinal DOM logosu 1.67:1 dikey bir armaydı; başlık çubuğu 100px
+   yüksekliğindeydi ve logonun alt kısmı (slogan) başlığın altındaki
+   yuvarlak çentiğe (logo-decor.svg, 374x72, bottom:-60px) sarkıyordu.
+   Park Ardeşen logosu 4.44:1 yatay bir wordmark; aynı yerleşimi
+   koruyabilmek için kutuyu yeniden ölçüp logoyu çentiğe indiriyoruz. */
+.site-branding{
+  /* logo mutlak konumlandığı için kutu genişliğini açıkça vermek gerekiyor;
+     aksi halde esnek satırda içeriksiz kalıp 0px'e düşüyor */
+  flex:0 0 auto;
+  width:288px;
+  max-width:288px;
+  height:96px;
+  align-self:flex-start;
+  display:block;
+  position:relative;
+}
+.site-branding img,
+.site-branding .custom-logo{
+  position:absolute;
+  left:0;
+  top:72px;            /* alt kenarı çentiğin içine denk gelsin */
+  width:100%;
+  height:auto;
+  margin-top:0 !important;
+  z-index:1;
+}
+
+@media (max-width:991px){
+  .site-branding{width:250px;max-width:250px;height:86px}
+  .site-branding img,.site-branding .custom-logo{top:60px}
+}
+@media (max-width:767px){
+  .site-branding{width:172px;max-width:172px;height:64px}
+  .site-branding img,.site-branding .custom-logo{top:40px}
+}
+
+.site-footer-logo{max-width:190px}
+.site-footer-logo img{width:100%;height:auto}
+
+/* Türkçe kelimeler uzun; ama kelime ortasından bölünmesinler
+   ("Ayakka-bı" gibi kırılmalar oluşuyordu). */
+h1,h2,h3,h4,.h1,.h2,.h3{
+  hyphens:none;
+  -webkit-hyphens:none;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+
+/* ---------------- Mağazalar: istemci tarafı filtre ---------------- */
+.pa-magaza-yok{
+  display:none;
+  padding:48px 0;
+  text-align:center;
+  font-size:18px;
+  color:#777;
+}
+.pa-magaza-yok.acik{display:block}
+
+.card-shop{position:relative}
+.card-shop .pa-magaza-bilgi{
+  margin-top:6px;
+  font-size:13px;
+  line-height:1.45;
+  color:#777;
+}
+.card-shop .pa-magaza-bilgi span{display:block}
+.card-shop img{object-fit:contain;background:#fff}
+
+/* Kategori filtresi aktif durumu */
+.shops-filter .dropdown-menu-inner a.pa-aktif{font-weight:700;text-decoration:underline}
+
+/* ---------------- Kat planı ---------------- */
+.pa-kat-plani{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  margin-top:32px;
+}
+.pa-kat{
+  border:1px solid #e5e5e5;
+  border-radius:12px;
+  padding:24px;
+  background:#fafafa;
+}
+.pa-kat h3{font-size:20px;margin-bottom:12px}
+.pa-kat ul{list-style:none;padding:0;margin:0}
+.pa-kat li{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:7px 0;
+  border-bottom:1px dashed #e0e0e0;
+  font-size:15px;
+}
+.pa-kat li:last-child{border-bottom:0}
+.pa-kat li em{font-style:normal;color:#8a8a8a;white-space:nowrap}
+
+/* ---------------- Anasayfa uyarlamaları ---------------- */
+
+/* Hero: orijinalde Dubai'de çekilmiş bir video vardı. Elimizdeki tek gerçek
+   AVM görseli 528x396 dış cephe fotoğrafı; tam ekran gerildiğinde yumuşak
+   kalıyor, bu yüzden hafif karartma + blur'lu bir alt katman kullanıyoruz.
+   YÜKSEK ÇÖZÜNÜRLÜKLÜ FOTOĞRAF/VİDEO GELDİĞİNDE BURASI SADELEŞTİRİLMELİ. */
+.home-banner .pa-hero{
+  background-position:center 72%;
+  background-size:cover;
+  transform:scale(1.02);
+}
+.home-banner .pa-hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,.18) 100%);
+}
+
+/* Marka logolu kartlar — orijinal kartlar fotoğraf içindi (object-fit:cover),
+   logo koyunca kırpılıyordu; contain + beyaz zemin ile düzeltiyoruz. */
+.pa-logo-kutu{
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.featured-shops-img.pa-logo-kutu{
+  aspect-ratio:16/10;
+  border:1px solid #ededed;
+}
+.pa-marka-logo{
+  width:auto !important;
+  max-width:66%;
+  max-height:62%;
+  object-fit:contain !important;
+  height:auto !important;
+}
+.pa-marka-yazi{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#171717;
+  text-align:center;
+  padding:0 16px;
+}
+.home-deals .card-inner.pa-logo-kutu{
+  flex-direction:column;
+  gap:14px;
+  padding:22px 18px;
+  min-height:230px;
+}
+.home-deals .card-inner.pa-logo-kutu h3{margin:0;text-align:center;font-size:16px;line-height:1.35}
+
+/* Anasayfa alt galerisi (bozuk Instagram widget'ının yerine) */
+.pa-galeri{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.pa-galeri-kart{
+  aspect-ratio:1/1;
+  background:#fff;
+  border:1px solid #ededed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.pa-galeri-kart img{width:100%;height:100%;object-fit:cover}
+.pa-galeri-kart img[src*="markalar/"]{
+  width:auto;height:auto;max-width:70%;max-height:55%;object-fit:contain;
+}
+@media (max-width:767px){ .pa-galeri{grid-template-columns:repeat(2,1fr)} }
+
+/* ---------------- Mağazalar / Kat planı ---------------- */
+.pa-gizle{display:none !important}
+.pa-magaza-logo{
+  aspect-ratio:1/1;
+  border:1px solid #ededed;
+  margin-bottom:14px;
+}
+.card-shop h2{font-size:18px;margin-bottom:2px}
+.pa-kat-not{margin-top:22px;font-size:14px;color:#8a8a8a}
+
+/* ---------------- İletişim / medya / metin sayfaları ---------------- */
+.pa-iletisim{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+  margin:8px 0 8px;
+}
+.pa-iletisim-kart{
+  border:1px solid #e5e5e5;
+  border-radius:12px;
+  padding:24px;
+  background:#fafafa;
+}
+.pa-iletisim-kart h3{font-size:16px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.pa-iletisim-kart h3+p{margin-bottom:16px}
+.pa-iletisim-kart .btn{margin-top:6px}
+.pa-kucuk{font-size:13px;color:#8a8a8a}
+.pa-form-not{
+  margin-top:18px;
+  padding:14px 18px;
+  border-left:3px solid #E53B41;
+  background:#fbf4f4;
+  font-size:14px;
+}
+.pa-medya{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin:16px 0 40px;
+}
+.pa-medya-kart{margin:0}
+.pa-medya-kart img{width:100%;height:230px;object-fit:cover;border-radius:10px;display:block}
+.pa-medya-kart figcaption{font-size:13px;color:#8a8a8a;padding-top:8px}
+
+/* ---------------- Türkçe tipografi düzeltmeleri ----------------
+   Tema başlıklarda line-height:1 ve .79 kullanıyor. Türkçede İ/Ğ'nin
+   üstteki, Ş/Ç'nin alttaki işaretleri bu sıkışıklıkta bir üst/alt satıra
+   giriyor ve harfler kırık görünüyor. Başlık satır yüksekliklerini
+   diyakritiklere yer bırakacak kadar açıyoruz. */
+.home-banner-content h1,
+.home-banner-content .h1{
+  line-height:1.02;
+  padding-bottom:.06em;
+}
+.home-banner-content h1 span,
+.home-banner-content .h1 span{ line-height:1.06; }
+@media (min-width:992px){
+  .home-banner-content h1,
+  .home-banner-content .h1{ font-size:5.6rem; }
+}
+.tdb h2,.tdb .h2{ line-height:1.08; padding-bottom:.04em; }
+.common-banner h1,.common-banner .h1{ line-height:1.14; }
+.page-title{ line-height:1.1; }
+.mall-stats-item h3{ line-height:1.1; }
+h1,h2,h3,h4,h5{ padding-bottom:.02em; }
+
+/* Kategori kartlarında iki kelimelik Türkçe adlar dar kutuya sığsın */
+.fsc h3{ font-size:1.15rem; line-height:1.25; }
+@media (min-width:768px){ .fsc h3{ font-size:1.25rem; } }
+
+/* .tdb başlıklarındaki kırmızı alt satır tasarım gereği bir üst satırın
+   içine giriyor (margin-top:-1.8rem). Türkçe diyakritiklerle bu çakışma
+   okunaksızlaşıyor; payı azaltıyoruz. */
+.tdb .h2 span,.tdb h2 span{
+  margin-top:-.55rem !important;
+  line-height:1.1;
+  padding-bottom:.08em;
+}
+
+/* Başlık altındaki yuvarlak çentik (logo-decor.svg) orijinalde 1.67:1 dikey
+   logoya göre ölçülmüştü. Yatay wordmark daha geniş olduğu için çentiği de
+   genişletiyoruz; aksi hâlde logo çentiğin dışına taşıyor. */
+.site-header:before{
+  width:430px !important;
+  height:80px !important;
+  bottom:-64px !important;
+  margin-left:-215px !important;
+}
+@media (max-width:991px){
+  .site-header:before{width:350px!important;height:68px!important;bottom:-55px!important;margin-left:-175px!important}
+}
+@media (max-width:767px){
+  .site-header:before{width:250px!important;height:48px!important;bottom:-39px!important;margin-left:-125px!important}
+}

@@ -1,0 +1,35 @@
+/* ------------------------------------------------------------------
+   Park Ardeşen AVM — font katmanı
+
+   Golos Text: TEMANIN KENDİ DOSYASI KULLANILIYOR. Kontrol edildi,
+   dört ağırlığın da 601 glifi var ve Türkçe karakterlerin tamamını
+   (ğ Ğ ş Ş ı İ ç Ç ö Ö ü Ü) içeriyor. Bu yüzden burada ezilmiyor.
+
+   linotype-didot / linotype-didot-headline: temanın başlık fontu
+   Adobe Typekit'ten çekiliyordu; hem Türkçe glifleri yok hem de
+   yerel kurulumda dış bağlantı gerektiriyor. Yerine aynı Didone
+   karakterdeki Bodoni Moda konuyor. Dosyalar tek parça (unicode-range
+   yok) — alt kümelere bölünce eksik glif riski doğuyor.
+   ------------------------------------------------------------------ */
+
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:300;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:400;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:500;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:600;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:700;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:800;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:linotype-didot;font-style:normal;font-weight:900;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:300;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:400;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:500;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:600;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:700;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:800;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:linotype-didot-headline;font-style:normal;font-weight:900;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:300;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:400;font-display:swap;src:url('bodoni-tam-400.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:600;font-display:swap;src:url('bodoni-tam-500.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:700;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:800;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:900;font-display:swap;src:url('bodoni-tam-700.woff2') format('woff2')}
