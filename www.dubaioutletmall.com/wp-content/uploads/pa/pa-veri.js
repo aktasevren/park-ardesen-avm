@@ -246,14 +246,19 @@
     var mag = magazaHaritasi(v);
     var hepsi = (v.kampanyalar || []).filter(aktif);
 
-    // anasayfadaki şerit: öne çıkanlar (yoksa ilk 8)
+    // Anasayfa şeridi: en fazla 8 kart. Önce "öne çıkar" işaretliler,
+    // kalan yer varsa diğer kampanyalarla dolduruluyor — böylece panelden
+    // eklenen yeni bir kampanya işaretlenmemiş olsa da anasayfada görünüyor.
     var anaRow = q(".home-deals .row");
     if (anaRow) {
       var one = hepsi.filter(function (k) { return k.oneCikar; });
-      if (!one.length) one = hepsi.slice(0, 8);
-      anaRow.innerHTML = one.slice(0, 8).map(function (k) {
-        return kampanyaKarti(k, mag, true);
-      }).join("");
+      var digerleri = hepsi.filter(function (k) { return !k.oneCikar; });
+      var gosterilecek = one.concat(digerleri).slice(0, 8);
+      anaRow.innerHTML = gosterilecek.length
+        ? gosterilecek.map(function (k) { return kampanyaKarti(k, mag, true); }).join("")
+        : "";
+      var bolum = anaRow.closest(".home-deals");
+      if (bolum) bolum.style.display = gosterilecek.length ? "" : "none";
     }
 
     // Kampanyalar sayfası

@@ -16,7 +16,7 @@
   var veri = null;
   var kirli = false;
   var aktif = "ozet";
-  var duzenlenen = null;              // { bolum, id }
+  var duzenlenen = null;              // { bolum, id, yeni }
 
   /* ---------------------------------------------------------- yardımcı */
   function $(s, k) { return (k || document).querySelector(s); }
@@ -96,6 +96,11 @@
     $("#durum").textContent = "Kaydedilmedi";
     $("#durum").classList.add("kirli");
   }
+
+  /* Değişiklikler kendiliğinden kaydedilsin: "Tamam" dedikten sonra ayrıca
+     "Kaydet"e basmayı beklemek, değişikliğin sitede görünmemesine yol
+     açıyordu. Kaydet düğmesi yine duruyor (elle yedekleme/güven için). */
+  function otoKaydet() { kirlet(); kaydet(true); }
 
   function kaydet(sessiz) {
     veri.guncelleme = new Date().toISOString();
@@ -224,6 +229,17 @@
         "yayımlanır (Vercel dağıtımı ~1 dakika sürer).</p>" +
         "<p><strong>JSON indir / yükle</strong> ile veriyi yedekleyebilir ya da " +
         "başka bir bilgisayara taşıyabilirsiniz.</p>", "") +
+      kartKabugu("Adresler", "",
+        '<div class="satir"><div class="govde"><strong>Panel</strong><small>' +
+          kacis(location.origin + location.pathname.replace(/[^/]*$/, "")) + "</small></div></div>" +
+        '<div class="satir"><div class="govde"><strong>Site</strong><small>' +
+          kacis(new URL("../www.dubaioutletmall.com/index.html", location.href).href) +
+          "</small></div></div>" +
+        '<p class="ipucu" style="margin-top:12px">Tarayıcıya kaydedilen değişiklikler ' +
+        '<strong>yalnızca aynı adres</strong> üzerinde görünür. Siteyi ' +
+        '<code>localhost</code> ile açtıysanız paneli de <code>localhost</code> ile açın ' +
+        '(<code>127.0.0.1</code> ile karıştırmayın). En güvenlisi yukarıdaki ' +
+        '<strong>Siteyi önizle</strong> düğmesini kullanmaktır.</p>', "") +
       kartKabugu("Son değişiklikler", "",
         '<div class="satir"><div class="govde"><strong>Son kayıt</strong>' +
         "<small>" + (veri.guncelleme
@@ -293,6 +309,9 @@
             yaziAlani("aciklama", "Açıklama", k.aciklama) +
             tarihAlani("baslangic", "Başlangıç").replace('value=""', 'value="' + kacis(k.baslangic || "") + '"') +
             tarihAlani("bitis", "Bitiş").replace('value=""', 'value="' + kacis(k.bitis || "") + '"') +
+            '<div class="alan genis"><span class="ipucu">Bitiş boş bırakılırsa kampanya ' +
+            'süresiz yayında kalır. Anasayfada en fazla 8 kampanya gösterilir; ' +
+            'önce &ldquo;öne çıkar&rdquo; işaretliler sıralanır.</span></div>' +
           "</div>", formDugmeleri());
       } else {
         html += kartKabugu(kacis(k.baslik || "(başlıksız)"), rozet,
@@ -482,11 +501,14 @@
       var bl = ekle.getAttribute("data-ekle");
       var o = yeniOge(bl);
       var liste = listeVe(bl);
-      liste.push(o);
-      duzenlenen = { bolum: bl, id: bl === "katilimci" ? String(liste.length - 1)
-        : (bl === "magaza" ? o.slug : o.id) };
+      // yeni kayıt listenin başına: hem panelde önce görünür hem de
+      // anasayfa gibi sınırlı alanlarda ilk sıraya girer
+      liste.unshift(o);
+      duzenlenen = { bolum: bl, yeni: true,
+        id: bl === "katilimci" ? "0"
+          : (bl === "magaza" ? o.slug : o.id) };
       aktif = bolumAdi(bl);
-      kirlet(); ciz(); return;
+      ciz(); return;
     }
 
     var duz = t.closest("[data-duzenle]");
@@ -506,29 +528,40 @@
         var i = l.findIndex(function (x) { return String(x[alan]) === q[1]; });
         if (i >= 0) l.splice(i, 1);
       }
-      duzenlenen = null; kirlet(); ciz();
-      bildir("Kayıt silindi. Kalıcı olması için Kaydet'e basın.");
+      duzenlenen = null; otoKaydet(); ciz();
+      bildir("Kayıt silindi.", "basarili");
       return;
     }
 
-    if (t.closest("[data-iptal]")) { duzenlenen = null; ciz(); return; }
+    if (t.closest("[data-iptal]")) {
+      if (duzenlenen && duzenlenen.yeni) {          // yeni kayıt vazgeçildi
+        var yl = listeVe(duzenlenen.bolum);
+        if (duzenlenen.bolum === "katilimci") yl.splice(Number(duzenlenen.id), 1);
+        else {
+          var al = duzenlenen.bolum === "magaza" ? "slug" : "id";
+          var ix = yl.findIndex(function (x) { return String(x[al]) === duzenlenen.id; });
+          if (ix >= 0) yl.splice(ix, 1);
+        }
+      }
+      duzenlenen = null; ciz(); return;
+    }
 
     if (t.closest("[data-tamam]")) {
       var form = $("[data-form]");
       var oge = ogeBul(duzenlenen.bolum, duzenlenen.id);
       if (form && oge) formuOku(form, oge);
-      duzenlenen = null; kirlet(); ciz();
-      bildir("Değişiklik alındı. Kalıcı olması için Kaydet'e basın.");
+      duzenlenen = null; otoKaydet(); ciz();
+      bildir("Kaydedildi. Site aynı tarayıcıda güncellendi.", "basarili");
       return;
     }
 
     if (t.closest("[data-firsat-kaydet]")) {
       formuOku($("[data-form-firsat]"), veri.firsatGunleri);
-      kirlet(); ciz(); bildir("Fırsat Günleri ayarları güncellendi."); return;
+      otoKaydet(); ciz(); bildir("Fırsat Günleri ayarları kaydedildi.", "basarili"); return;
     }
     if (t.closest("[data-kiralama-kaydet]")) {
       formuOku($("[data-form-kiralama]"), veri.kiralama);
-      kirlet(); ciz(); bildir("Kiralama metni güncellendi."); return;
+      otoKaydet(); ciz(); bildir("Kiralama metni kaydedildi.", "basarili"); return;
     }
   });
 
