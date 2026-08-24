@@ -16,7 +16,9 @@ Kök dizin `www.dubaioutletmall.com/index.html`'e yönlendirir.
 |---|---|
 | `www.dubaioutletmall.com/` | Ana ayna — **uyarlanmış site burası** |
 | `dubaioutletmall.com/` | wget'in ürettiği ikinci ayna (aynı uyarlamalar burada da uygulanır); `privacy-policy-2/` ve `terms-and-conditions/` yalnızca burada |
-| `pa-assets/` | Park Ardeşen'e ait varlıkların **kaynağı**: logo, mağaza logoları, fotoğraflar, `magazalar.json`, `pa-avm.css`, `pa-avm.js`, fontlar |
+| `pa-assets/` | Park Ardeşen'e ait varlıkların **kaynağı**: logo, mağaza logoları, fotoğraflar, `pa-avm.css`, `pa-avm.js`, `pa-veri.js`, fontlar |
+| `panel/` | Yönetim paneli + `veri.json` (site içeriğinin tek kaynağı) |
+| `api/` | Vercel serverless fonksiyonu (`kaydet.js` — panelden gelen veriyi GitHub'a commit'ler) |
 | `_uyarla/` | Uyarlama betikleri (aşağıya bakın) |
 | `_orijinal/` | Büyük ölçüde yeniden yazılan sayfaların **klon hâlindeki** yedekleri + orijinal site ikonları ve fontları |
 | `serve.py` | Yerel geliştirme sunucusu |
@@ -40,6 +42,7 @@ Tamamı yeniden çalıştırılabilir. Zinciri baştan kurmak için:
 | `06_baglantilar.py` | Kalan mutlak `dubaioutletmall.com` adreslerini yerel göreli yollara çevirir |
 | `07_font_duzelt.py` | Golos Text'in bozuk `ğ/Ğ` gliflerini onarır |
 | `08_cloudflare.py` | Cloudflare Rocket Loader izlerini ve ölü eklenti dosyalarını temizler (zincirde **ilk** çalışır) |
+| `09_duyurular.py` | `duyurular/` sayfasını üretir ve menüye ekler |
 
 Yardımcılar (sunucu 8001'de açıkken):
 
@@ -54,10 +57,57 @@ Yardımcılar (sunucu 8001'de açıkken):
 ikilisini kullanır (`~/Library/Caches/ms-playwright/...`); kullanıcının Chrome
 penceresine dokunmaz.
 
+## Yönetim paneli
+
+    http://localhost:8001/panel/          (yayında: <site>/panel/)
+    şifre: parkardesen2026
+
+Panelden yönetilenler:
+
+| Bölüm | Sitede nereye çıkar |
+|---|---|
+| **Duyurular** | Üst şerit (tüm sayfalar), anasayfa açılış penceresi, anasayfa duyuru bölümü, `duyurular/` sayfası |
+| **Kampanyalar** | Anasayfa kampanya şeridi (öne çıkanlar) + `deals/` sayfası |
+| **Fırsat Günleri** | `bargain-monday/` sayfası (metin + katılımcı mağazalar) |
+| **Mağaza Kiralama** | `leasing/` sayfasındaki "Güncel boş birimler" listesi |
+| **Mağazalar** | `shops/` mağaza rehberi, `mall-map/` kat planı, kampanya/fırsat kartlarındaki logolar |
+
+Duyuru türleri: çalışma saati, yeni mağaza açılışı, yakında açılıyor, etkinlik, çekiliş,
+kampanya, yeni hizmet, bakım, ulaşım & otopark, sosyal sorumluluk, acil duyuru.
+Her duyurunun tarih aralığı var; süresi dolan duyuru siteden kendiliğinden düşer.
+
+### Veri akışı
+
+`panel/veri.json` tek kaynak. Site `pa-veri.js` ile bu dosyayı **çalışma anında** okur ve
+ilgili blokları çizer — içerik değişince sayfaların yeniden üretilmesi gerekmez.
+
+Okuma sırası: `localStorage['pa-veri']` → `panel/veri.json`. Yani panelde **Kaydet**'e
+basınca aynı tarayıcıdaki site anında güncellenir (sunum için yeterli). **Yayınla**
+düğmesi veriyi `/api/kaydet` uç noktasına gönderir; o da `panel/veri.json`'u GitHub'a
+commit'ler ve Vercel dağıtımı (~1 dk) herkes için yayımlar.
+
+`JSON indir` / `JSON yükle` ile veri yedeklenebilir veya başka bir bilgisayara taşınabilir.
+
+### Yayınla için Vercel ayarı
+
+Vercel → Settings → Environment Variables:
+
+| Değişken | Değer |
+|---|---|
+| `PANEL_SIFRE` | panelin giriş şifresiyle **aynı** olmalı |
+| `GITHUB_TOKEN` | depoya yazma yetkisi olan kişisel erişim jetonu (`repo` kapsamı) |
+| `GITHUB_REPO` | (isteğe bağlı) varsayılan `aktasevren/park-ardesen-avm` |
+| `GITHUB_DAL` | (isteğe bağlı) varsayılan `main` |
+
+Bu değişkenler tanımlanmadan da panel ve site tamamen çalışır; yalnızca "Yayınla"
+düğmesi devre dışı kalır. Şifreyi değiştirmek için `panel/panel.js` içindeki `SIFRE`
+sabitini ve `PANEL_SIFRE` değişkenini birlikte güncelleyin.
+
 ## Mağaza verisi
 
-`pa-assets/magazalar.json` tek kaynak. Mağaza eklemek/çıkarmak için bu dosyayı düzenleyip
-`03_magazalar.py`, `02_anasayfa.py` ve `04_sayfalar.py`'yi yeniden çalıştırın.
+Mağazalar artık `panel/veri.json` içinde ve panelden yönetiliyor.
+`pa-assets/magazalar.json` build sırasında (JS'siz gösterim için) kullanılan yedek kaynak
+olarak duruyor; kalıcı değişiklikleri panelden yapın.
 
 Marka listesi ve logoları `parkardesen.com/referanslar` sayfasından, Grand Bowling ile
 V&K Prestij ise AVM dış cephe fotoğrafındaki tabelalardan alındı.

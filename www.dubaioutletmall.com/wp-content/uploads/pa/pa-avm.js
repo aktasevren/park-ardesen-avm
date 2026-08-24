@@ -130,4 +130,11 @@
   }
 
   hazir(function () { magazaFiltresi(); bagDuzelt(); menuKapatma(); });
+
+  /* pa-veri.js mağaza ızgarasını ve kategori listesini yeniden çizdiğinde
+     filtrenin olay bağları kopuyor; yeniden kuruyoruz. */
+  document.addEventListener("pa:veri-cizildi", function () {
+    magazaFiltresi();
+    bagDuzelt();
+  });
 })();

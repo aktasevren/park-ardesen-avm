@@ -1,0 +1,210 @@
+/* Park Ardeşen AVM — yönetim paneli
+   Bağımlılık yok; tek sayfa, statik. */
+
+:root{
+  --koyu:#171717;
+  --koyu-2:#222225;
+  --kirmizi:#e11f26;
+  --mavi:#1580c4;
+  --yesil:#3f8f2c;
+  --sari:#b8860b;
+  --cizgi:#e6e6e8;
+  --metin:#2b2b2e;
+  --soluk:#8b8b91;
+  --zemin:#f5f5f7;
+  --golge:0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:var(--metin);
+  background:var(--zemin);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+@font-face{
+  font-family:"Golos Text";font-weight:400;font-display:swap;
+  src:url("../www.dubaioutletmall.com/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Regular.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Golos Text";font-weight:500;font-display:swap;
+  src:url("../www.dubaioutletmall.com/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Medium.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Golos Text";font-weight:600;font-display:swap;
+  src:url("../www.dubaioutletmall.com/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-SemiBold.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Golos Text";font-weight:700;font-display:swap;
+  src:url("../www.dubaioutletmall.com/wp-content/themes/dubaioutletmall/assets/css/fonts/GolosText-Bold.woff2") format("woff2");
+}
+
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.25}
+a{color:var(--mavi)}
+button{font:inherit}
+
+/* ---------------------------------------------------------- giriş */
+.giris{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--koyu);
+  padding:24px;
+}
+.giris-kutu{
+  background:#fff;border-radius:16px;padding:40px;
+  width:100%;max-width:400px;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.4);
+}
+.giris-kutu img{width:210px;margin-bottom:26px}
+.giris-kutu h1{font-size:1.2rem;margin-bottom:6px}
+.giris-kutu p{color:var(--soluk);font-size:14px;margin:0 0 24px}
+.giris-hata{color:var(--kirmizi);font-size:13px;min-height:20px;margin-top:10px}
+
+/* ---------------------------------------------------------- düzen */
+.uygulama{display:none;min-height:100vh;grid-template-columns:246px 1fr}
+.uygulama.acik{display:grid}
+
+.yan{
+  background:var(--koyu);color:#cfcfd4;
+  padding:22px 0;
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+}
+.yan-logo{padding:0 22px 22px}
+.yan-logo img{width:100%}
+.yan nav{flex:1;overflow:auto}
+.yan a.bolum{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 22px;color:#cfcfd4;text-decoration:none;
+  font-size:14px;font-weight:500;border-left:3px solid transparent;
+}
+.yan a.bolum:hover{background:rgba(255,255,255,.05);color:#fff}
+.yan a.bolum.aktif{background:rgba(255,255,255,.08);color:#fff;border-left-color:var(--kirmizi)}
+.yan a.bolum .sayi{
+  margin-left:auto;background:rgba(255,255,255,.12);
+  font-size:11px;padding:2px 7px;border-radius:99px;
+}
+.yan-alt{padding:16px 22px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#7c7c85}
+
+.icerik{padding:26px 34px 60px;min-width:0}
+
+/* ---------------------------------------------------------- üst çubuk */
+.ust{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:26px;flex-wrap:wrap;
+}
+.ust h2{font-size:1.5rem;flex:1;min-width:200px}
+.durum{
+  font-size:13px;padding:6px 12px;border-radius:99px;
+  background:#e8f5e9;color:var(--yesil);font-weight:500;white-space:nowrap;
+}
+.durum.kirli{background:#fdecea;color:var(--kirmizi)}
+
+.dugme{
+  border:1px solid var(--cizgi);background:#fff;color:var(--metin);
+  padding:9px 15px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:500;
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.dugme:hover{border-color:#c9c9cf;background:#fafafa}
+.dugme.ana{background:var(--koyu);border-color:var(--koyu);color:#fff}
+.dugme.ana:hover{background:#000}
+.dugme.vurgu{background:var(--kirmizi);border-color:var(--kirmizi);color:#fff}
+.dugme.vurgu:hover{background:#c9151c}
+.dugme.kucuk{padding:6px 11px;font-size:13px}
+.dugme.tehlike{color:var(--kirmizi);border-color:#f3cfd1}
+.dugme:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------------------------------------------------------- kartlar */
+.kutu{
+  background:#fff;border:1px solid var(--cizgi);border-radius:14px;
+  padding:22px 24px;margin-bottom:18px;box-shadow:var(--golge);
+}
+.kutu-ust{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.kutu-ust h3{font-size:1.06rem;flex:1;min-width:0}
+.kutu-ust .islem{display:flex;gap:7px;flex-shrink:0}
+
+.ozet{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:26px}
+.ozet .kutu{margin:0;padding:20px 22px}
+.ozet .sayi{font-size:2rem;font-weight:700;line-height:1.1}
+.ozet .etiket{color:var(--soluk);font-size:13px;margin-top:2px}
+
+.rozet{
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+  padding:4px 9px;border-radius:99px;background:#eee;color:#666;white-space:nowrap;
+}
+.rozet.yayinda{background:#e8f5e9;color:var(--yesil)}
+.rozet.kapali{background:#f0f0f0;color:#8b8b91}
+.rozet.bekliyor{background:#fdf1dc;color:var(--sari)}
+.rozet.gecti{background:#fdecea;color:var(--kirmizi)}
+
+/* ---------------------------------------------------------- form */
+.alanlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 16px}
+.alan{display:flex;flex-direction:column;gap:5px;min-width:0}
+.alan.genis{grid-column:1/-1}
+.alan label{font-size:12.5px;font-weight:600;color:#5a5a61}
+.alan input,.alan select,.alan textarea{
+  font:inherit;color:inherit;
+  border:1px solid var(--cizgi);border-radius:9px;padding:9px 11px;
+  background:#fff;width:100%;
+}
+.alan textarea{min-height:88px;resize:vertical;line-height:1.5}
+.alan input:focus,.alan select:focus,.alan textarea:focus{
+  outline:none;border-color:var(--mavi);box-shadow:0 0 0 3px rgba(21,128,196,.12);
+}
+.alan .ipucu{font-size:12px;color:var(--soluk)}
+
+.kutucuklar{display:flex;flex-wrap:wrap;gap:8px}
+.kutucuk{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--cizgi);border-radius:9px;padding:8px 12px;
+  font-size:13.5px;cursor:pointer;background:#fff;
+}
+.kutucuk input{margin:0}
+.kutucuk:has(input:checked){border-color:var(--mavi);background:#f2f8fd}
+
+/* ---------------------------------------------------------- listeler */
+.satir{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 0;border-bottom:1px solid #f0f0f2;
+}
+.satir:last-child{border-bottom:0}
+.satir .logo{
+  width:56px;height:40px;flex-shrink:0;
+  border:1px solid var(--cizgi);border-radius:7px;background:#fff;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.satir .logo img{max-width:82%;max-height:76%;object-fit:contain}
+.satir .logo span{font-size:10px;font-weight:600;color:#999;padding:0 4px;text-align:center}
+.satir .govde{flex:1;min-width:0}
+.satir .govde strong{display:block;font-weight:600}
+.satir .govde small{color:var(--soluk);display:block;font-size:12.5px}
+.satir .islem{display:flex;gap:6px;flex-shrink:0}
+
+.bos{color:var(--soluk);padding:22px 0;text-align:center}
+
+/* ---------------------------------------------------------- bildirim */
+.bildirim{
+  position:fixed;right:20px;bottom:20px;z-index:120;
+  background:var(--koyu);color:#fff;padding:13px 18px;border-radius:11px;
+  box-shadow:0 12px 34px rgba(0,0,0,.28);font-size:14px;
+  opacity:0;transform:translateY(10px);transition:all ease .25s;pointer-events:none;
+  max-width:420px;
+}
+.bildirim.acik{opacity:1;transform:none}
+.bildirim.hata{background:var(--kirmizi)}
+.bildirim.basarili{background:var(--yesil)}
+
+@media (max-width:900px){
+  .uygulama.acik{grid-template-columns:1fr}
+  .yan{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;padding:10px}
+  .yan-logo{padding:0 14px 0 6px;flex-shrink:0;width:150px}
+  .yan nav{display:flex}
+  .yan a.bolum{border-left:0;border-bottom:3px solid transparent;padding:9px 13px;white-space:nowrap}
+  .yan a.bolum.aktif{border-left:0;border-bottom-color:var(--kirmizi)}
+  .yan-alt{display:none}
+  .icerik{padding:20px 16px 60px}
+}

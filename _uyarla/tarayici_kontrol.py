@@ -29,6 +29,9 @@ window.addEventListener('load',function(){
     if(y>document.body.scrollHeight+1200){ clearInterval(kaydir); bitir(); }
   },30);
   function bitir(){ setTimeout(function(){
+    // açılış penceresi varsa önce onu kapat (menü örtüsünün önünde duruyor)
+    var pk=document.querySelector('.pa-pencere-kapat'); if(pk) pk.click();
+    var po=document.querySelector('.pa-pencere-ortu'); if(po) po.remove();
     var t=document.querySelector('.nav-toggle'); if(t) t.click();
     var menuAcik = document.documentElement.classList.contains('nav-on');
     var kirik=[].slice.call(document.querySelectorAll('img')).filter(function(i){

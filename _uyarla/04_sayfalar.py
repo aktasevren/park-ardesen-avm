@@ -307,6 +307,9 @@ ise geniş kullanım alanı arayan markalar için uygundur.</p>
 <h4 class="wp-block-heading">Kiosk, stant ve reklam alanları</h4>
 <p>Kısa süreli tanıtım standı, kiosk, araç teşhiri, dijital ekran ve ATM yerleşimi gibi
 esnek kullanım seçenekleri için de görüşebiliriz.</p>
+<h4 class="wp-block-heading">Güncel boş birimler</h4>
+<div data-pa-kiralama><p class="pa-bos">Birim listesi yükleniyor…</p></div>
+
 <h4 class="wp-block-heading">İletişim</h4>
 <p>Telefon: <a href="tel:+904647153030">{tel}</a><br>
 E-posta: <a href="mailto:{eposta}">{eposta}</a><br>

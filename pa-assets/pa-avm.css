@@ -290,3 +290,146 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   pointer-events:none;
   transition:opacity ease .3s, visibility ease .3s;
 }
+
+/* ==================================================================
+   PANEL İÇERİĞİ — duyuru, kampanya, kiralama bileşenleri
+   (pa-veri.js tarafından çizilir)
+   ================================================================== */
+
+/* ---- üst duyuru şeridi ---- */
+.pa-serit{
+  position:relative;
+  z-index:12;
+  background:#171717;
+  color:#fff;
+  font-size:14px;
+  line-height:1.4;
+}
+.pa-serit.pa-onem-onemli{background:#e11f26}
+.pa-serit.pa-onem-acil{background:#b8860b;color:#fff}
+.pa-serit-ic{
+  max-width:1200px;
+  margin:0 auto;
+  padding:10px 46px 10px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  position:relative;
+}
+.pa-serit-ikon{font-size:16px;line-height:1}
+.pa-serit-metin{flex:1;min-width:0}
+.pa-serit-bag{
+  color:#fff;
+  text-decoration:underline;
+  white-space:nowrap;
+  font-weight:500;
+}
+.pa-serit-kapat{
+  position:absolute;
+  right:10px; top:50%;
+  transform:translateY(-50%);
+  background:none;border:0;color:inherit;
+  font-size:22px;line-height:1;cursor:pointer;padding:0 6px;opacity:.75;
+}
+.pa-serit-kapat:hover{opacity:1}
+@media (max-width:767px){
+  .pa-serit-ic{padding:9px 40px 9px 12px;font-size:13px}
+  .pa-serit-bag{display:none}
+}
+
+/* ---- açılış penceresi ---- */
+.pa-pencere-ortu{
+  position:fixed;inset:0;z-index:60;
+  background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  opacity:0;transition:opacity ease .3s;
+}
+.pa-pencere-ortu.acik{opacity:1}
+.pa-pencere{
+  background:#fff;
+  max-width:560px;width:100%;
+  border-radius:14px;overflow:hidden;
+  position:relative;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  transform:translateY(12px);
+  transition:transform ease .3s;
+  max-height:90vh;overflow-y:auto;
+}
+.pa-pencere-ortu.acik .pa-pencere{transform:none}
+.pa-pencere-gorsel img{width:100%;height:240px;object-fit:cover;display:block}
+.pa-pencere-govde{padding:28px}
+.pa-pencere-govde h2{font-size:1.9rem;line-height:1.15;margin:10px 0 12px}
+.pa-pencere-govde p{margin-bottom:20px;color:#555}
+.pa-pencere-kapat{
+  position:absolute;right:10px;top:10px;z-index:2;
+  width:34px;height:34px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.92);color:#171717;
+  font-size:22px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+/* ---- etiket ---- */
+.pa-etiket{
+  display:inline-block;
+  font-size:12px;font-weight:600;letter-spacing:.03em;
+  text-transform:uppercase;
+  background:#f1f1f1;color:#555;
+  padding:5px 10px;border-radius:99px;
+}
+
+/* ---- duyuru listesi ---- */
+.pa-duyuru-listesi{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:20px;
+}
+.pa-duyuru{
+  border:1px solid #e8e8e8;
+  border-left:4px solid #d8d8d8;
+  border-radius:12px;
+  padding:22px 24px;
+  background:#fff;
+}
+.pa-duyuru.pa-onem-onemli{border-left-color:#e11f26}
+.pa-duyuru.pa-onem-acil{border-left-color:#b8860b}
+.pa-duyuru-ust{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:12px;
+}
+.pa-duyuru-ust time{font-size:13px;color:#999;white-space:nowrap}
+.pa-duyuru h3{font-size:1.3rem;line-height:1.25;margin-bottom:8px}
+.pa-duyuru p{color:#555;margin-bottom:10px}
+.pa-duyuru-bag{font-weight:600;text-decoration:none}
+.pa-bos{color:#999;padding:28px 0}
+
+/* ---- kiralama birimleri ---- */
+.pa-birimler{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+  margin-top:24px;
+}
+.pa-birim{
+  border:1px solid #e8e8e8;border-radius:12px;
+  padding:22px 24px;background:#fafafa;
+}
+.pa-birim-ust{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pa-birim-ust h4{font-size:1.5rem;margin:0}
+.pa-rozet{
+  font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+  padding:5px 10px;border-radius:99px;background:#e8e8e8;color:#555;
+}
+.pa-durum-bos .pa-rozet{background:#e3f5e6;color:#1f7a33}
+.pa-durum-rezerve .pa-rozet{background:#fdf1dc;color:#8a5a00}
+.pa-durum-dolu .pa-rozet{background:#f0f0f0;color:#888}
+.pa-birim-bilgi{
+  display:grid;grid-template-columns:auto 1fr;gap:4px 14px;
+  margin:16px 0 12px;font-size:14px;
+}
+.pa-birim-bilgi dt{color:#8a8a8a}
+.pa-birim-bilgi dd{margin:0;font-weight:500}
+.pa-birim p{font-size:14px;color:#666;margin:0}
+
+/* ---- kampanya kartında tarih ---- */
+.pa-magaza-bilgi .pa-tarih{color:#a0a0a0;font-size:12px;margin-top:2px}

@@ -251,13 +251,36 @@ def marka(s):
     return s
 
 def enjekte(s, onek):
-    """Font katmanı + AVM stil/JS dosyalarını </head> ve </body> öncesine ekle."""
+    """Font katmanı, stil, veri katmanı ve AVM JS dosyalarını ekle.
+
+    pa-veri.js panel/veri.json'u okuyup kampanya, duyuru, kiralama ve mağaza
+    içeriğini çalışma anında çiziyor; dosyayı bulabilmesi için sayfanın
+    derinliğine göre iki yol meta olarak veriliyor."""
     if "pa-avm.css" in s:
+        # daha eski bir sürümle enjekte edilmişse eksikleri tamamla
+        if "pa-veri-url" not in s:
+            s = s.replace("</head>",
+                          '<meta name="pa-veri-url" content="%s../panel/veri.json">\n'
+                          '<meta name="pa-site-kok" content="%s">\n' % (onek, onek) +
+                          "</head>", 1)
+        else:
+            s = re.sub(r'<meta name="pa-veri-url" content="[^"]*">',
+                       '<meta name="pa-veri-url" content="%s../panel/veri.json">' % onek, s)
+            s = re.sub(r'<meta name="pa-site-kok" content="[^"]*">',
+                       '<meta name="pa-site-kok" content="%s">' % onek, s)
+        if "pa-veri.js" not in s:
+            s = s.replace("</body>",
+                          '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n'
+                          % onek + "</body>", 1)
         return s
-    css = ('\n<link rel="stylesheet" href="%swp-content/uploads/pa/fonts/pa-fonts.css">\n'
-           '<link rel="stylesheet" href="%swp-content/uploads/pa/pa-avm.css">\n' % (onek, onek))
-    s = s.replace("</head>", css + "</head>", 1)
-    js = '\n<script src="%swp-content/uploads/pa/pa-avm.js"></script>\n' % onek
+    bas = ('\n<meta name="pa-veri-url" content="%s../panel/veri.json">\n'
+           '<meta name="pa-site-kok" content="%s">\n'
+           '<link rel="stylesheet" href="%swp-content/uploads/pa/fonts/pa-fonts.css">\n'
+           '<link rel="stylesheet" href="%swp-content/uploads/pa/pa-avm.css">\n'
+           % (onek, onek, onek, onek))
+    s = s.replace("</head>", bas + "</head>", 1)
+    js = ('\n<script src="%swp-content/uploads/pa/pa-avm.js"></script>\n'
+          '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n' % (onek, onek))
     s = s.replace("</body>", js + "</body>", 1)
     return s
 

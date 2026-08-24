@@ -121,6 +121,25 @@ def slider_html(onek):
         % (onek, PA, p, a)
         for p, a in gorseller * 2)
 
+
+def duyuru_bolumu(onek):
+    """Anasayfada duyurular şeridi. İçeriği pa-veri.js dolduruyor;
+    aktif duyuru yoksa bölüm tamamen gizleniyor."""
+    return (
+        '<div class="pa-duyuru-bolum" data-pa-duyuru-bolum>\n'
+        '  <div class="tdb">\n'
+        '    <div class="container">\n'
+        '      <h2>Park Ardeşen&#8217;den<br>duyurular<span></span></h2>\n'
+        '      <div class="tdb-db">\n'
+        '        <p>Çalışma saatleri, yeni açılışlar ve etkinliklerle ilgili '
+        'güncel bilgiler.</p>\n'
+        '        <a href="%sduyurular/index.html" class="btn">Tüm duyurular</a>\n'
+        '      </div>\n'
+        '    </div>\n'
+        '  </div>\n'
+        '  <div class="container"><div data-pa-duyurular></div></div>\n'
+        '</div>\n' % onek)
+
 def uyarla(s, onek):
     # ---- 1. hero ---------------------------------------------------------
     s = re.sub(
@@ -177,6 +196,14 @@ def uyarla(s, onek):
     s = re.sub(r'(?s)(<div class="home-slider">).*?(</div><!-- \.home-slider -->)',
                lambda m: m.group(1) + "\n" + slider_html(onek) + "\n" + m.group(2),
                s, count=1)
+
+    # ---- 6b. duyurular ---------------------------------------------------
+    if "data-pa-duyuru-bolum" not in s:
+        s = s.replace('<div class="tdb">\n    <div class="container">\n        '
+                      '<h2>Park Ardeşen<br>kampanya <span>fırsatları</span></h2>',
+                      duyuru_bolumu(onek) +
+                      '<div class="tdb">\n    <div class="container">\n        '
+                      '<h2>Park Ardeşen<br>kampanya <span>fırsatları</span></h2>', 1)
 
     # ---- 7. kampanyalar --------------------------------------------------
     s = s.replace("<h2>Dom<br>Exclusive <span>deals</span></h2>",

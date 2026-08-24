@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="tr-TR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Park Ardeşen AVM — Yönetim Paneli</title>
+<link rel="icon" href="../www.dubaioutletmall.com/wp-content/uploads/2023/06/cropped-site-icon-192x192.png">
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+
+<!-- ------------------------------------------------------------ giriş -->
+<div class="giris" id="giris">
+  <form class="giris-kutu" id="giris-form">
+    <img src="../pa-assets/logo/parkardesen-logo-dark.svg" alt="Park Ardeşen AVM">
+    <h1>Yönetim Paneli</h1>
+    <p>Devam etmek için şifrenizi girin.</p>
+    <div class="alan">
+      <input type="password" id="sifre" placeholder="Şifre" autocomplete="current-password" autofocus>
+    </div>
+    <div class="giris-hata" id="giris-hata"></div>
+    <button class="dugme ana" style="width:100%;justify-content:center;margin-top:14px">Giriş yap</button>
+  </form>
+</div>
+
+<!-- ------------------------------------------------------------ uygulama -->
+<div class="uygulama" id="uygulama">
+
+  <aside class="yan">
+    <div class="yan-logo"><img src="../pa-assets/logo/parkardesen-logo-light.svg" alt="Park Ardeşen AVM"></div>
+    <nav id="menu"></nav>
+    <div class="yan-alt">
+      <div id="son-kayit">—</div>
+    </div>
+  </aside>
+
+  <main class="icerik">
+    <div class="ust">
+      <h2 id="baslik">Genel Bakış</h2>
+      <span class="durum" id="durum">Kaydedildi</span>
+      <button class="dugme" id="btn-onizle">Siteyi önizle</button>
+      <button class="dugme" id="btn-indir">JSON indir</button>
+      <button class="dugme" id="btn-yukle">JSON yükle</button>
+      <button class="dugme ana" id="btn-kaydet">Kaydet</button>
+      <button class="dugme vurgu" id="btn-yayinla">Yayınla</button>
+    </div>
+    <div id="govde"></div>
+  </main>
+</div>
+
+<input type="file" id="dosya" accept="application/json" hidden>
+<div class="bildirim" id="bildirim"></div>
+
+<script src="panel.js"></script>
+</body>
+</html>

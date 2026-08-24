@@ -1,0 +1,482 @@
+{
+  "surum": 1,
+  "guncelleme": "2026-08-24T21:00:00Z",
+  "site": {
+    "ad": "Park Ardeşen AVM",
+    "telefon": "0464 715 30 30",
+    "eposta": "muhasebe@parkardesen.com",
+    "adres": "Cumhuriyet Mah. Sultan Alparslan Cad. No: 2/1, 53400 Ardeşen / Rize",
+    "calismaSaatleri": "Her gün 10:00 – 22:00"
+  },
+  "kategoriler": [
+    {
+      "slug": "moda",
+      "ad": "Moda & Giyim"
+    },
+    {
+      "slug": "ayakkabi",
+      "ad": "Ayakkabı & Çanta"
+    },
+    {
+      "slug": "ev-yasam",
+      "ad": "Ev & Yaşam"
+    },
+    {
+      "slug": "kozmetik",
+      "ad": "Kozmetik & Parfüm"
+    },
+    {
+      "slug": "market",
+      "ad": "Market"
+    },
+    {
+      "slug": "yeme-icme",
+      "ad": "Yeme & İçme"
+    },
+    {
+      "slug": "eglence",
+      "ad": "Eğlence & Çocuk"
+    },
+    {
+      "slug": "hizmet",
+      "ad": "Hizmet"
+    }
+  ],
+  "magazalar": [
+    {
+      "ad": "LC Waikiki",
+      "slug": "lc-waikiki",
+      "kategori": "moda",
+      "logo": "lc-waikiki.png",
+      "kat": "Zemin Kat",
+      "no": "Z-01",
+      "aciklama": "Tüm aile için uygun fiyatlı moda; kadın, erkek, çocuk ve bebek koleksiyonları."
+    },
+    {
+      "ad": "Long Street",
+      "slug": "long-street",
+      "kategori": "moda",
+      "logo": "long-street.png",
+      "kat": "1. Kat",
+      "no": "1-04",
+      "aciklama": "Şehirli ve genç bir çizgide erkek ve kadın giyim."
+    },
+    {
+      "ad": "Paul & Mark",
+      "slug": "paul-mark",
+      "kategori": "moda",
+      "logo": "paul-mark.png",
+      "kat": "1. Kat",
+      "no": "1-07",
+      "aciklama": "Klasik ve smart-casual erkek giyim, takım elbise ve gömlek."
+    },
+    {
+      "ad": "Lux",
+      "slug": "lux",
+      "kategori": "moda",
+      "logo": "lux.svg",
+      "kat": "1. Kat",
+      "no": "1-11",
+      "aciklama": "Özel gün ve abiye koleksiyonları."
+    },
+    {
+      "ad": "FLO",
+      "slug": "flo",
+      "kategori": "ayakkabi",
+      "logo": "flo.png",
+      "kat": "Zemin Kat",
+      "no": "Z-05",
+      "aciklama": "Türkiye'nin ayakkabı mağazası: spor, klasik ve günlük modeller, çanta ve aksesuar."
+    },
+    {
+      "ad": "Madame Coco",
+      "slug": "madame-coco",
+      "kategori": "ev-yasam",
+      "logo": "madame-coco.png",
+      "kat": "1. Kat",
+      "no": "1-02",
+      "aciklama": "Ev tekstili, mutfak ve dekorasyon ürünleri."
+    },
+    {
+      "ad": "Bargello",
+      "slug": "bargello",
+      "kategori": "kozmetik",
+      "logo": "bargello.png",
+      "kat": "Zemin Kat",
+      "no": "Z-08",
+      "aciklama": "Kadın ve erkek parfümleri, vücut bakım ürünleri."
+    },
+    {
+      "ad": "Migros",
+      "slug": "migros",
+      "kategori": "market",
+      "logo": "migros.png",
+      "kat": "Zemin Kat",
+      "no": "Z-00",
+      "aciklama": "Günlük alışverişin tamamı; taze gıda, market ve temizlik reyonları."
+    },
+    {
+      "ad": "Burger King",
+      "slug": "burger-king",
+      "kategori": "yeme-icme",
+      "logo": "burger-king.png",
+      "kat": "2. Kat",
+      "no": "2-01",
+      "aciklama": "Alev üzerinde ızgara burgerler ve menüler."
+    },
+    {
+      "ad": "Popeyes",
+      "slug": "popeyes",
+      "kategori": "yeme-icme",
+      "logo": "popeyes.png",
+      "kat": "2. Kat",
+      "no": "2-02",
+      "aciklama": "Louisiana usulü çıtır tavuk ve sandviçler."
+    },
+    {
+      "ad": "Gloria Jean's Coffees",
+      "slug": "gloria-jeans-coffees",
+      "kategori": "yeme-icme",
+      "logo": "gloria-jeans.png",
+      "kat": "2. Kat",
+      "no": "2-05",
+      "aciklama": "Dünya kahveleri, soğuk içecekler ve tatlılar."
+    },
+    {
+      "ad": "Defne Cafe & Bar",
+      "slug": "defne-cafe-bar",
+      "kategori": "yeme-icme",
+      "logo": "defne-cafe.png",
+      "kat": "2. Kat",
+      "no": "2-08",
+      "aciklama": "Kahvaltı, ana yemek ve gün boyu kafe keyfi."
+    },
+    {
+      "ad": "Helvacı Yakub Efendi",
+      "slug": "helvaci-yakub-efendi",
+      "kategori": "yeme-icme",
+      "logo": "helvaci-yakub-efendi.png",
+      "kat": "2. Kat",
+      "no": "2-10",
+      "aciklama": "1887'den beri geleneksel Türk tatlıları, helva ve şekerleme."
+    },
+    {
+      "ad": "Sıroğlu Çikolata",
+      "slug": "siroglu-cikolata",
+      "kategori": "yeme-icme",
+      "logo": "siroglu-cikolata.png",
+      "kat": "Zemin Kat",
+      "no": "Z-12",
+      "aciklama": "El yapımı çikolata, draje ve hediyelik kutular."
+    },
+    {
+      "ad": "Berru Park",
+      "slug": "berru-park",
+      "kategori": "eglence",
+      "logo": "berru-park.png",
+      "kat": "2. Kat",
+      "no": "2-15",
+      "aciklama": "Çocuklar için oyun alanı, trambolin ve etkinlik parkı."
+    },
+    {
+      "ad": "Grand Bowling",
+      "slug": "grand-bowling",
+      "kategori": "eglence",
+      "logo": null,
+      "kat": "2. Kat",
+      "no": "2-20",
+      "aciklama": "Bowling salonu, bilardo ve oyun makineleriyle grup eğlencesi."
+    },
+    {
+      "ad": "V&K Prestij",
+      "slug": "vk-prestij",
+      "kategori": "hizmet",
+      "logo": null,
+      "kat": "Zemin Kat",
+      "no": "Z-20",
+      "aciklama": "AVM girişinde hizmet veren V&K Prestij."
+    }
+  ],
+  "duyurular": [
+    {
+      "id": "d1",
+      "tur": "saat",
+      "onem": "onemli",
+      "baslik": "Bayram boyunca 10:00 – 23:00 açığız",
+      "metin": "Bayramın dört günü boyunca merkezimiz bir saat geç kapanıyor. Market ve yeme-içme katı aynı saatlerde hizmet veriyor.",
+      "baslangic": "2026-08-22",
+      "bitis": "2026-09-05",
+      "yayinda": true,
+      "yerler": [
+        "ust-serit",
+        "duyurular"
+      ],
+      "bagLabel": "Çalışma saatleri",
+      "bagUrl": "bus-schedule/",
+      "gorsel": ""
+    },
+    {
+      "id": "d2",
+      "tur": "acilis",
+      "onem": "normal",
+      "baslik": "Grand Bowling ikinci katta açıldı",
+      "metin": "Bowling salonu, bilardo ve oyun makineleriyle Grand Bowling artık Park Ardeşen AVM 2. katta. Açılışa özel ilk oyun yarı fiyatına.",
+      "baslangic": "2026-08-14",
+      "bitis": "2026-09-18",
+      "yayinda": true,
+      "yerler": [
+        "acilis-penceresi",
+        "duyurular"
+      ],
+      "bagLabel": "Mağazalar",
+      "bagUrl": "shops/",
+      "gorsel": "gorseller/ic-mekan-1.webp"
+    },
+    {
+      "id": "d3",
+      "tur": "cekilis",
+      "onem": "normal",
+      "baslik": "500 TL ve üzeri alışverişe çekiliş hakkı",
+      "metin": "Ay boyunca 500 TL ve üzeri alışveriş yapan ziyaretçilerimiz, ayın son günü yapılacak hediye çeki çekilişine katılıyor. Fişlerinizi zemin kattaki danışma bankosuna getirmeniz yeterli.",
+      "baslangic": "2026-08-19",
+      "bitis": "2026-09-13",
+      "yayinda": true,
+      "yerler": [
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    },
+    {
+      "id": "d4",
+      "tur": "ulasim",
+      "onem": "normal",
+      "baslik": "Otopark girişi geçici olarak yan caddeden",
+      "metin": "Zemin otopark girişinde bakım çalışması sürüyor. Giriş, çalışma tamamlanana kadar yan caddeden sağlanmaktadır.",
+      "baslangic": "2026-08-23",
+      "bitis": "2026-08-30",
+      "yayinda": false,
+      "yerler": [
+        "ust-serit",
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    },
+    {
+      "id": "d5",
+      "tur": "sosyal",
+      "onem": "normal",
+      "baslik": "Kızılay kan bağışı standı zemin katta",
+      "metin": "Türk Kızılayı kan bağışı aracı hafta boyunca merkezimizde. Bağış için kimliğinizi yanınızda bulundurmanız yeterli.",
+      "baslangic": "2026-08-25",
+      "bitis": "2026-09-01",
+      "yayinda": true,
+      "yerler": [
+        "duyurular"
+      ],
+      "bagLabel": "",
+      "bagUrl": "",
+      "gorsel": ""
+    }
+  ],
+  "kampanyalar": [
+    {
+      "id": "k1",
+      "magaza": "lc-waikiki",
+      "baslik": "Sezon sonunda %50'ye varan indirim",
+      "aciklama": "Kadın, erkek, çocuk ve bebek koleksiyonlarında sezon sonu fiyatları.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": true
+    },
+    {
+      "id": "k2",
+      "magaza": "flo",
+      "baslik": "İkinci çiftte %40 indirim",
+      "aciklama": "Seçili spor ve günlük ayakkabı modellerinde geçerlidir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": true
+    },
+    {
+      "id": "k3",
+      "magaza": "migros",
+      "baslik": "Money'e özel haftanın fırsatları",
+      "aciklama": "Money Kart sahiplerine özel indirimler her hafta yenilenir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": true
+    },
+    {
+      "id": "k4",
+      "magaza": "madame-coco",
+      "baslik": "Ev tekstilinde %40 indirim",
+      "aciklama": "Nevresim, havlu ve mutfak ürünlerinde geçerlidir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": true
+    },
+    {
+      "id": "k5",
+      "magaza": "bargello",
+      "baslik": "3 al 2 öde",
+      "aciklama": "Tüm kadın ve erkek parfümlerinde geçerlidir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": false
+    },
+    {
+      "id": "k6",
+      "magaza": "burger-king",
+      "baslik": "Menüde ikinci ürün hediye",
+      "aciklama": "Seçili menülerde, her gün 15:00–18:00 arası.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": false
+    },
+    {
+      "id": "k7",
+      "magaza": "popeyes",
+      "baslik": "Çıtır menülerde %25 indirim",
+      "aciklama": "Tüm çıtır tavuk menülerinde geçerlidir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": false
+    },
+    {
+      "id": "k8",
+      "magaza": "berru-park",
+      "baslik": "Hafta içi oyun kartında %30 indirim",
+      "aciklama": "Pazartesi–Perşembe günleri geçerlidir.",
+      "baslangic": "2026-08-17",
+      "bitis": "2026-09-14",
+      "yayinda": true,
+      "oneCikar": false
+    }
+  ],
+  "firsatGunleri": {
+    "yayinda": true,
+    "baslik": "Fırsat Günleri",
+    "donem": "Her ayın ilk haftası",
+    "aciklama": "Katılımcı mağazalarımız, hâlihazırda indirimli ürünlerin üzerine ekstra indirim uyguluyor. Mağaza önlerine çıkarılan fırsat reyonlarında sezonun en iyi fiyatlarını bulabilirsiniz.",
+    "katilimcilar": [
+      {
+        "magaza": "lc-waikiki",
+        "teklif": "Sepette ek %20 indirim"
+      },
+      {
+        "magaza": "flo",
+        "teklif": "Seçili modellerde 2 al 1 öde"
+      },
+      {
+        "magaza": "madame-coco",
+        "teklif": "Tüm ev tekstilinde ek %15"
+      },
+      {
+        "magaza": "bargello",
+        "teklif": "3 al 2 öde"
+      },
+      {
+        "magaza": "long-street",
+        "teklif": "İkinci üründe %50"
+      },
+      {
+        "magaza": "paul-mark",
+        "teklif": "Takım elbiselerde %40"
+      }
+    ]
+  },
+  "kiralama": {
+    "girisMetni": "Ardeşen'in en işlek caddesinde, cadde cepheli ve üst kat birimlerle markanıza uygun alanı bulabilirsiniz. Güncel boş birimlerimiz aşağıdadır.",
+    "iletisimAd": "Park Ardeşen AVM Kiralama Ekibi",
+    "birimler": [
+      {
+        "id": "b1",
+        "birim": "Z-14",
+        "kat": "Zemin Kat",
+        "m2": 84,
+        "kategori": "Moda & Giyim",
+        "durum": "bos",
+        "aciklama": "Cadde cepheli, çift vitrinli köşe birim. Depo alanı dâhil.",
+        "gorsel": "",
+        "yayinda": true
+      },
+      {
+        "id": "b2",
+        "birim": "1-09",
+        "kat": "1. Kat",
+        "m2": 120,
+        "kategori": "Ev & Yaşam",
+        "durum": "bos",
+        "aciklama": "Yürüyen merdiven karşısı, geniş vitrin cephesi.",
+        "gorsel": "",
+        "yayinda": true
+      },
+      {
+        "id": "b3",
+        "birim": "2-12",
+        "kat": "2. Kat",
+        "m2": 65,
+        "kategori": "Yeme & İçme",
+        "durum": "rezerve",
+        "aciklama": "Yeme-içme katında, ortak oturma alanına cepheli.",
+        "gorsel": "",
+        "yayinda": true
+      },
+      {
+        "id": "b4",
+        "birim": "K-01",
+        "kat": "Zemin Kat",
+        "m2": 12,
+        "kategori": "Kiosk",
+        "durum": "bos",
+        "aciklama": "Ana giriş holünde kiosk alanı. Kısa dönem kiralamaya uygun.",
+        "gorsel": "",
+        "yayinda": true
+      },
+      {
+        "id": "b5",
+        "birim": "1-05",
+        "kat": "1. Kat",
+        "m2": 95,
+        "kategori": "Kozmetik & Parfüm",
+        "durum": "dolu",
+        "aciklama": "",
+        "gorsel": "",
+        "yayinda": false
+      }
+    ]
+  },
+  "logolar": [
+    "bargello.png",
+    "berru-park.png",
+    "burger-king.png",
+    "defne-cafe.png",
+    "flo.png",
+    "gloria-jeans.png",
+    "helvaci-yakub-efendi.png",
+    "lc-waikiki.png",
+    "long-street.png",
+    "lux.svg",
+    "madame-coco.png",
+    "migros.png",
+    "paul-mark.png",
+    "popeyes.png",
+    "siroglu-cikolata.png"
+  ],
+  "gorseller": [
+    "gorseller/avm-dis-cephe.jpg",
+    "gorseller/ic-mekan-1.webp",
+    "gorseller/ic-mekan-2.webp"
+  ]
+}
