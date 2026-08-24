@@ -86,15 +86,36 @@ module.exports = async function handler(req, res) {
     }
 
     if (sadeceTest) {
+      // Okuma yetkisi yazma yetkisini garanti etmiyor; jetonun bu depodaki
+      // etkin izinlerini soruyoruz ki salt okunur jeton ilk yayında değil
+      // burada yakalansın.
+      let yazabilir = null;
+      try {
+        const bilgi = await fetch(`https://api.github.com/repos/${depo}`, { headers: baslik });
+        if (bilgi.ok) {
+          const j = await bilgi.json();
+          yazabilir = !!(j.permissions && j.permissions.push);
+        }
+      } catch (e) { /* bilgi alınamadıysa null bırak */ }
+
+      if (yazabilir === false) {
+        return res.status(200).json({
+          tamam: false,
+          hata: "Jeton depoyu okuyabiliyor ama YAZAMIYOR. Klasik jetonda 'repo' " +
+                "kapsamı, ince ayarlı jetonda 'Contents: Read and write' izni gerekiyor."
+        });
+      }
       return res.status(200).json({
-        tamam: true, test: true, depo, dal,
-        mesaj: sha
+        tamam: true, test: true, depo, dal, yazabilir,
+        mesaj: (sha
           ? `Bağlantı çalışıyor. ${depo} (${dal}) deposundaki ${DOSYA} okundu.`
-          : `Bağlantı çalışıyor. ${DOSYA} henüz yok, ilk yayında oluşturulacak.`
+          : `Bağlantı çalışıyor. ${DOSYA} henüz yok, ilk yayında oluşturulacak.`) +
+          (yazabilir === true ? " Yazma yetkisi de var." :
+           yazabilir === null ? " (Yazma yetkisi doğrulanamadı.)" : "")
       });
     }
 
-    const zaman = new Date().toISOString().replace("T", " ").slice(0, 16);
+    const zaman = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
     const yaz = await fetch(url, {
       method: "PUT",
       headers: { ...baslik, "Content-Type": "application/json" },
