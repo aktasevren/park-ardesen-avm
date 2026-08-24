@@ -13,7 +13,20 @@ görseller boş kalıyordu.
 import re, os, glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+
+
+def site_dosyalari(desen=("*.html",)):
+    """Sitenin dosyaları — yardımcı dizinler hariç."""
+    import fnmatch
+    out = []
+    for kok, dizinler, dosyalar in os.walk(ROOT):
+        dizinler[:] = [d for d in dizinler if d not in HARIC]
+        for d in dosyalar:
+            if any(fnmatch.fnmatch(d, x) for x in desen):
+                out.append(os.path.join(kok, d))
+    return sorted(out)
+
 
 TIP = re.compile(r'type="[0-9a-fA-F]{16,}-(text/javascript|module|application/json)"')
 GUARD = re.compile(r'if \(!window\.__cfRLUnblockHandlers\) return false;\s*')
@@ -31,11 +44,8 @@ INSTA_VAR = re.compile(
 
 
 def main():
-    dosyalar = []
-    for h in HOSTS:
-        dosyalar += glob.glob(os.path.join(ROOT, h, "**", "*.html"), recursive=True)
     n = toplam = 0
-    for f in sorted(dosyalar):
+    for f in site_dosyalari():
         s0 = open(f, encoding="utf-8", errors="replace").read()
         s = TIP.sub(lambda m: 'type="%s"' % m.group(1), s0)
         s = GUARD.sub("", s)

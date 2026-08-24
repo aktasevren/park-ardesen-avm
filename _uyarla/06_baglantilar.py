@@ -4,7 +4,20 @@
 import re, os, glob, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+
+
+def site_dosyalari(desen=("*.html",)):
+    """Sitenin dosyaları — yardımcı dizinler hariç."""
+    import fnmatch
+    out = []
+    for kok, dizinler, dosyalar in os.walk(ROOT):
+        dizinler[:] = [d for d in dizinler if d not in HARIC]
+        for d in dosyalar:
+            if any(fnmatch.fnmatch(d, x) for x in desen):
+                out.append(os.path.join(kok, d))
+    return sorted(out)
+
 
 MUTLAK = re.compile(r'https?://(?:www\.)?dubaioutletmall\.com/[^"\'\s)<>]*')
 
@@ -13,10 +26,8 @@ def coz(url):
     p = urllib.parse.urlsplit(url)
     yol = urllib.parse.unquote(p.path)
     yol = re.sub(r'/{2,}', '/', yol)          # //deals/ → /deals/
-    adaylar = []
-    for h in ([p.netloc] + [x for x in HOSTS if x != p.netloc]):
-        t = os.path.join(ROOT, h, yol.lstrip('/'))
-        adaylar += [t, os.path.join(t, "index.html")]
+    t = os.path.join(ROOT, yol.lstrip('/'))
+    adaylar = [t, os.path.join(t, "index.html")]
     for a in adaylar:
         if os.path.isfile(a):
             return a
@@ -25,20 +36,15 @@ def coz(url):
     # wp-includes'tan itibaren kesip yeniden dene.
     m = re.search(r'(wp-(?:content|includes)/.*)$', yol)
     if m:
-        for h in HOSTS:
-            t = os.path.join(ROOT, h, m.group(1))
-            if os.path.isfile(t):
-                return t
+        t = os.path.join(ROOT, m.group(1))
+        if os.path.isfile(t):
+            return t
     return None
 
 
 def main():
     tot = dosya = 0
-    dosyalar = []
-    for h in HOSTS:
-        dosyalar += glob.glob(os.path.join(ROOT, h, "**", "*.html"), recursive=True)
-        dosyalar += glob.glob(os.path.join(ROOT, h, "**", "*.css"), recursive=True)
-    for f in sorted(dosyalar):
+    for f in site_dosyalari(("*.html", "*.css")):
         s0 = open(f, encoding="utf-8", errors="replace").read()
         d = os.path.dirname(f)
         sayac = [0]

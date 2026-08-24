@@ -3,7 +3,7 @@
 """Yerel sunucudaki sayfaların kırık referanslarını bulur."""
 import re, sys, urllib.parse, urllib.request
 
-BASE = "http://127.0.0.1:8001/www.dubaioutletmall.com/"
+BASE = "http://127.0.0.1:8001/"
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 BELLEK = {}
 
@@ -23,8 +23,8 @@ def kontrol(sayfa):
     except Exception as e:
         return None, [("(sayfanın kendisi)", getattr(e, "code", e))]
     refs = set()
-    for m in re.finditer(r'(?:href|src|data-src)="([^"]+)"', s):
-        r = m.group(1)
+    for m in re.finditer(r'(?:href|src|data-src)=(["\'])(.+?)\1', s):
+        r = m.group(2)
         if r.startswith(("data:", "#", "mailto:", "tel:", "javascript:", "http")): continue
         refs.add(r)
     for m in re.finditer(r'url\(([^)]+)\)', s):

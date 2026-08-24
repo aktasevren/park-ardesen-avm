@@ -84,11 +84,13 @@ def calistir(url):
 def main():
     sayfalar = sys.argv[1:]
     if not sayfalar:
-        sayfalar = ["www.dubaioutletmall.com/index.html"] + sorted(
+        HARIC = ("_yedek-ayna", "_orijinal", "_uyarla", "panel", "api", "pa-assets",
+                 "shop", "deal", "shops", "wp-content", "wp-includes")
+        sayfalar = ["index.html"] + sorted(
             os.path.relpath(f, ROOT).replace(os.sep, "/")
-            for f in glob.glob(os.path.join(ROOT, "www.dubaioutletmall.com", "*", "index.html")))
-        sayfalar += ["dubaioutletmall.com/privacy-policy-2/index.html",
-                     "dubaioutletmall.com/terms-and-conditions/index.html"]
+            for f in glob.glob(os.path.join(ROOT, "*", "index.html"))
+            if os.path.basename(os.path.dirname(f)) not in HARIC)
+        sayfalar += ["shops/index.html"]
     sorunlu = 0
     for rel in sayfalar:
         if not os.path.isfile(os.path.join(ROOT, rel)):
@@ -98,7 +100,7 @@ def main():
             r = calistir(TABAN + turl)
         finally:
             os.remove(tmp)
-        ad = rel.replace("www.dubaioutletmall.com/", "").replace("/index.html", "") or "anasayfa"
+        ad = rel.replace("/index.html", "") or "anasayfa"
         if r is None:
             print("%-24s RAPOR ALINAMADI" % ad); sorunlu += 1; continue
         bayrak = []

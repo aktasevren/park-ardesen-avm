@@ -3,5 +3,6 @@ _uyarla/
 serve.py
 *.log
 
-# klonun dönüştürülmemiş (İngilizce) yedekleri; yayında erişilebilir olmamalı
+# klonun dönüştürülmemiş (İngilizce) yedekleri ve wget'in ürettiği kopya ayna
 _orijinal/
+_yedek-ayna/

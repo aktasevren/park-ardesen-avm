@@ -7,7 +7,20 @@ logo, menü, footer, marka adı, iletişim bilgisi, font katmanı, Shop Online k
 import re, os, glob, shutil, html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+# Site artık depo kökünde duruyor (URL'lerde klasör adı görünmesin diye).
+# Aşağıdaki dizinler siteye ait değil, taranmaz.
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+
+
+def site_dosyalari(desen="*.html"):
+    """Sitenin HTML/CSS dosyaları — yardımcı dizinler hariç."""
+    out = []
+    for kok, dizinler, dosyalar in os.walk(ROOT):
+        dizinler[:] = [d for d in dizinler if d not in HARIC]
+        for d in dosyalar:
+            if glob.fnmatch.fnmatch(d, desen):
+                out.append(os.path.join(kok, d))
+    return sorted(out)
 
 MARKA      = "Park Ardeşen Alışveriş ve Yaşam Merkezi"
 MARKA_KISA = "Park Ardeşen AVM"
@@ -24,27 +37,19 @@ WHATSAPP   = "https://api.whatsapp.com/send?phone=904647153030"
 # ---------------------------------------------------------------- varlıklar
 def varliklari_kopyala():
     src = os.path.join(ROOT, "pa-assets")
-    for h in HOSTS:
-        dst = os.path.join(ROOT, h, "wp-content", "uploads", "pa")
-        if os.path.isdir(dst):
-            shutil.rmtree(dst)
-        shutil.copytree(src, dst)
-    print("  varlıklar → wp-content/uploads/pa/ (%d host)" % len(HOSTS))
+    dst = os.path.join(ROOT, "wp-content", "uploads", "pa")
+    if os.path.isdir(dst):
+        shutil.rmtree(dst)
+    shutil.copytree(src, dst)
+    print("  varlıklar → wp-content/uploads/pa/")
 
 def html_dosyalari():
-    out = []
-    for h in HOSTS:
-        out += glob.glob(os.path.join(ROOT, h, "**", "*.html"), recursive=True)
-    return sorted(out)
+    return site_dosyalari("*.html")
 
 def kok_oneki(dosya):
-    """Dosyadan host köküne göreli önek: '', '../', '../../' …"""
-    for h in HOSTS:
-        base = os.path.join(ROOT, h)
-        if dosya.startswith(base + os.sep):
-            rel = os.path.relpath(base, os.path.dirname(dosya)).replace(os.sep, "/")
-            return "" if rel == "." else rel + "/"
-    return ""
+    """Dosyadan site köküne göreli önek: '', '../', '../../' …"""
+    rel = os.path.relpath(ROOT, os.path.dirname(dosya)).replace(os.sep, "/")
+    return "" if rel == "." else rel + "/"
 
 # ---------------------------------------------------------------- metin haritaları
 MENU_TR = {
@@ -260,12 +265,12 @@ def enjekte(s, onek):
         # daha eski bir sürümle enjekte edilmişse eksikleri tamamla
         if "pa-veri-url" not in s:
             s = s.replace("</head>",
-                          '<meta name="pa-veri-url" content="%s../panel/veri.json">\n'
+                          '<meta name="pa-veri-url" content="%spanel/veri.json">\n'
                           '<meta name="pa-site-kok" content="%s">\n' % (onek, onek) +
                           "</head>", 1)
         else:
             s = re.sub(r'<meta name="pa-veri-url" content="[^"]*">',
-                       '<meta name="pa-veri-url" content="%s../panel/veri.json">' % onek, s)
+                       '<meta name="pa-veri-url" content="%spanel/veri.json">' % onek, s)
             s = re.sub(r'<meta name="pa-site-kok" content="[^"]*">',
                        '<meta name="pa-site-kok" content="%s">' % onek, s)
         if "pa-veri.js" not in s:
@@ -273,7 +278,7 @@ def enjekte(s, onek):
                           '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n'
                           % onek + "</body>", 1)
         return s
-    bas = ('\n<meta name="pa-veri-url" content="%s../panel/veri.json">\n'
+    bas = ('\n<meta name="pa-veri-url" content="%spanel/veri.json">\n'
            '<meta name="pa-site-kok" content="%s">\n'
            '<link rel="stylesheet" href="%swp-content/uploads/pa/fonts/pa-fonts.css">\n'
            '<link rel="stylesheet" href="%swp-content/uploads/pa/pa-avm.css">\n'

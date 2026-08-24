@@ -19,17 +19,19 @@ def durum(url):
 
 
 def main():
+    HARIC = ("_yedek-ayna", "_orijinal", "_uyarla", "panel", "api", "pa-assets", ".git")
     dosyalar = []
-    for h in ("www.dubaioutletmall.com", "dubaioutletmall.com"):
-        dosyalar += glob.glob(os.path.join(ROOT, h, "**", "*.html"), recursive=True)
+    for kok, dizinler, dsy in os.walk(ROOT):
+        dizinler[:] = [d for d in dizinler if d not in HARIC]
+        dosyalar += [os.path.join(kok, d) for d in dsy if d.endswith(".html")]
     toplam = kirik = 0
     for f in sorted(dosyalar):
         rel = os.path.relpath(f, ROOT).replace(os.sep, "/")
         u = TABAN + urllib.parse.quote(rel)
         s = open(f, encoding="utf-8", errors="replace").read()
         refs = set()
-        for m in re.finditer(r'(?:href|src|data-src)="([^"]+)"', s):
-            r = m.group(1)
+        for m in re.finditer(r'(?:href|src|data-src)=(["\'])(.+?)\1', s):
+            r = m.group(2)
             if r.startswith(("data:", "#", "mailto:", "tel:", "javascript:", "http")):
                 continue
             refs.add(r.split("&quot;")[0])

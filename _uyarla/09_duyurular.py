@@ -8,7 +8,20 @@ kap (data-pa-duyurular) barındırıyor. Şablon olarak dönüştürülmüş
 import re, os, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+
+
+def site_dosyalari(desen=("*.html",)):
+    """Sitenin dosyaları — yardımcı dizinler hariç."""
+    import fnmatch
+    out = []
+    for kok, dizinler, dosyalar in os.walk(ROOT):
+        dizinler[:] = [d for d in dizinler if d not in HARIC]
+        for d in dosyalar:
+            if any(fnmatch.fnmatch(d, x) for x in desen):
+                out.append(os.path.join(kok, d))
+    return sorted(out)
+
 
 GOVDE = '''<div class="container container-small">
 <div data-pa-duyurular>
@@ -21,8 +34,8 @@ MENU_OGE = ('<li id="menu-item-pa-duyuru" class="menu-item menu-item-type-post_t
             '<a href="{onek}duyurular/index.html">Duyurular</a></li>\n')
 
 
-def sayfayi_uret(host):
-    kaynak = os.path.join(ROOT, host, "press", "index.html")
+def sayfayi_uret():
+    kaynak = os.path.join(ROOT, "press", "index.html")
     if not os.path.isfile(kaynak):
         return False
     s = open(kaynak, encoding="utf-8").read()
@@ -32,7 +45,7 @@ def sayfayi_uret(host):
     s = s.replace("<span>Basında Biz</span>", "<span>Duyurular</span>")
     s = re.sub(r'(?s)(</div><!-- \.breadcrumbs -->).*?(</main>)',
                lambda m: m.group(1) + "\n" + GOVDE + "\n" + m.group(2), s, count=1)
-    hedef = os.path.join(ROOT, host, "duyurular")
+    hedef = os.path.join(ROOT, "duyurular")
     os.makedirs(hedef, exist_ok=True)
     open(os.path.join(hedef, "index.html"), "w", encoding="utf-8").write(s)
     return True
@@ -40,30 +53,26 @@ def sayfayi_uret(host):
 
 def menuye_ekle():
     n = 0
-    for host in HOSTS:
-        for dizin, _, dosyalar in os.walk(os.path.join(ROOT, host)):
-            for d in dosyalar:
-                if d != "index.html" and not d.endswith(".html"):
-                    continue
-                f = os.path.join(dizin, d)
-                s = open(f, encoding="utf-8", errors="replace").read()
-                if "menu-item-pa-duyuru" in s or "primary-menu" not in s:
-                    continue
-                m = re.search(r'<meta name="pa-site-kok" content="([^"]*)">', s)
-                onek = m.group(1) if m else ""
-                yeni = re.sub(r'(<li[^>]*>\s*<a[^>]*>Kampanyalar</a>\s*</li>\s*)',
-                              lambda mm: mm.group(1) + MENU_OGE.format(onek=onek),
-                              s, count=1)
-                if yeni != s:
-                    open(f, "w", encoding="utf-8").write(yeni)
-                    n += 1
+    for f in site_dosyalari():
+        s = open(f, encoding="utf-8", errors="replace").read()
+        if "menu-item-pa-duyuru" in s or "primary-menu" not in s:
+            continue
+        m = re.search(r'<meta name="pa-site-kok" content="([^"]*)">', s)
+        onek = m.group(1) if m else ""
+        yeni = re.sub(r'(<li[^>]*>\s*<a[^>]*>Kampanyalar</a>\s*</li>\s*)',
+                      lambda mm: mm.group(1) + MENU_OGE.format(onek=onek),
+                      s, count=1)
+        if yeni != s:
+            open(f, "w", encoding="utf-8").write(yeni)
+            n += 1
     return n
 
 
 def main():
-    uretilen = sum(1 for h in HOSTS if sayfayi_uret(h))
+    uretilen = sayfayi_uret()
     eklenen = menuye_ekle()
-    print("  duyurular sayfası: %d ayna | menüye eklenen: %d dosya" % (uretilen, eklenen))
+    print("  duyurular sayfası: %s | menüye eklenen: %d dosya"
+          % ("üretildi" if uretilen else "üretilemedi", eklenen))
 
 
 if __name__ == "__main__":

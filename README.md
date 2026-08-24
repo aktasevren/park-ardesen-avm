@@ -8,14 +8,16 @@ Tasarım, `dubaioutletmall.com` klonundan birebir korunarak Türkçeleştirildi 
     python3 serve.py 8001
     # http://localhost:8001/
 
-Kök dizin `www.dubaioutletmall.com/index.html`'e yönlendirir.
-
 ## Yapı
+
+Site **depo kökünde** duruyor; URL'lerde klasör adı görünmüyor
+(`/shops/`, `/duyurular/`, `/gizlilik-politikasi/` …).
 
 | Yol | Ne |
 |---|---|
-| `www.dubaioutletmall.com/` | Ana ayna — **uyarlanmış site burası** |
-| `dubaioutletmall.com/` | wget'in ürettiği ikinci ayna (aynı uyarlamalar burada da uygulanır); `privacy-policy-2/` ve `terms-and-conditions/` yalnızca burada |
+| `index.html`, `shops/`, `duyurular/`, `wp-content/` … | **Site** |
+| `gizlilik-politikasi/`, `kullanim-kosullari/` | Yasal metinler (Türkçe adreslerle) |
+| `_yedek-ayna/` | wget'in ürettiği ikinci (kopya) ayna — dağıtıma girmez, yalnızca yedek |
 | `pa-assets/` | Park Ardeşen'e ait varlıkların **kaynağı**: logo, mağaza logoları, fotoğraflar, `pa-avm.css`, `pa-avm.js`, `pa-veri.js`, fontlar |
 | `panel/` | Yönetim paneli + `veri.json` (site içeriğinin tek kaynağı) |
 | `api/` | Vercel serverless fonksiyonu (`kaydet.js` — panelden gelen veriyi GitHub'a commit'ler) |
@@ -155,7 +157,7 @@ Kullanıcı isteğiyle uyarlanamayan orijinal sayfalar **silinmedi**:
 - `shop/*` — Dubai Outlet Mall mağaza detay sayfaları (13 adet)
 - `deal/*` — orijinal kampanya detay sayfaları (8 adet)
 - `shops/page/2..12` — orijinal sayfalı mağaza listeleri
-- `dubaioutletmall.com/images/`, `videos/` — wget'in indirdiği anasayfa kopyaları
+- `_yedek-ayna/` — wget'in ürettiği ikinci aynanın tamamı (dağıtıma girmez)
 
 Menüden erişilen sayfaların tamamı uyarlandı; bunlar menüde yer almıyor.
 
@@ -173,5 +175,10 @@ Menüden erişilen sayfaların tamamı uyarlandı; bunlar menüde yer almıyor.
 ### Vercel
 
 Statik site, build gerektirmez. Framework: **Other**, build komutu yok, output dizini
-depo kökü. `vercel.json` yalnızca `cleanUrls:false` / `trailingSlash:false` ayarlıyor;
-kök `index.html`, `www.dubaioutletmall.com/index.html`'e yönlendiriyor.
+depo kökü. Site kökte olduğu için ek yönlendirme gerekmiyor.
+
+`vercel.json`: `panel/veri.json` için `no-store` (yayımlanan içerik CDN'de takılmasın),
+`/panel` kısayolu ve panel için `X-Robots-Tag: noindex`.
+
+Commit yazarının e-postası GitHub hesabına bağlı olmalı; aksi hâlde Vercel dağıtımı
+reddediyor. Bu depoda `evrenaktas@yahoo.com` kullanılıyor.

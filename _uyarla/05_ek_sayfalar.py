@@ -176,14 +176,10 @@ def govde_degistir(f, ic, onek):
 def main():
     n = 0
     hedefler = [
-        ("dubaioutletmall.com/privacy-policy-2/index.html", "privacy-policy.html",
-         bicim(GIZLILIK, "../")),
-        ("dubaioutletmall.com/terms-and-conditions/index.html", "terms.html",
-         bicim(KOSULLAR, "../")),
-        ("www.dubaioutletmall.com/media-center/index.html", None, medya_galeri("../")),
-        ("dubaioutletmall.com/media-center/index.html", None, medya_galeri("../")),
-        ("www.dubaioutletmall.com/bus-schedule/index.html", None, bicim(SERVIS, "../")),
-        ("dubaioutletmall.com/bus-schedule/index.html", None, bicim(SERVIS, "../")),
+        ("gizlilik-politikasi/index.html", "privacy-policy.html", bicim(GIZLILIK, "../")),
+        ("kullanim-kosullari/index.html", "terms.html", bicim(KOSULLAR, "../")),
+        ("media-center/index.html", None, medya_galeri("../")),
+        ("bus-schedule/index.html", None, bicim(SERVIS, "../")),
     ]
     for rel, yedek_ad, ic in hedefler:
         f = os.path.join(ROOT, rel)

@@ -4,7 +4,7 @@
 import re, os, json, glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+
 VERI = json.load(open(os.path.join(ROOT, "pa-assets", "magazalar.json"), encoding="utf-8"))
 MAG = {m["slug"]: m for m in VERI["magazalar"]}
 
@@ -258,13 +258,9 @@ def uyarla(s, onek):
 
 def main():
     n = 0
-    hedefler = [(h, "index.html", "") for h in HOSTS]
-    # wget, /images/ ve /videos/ adreslerinde de anasayfayı indirmiş
-    hedefler += [("dubaioutletmall.com", os.path.join(a, "index.html"), "../")
-                 for a in ("images", "videos")]
-    hedefler += [("dubaioutletmall.com", "shops.html", "")]
-    for h, rel, onek in hedefler:
-        f = os.path.join(ROOT, h, rel)
+    hedefler = [("index.html", "")]
+    for rel, onek in hedefler:
+        f = os.path.join(ROOT, rel)
         if not os.path.isfile(f):
             continue
         s0 = open(f, encoding="utf-8").read()

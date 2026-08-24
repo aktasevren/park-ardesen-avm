@@ -4,7 +4,7 @@
 import re, os, json, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+
 VERI = json.load(open(os.path.join(ROOT, "pa-assets", "magazalar.json"), encoding="utf-8"))
 MAG = {m["slug"]: m for m in VERI["magazalar"]}
 YEDEK = os.path.join(ROOT, "_orijinal")
@@ -574,18 +574,16 @@ def _(s, onek):
 
 def main():
     n = 0
-    for h in HOSTS:
-        for ad, fn in SAYFALAR.items():
-            f = os.path.join(ROOT, h, ad, "index.html")
-            if not os.path.isfile(f):
-                continue
-            if h.startswith("www."):
-                yedekle(f, ad + ".html")
-            s0 = oku(f)
-            s = ortak(s0, "../")
-            s = fn(s, "../")
-            if s != s0:
-                yaz(f, s); n += 1
+    for ad, fn in SAYFALAR.items():
+        f = os.path.join(ROOT, ad, "index.html")
+        if not os.path.isfile(f):
+            continue
+        yedekle(f, ad + ".html")
+        s0 = oku(f)
+        s = ortak(s0, "../")
+        s = fn(s, "../")
+        if s != s0:
+            yaz(f, s); n += 1
     print("  iç sayfalar: %d dosya güncellendi (%d sayfa şablonu)" % (n, len(SAYFALAR)))
 
 

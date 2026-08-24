@@ -234,7 +234,7 @@
         '<div class="satir"><div class="govde"><strong>Panel</strong><small>' +
           kacis(location.origin + location.pathname.replace(/[^/]*$/, "")) + "</small></div></div>" +
         '<div class="satir"><div class="govde"><strong>Site</strong><small>' +
-          kacis(new URL("../www.dubaioutletmall.com/index.html", location.href).href) +
+          kacis(new URL("../index.html", location.href).href) +
           "</small></div></div>" +
         '<p class="ipucu" style="margin-top:12px">Tarayıcıya kaydedilen değişiklikler ' +
         '<strong>yalnızca aynı adres</strong> üzerinde görünür. Siteyi ' +
@@ -572,7 +572,7 @@
 
     $("#btn-onizle").addEventListener("click", function () {
       if (kirli) kaydet(true);
-      window.open("../www.dubaioutletmall.com/index.html", "_blank");
+      window.open("../index.html", "_blank");
     });
 
     $("#btn-indir").addEventListener("click", function () {

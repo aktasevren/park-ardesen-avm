@@ -1,9 +1,6 @@
 {
   "cleanUrls": false,
   "trailingSlash": false,
-  "redirects": [
-    { "source": "/", "destination": "/www.dubaioutletmall.com/index.html", "permanent": false }
-  ],
   "rewrites": [
     { "source": "/panel", "destination": "/panel/index.html" }
   ],

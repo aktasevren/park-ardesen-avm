@@ -9,7 +9,7 @@ CIKTI = os.environ.get("ONIZLEME_DIZIN", tempfile.gettempdir())
 
 
 def hazirla(rel, zoom):
-    src = os.path.join(ROOT, "www.dubaioutletmall.com", rel)
+    src = os.path.join(ROOT, rel)
     s = open(src, encoding="utf-8").read()
     s = s.replace("</head>",
                   "<style>html{zoom:%s}.home-banner,.home-banner .container"

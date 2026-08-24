@@ -7,12 +7,9 @@ echo "→ _orijinal/ yedeklerinden sayfa gövdeleri geri yükleniyor"
 for f in _orijinal/*.html; do
   b=$(basename "$f" .html)
   case "$b" in
-    privacy-policy) cp "$f" dubaioutletmall.com/privacy-policy-2/index.html ;;
-    terms)          cp "$f" dubaioutletmall.com/terms-and-conditions/index.html ;;
-    *)
-      [ -d "www.dubaioutletmall.com/$b" ] && cp "$f" "www.dubaioutletmall.com/$b/index.html"
-      [ -d "dubaioutletmall.com/$b" ]     && cp "$f" "dubaioutletmall.com/$b/index.html"
-      ;;
+    privacy-policy) cp "$f" gizlilik-politikasi/index.html ;;
+    terms)          cp "$f" kullanim-kosullari/index.html ;;
+    *) [ -d "$b" ] && cp "$f" "$b/index.html" ;;
   esac
 done
 

@@ -4,7 +4,7 @@
 import re, os, json, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HOSTS = ["www.dubaioutletmall.com", "dubaioutletmall.com"]
+
 VERI = json.load(open(os.path.join(ROOT, "pa-assets", "magazalar.json"), encoding="utf-8"))
 KAT_SIRA = ["Zemin Kat", "1. Kat", "2. Kat"]
 YEDEK = os.path.join(ROOT, "_orijinal")
@@ -136,15 +136,13 @@ def kat_plani_sayfa(f, onek):
 
 
 def main():
-    for h in HOSTS:
-        for alt, isim, fn in (("shops", "shops.html", magazalar),
-                              ("mall-map", "mall-map.html", kat_plani_sayfa)):
-            f = os.path.join(ROOT, h, alt, "index.html")
-            if not os.path.isfile(f):
-                continue
-            if h.startswith("www."):
-                yedekle(f, isim)
-            fn(f, "../")
+    for alt, isim, fn in (("shops", "shops.html", magazalar),
+                          ("mall-map", "mall-map.html", kat_plani_sayfa)):
+        f = os.path.join(ROOT, alt, "index.html")
+        if not os.path.isfile(f):
+            continue
+        yedekle(f, isim)
+        fn(f, "../")
     print("  mağazalar + kat planı güncellendi (%d mağaza)" % len(VERI["magazalar"]))
 
 
