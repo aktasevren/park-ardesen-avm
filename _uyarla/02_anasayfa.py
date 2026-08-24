@@ -87,13 +87,12 @@ def kampanya_html(onek):
 
 
 def galeri_html(onek):
+    # Yalnızca gerçek AVM fotoğrafları. (Önceden marka logoları da vardı;
+    # büyük boş kutularda kötü duruyordu.)
     gorseller = [
         ("gorseller/avm-dis-cephe.jpg", "Park Ardeşen AVM dış cephe"),
         ("gorseller/ic-mekan-1.webp", "Park Ardeşen AVM iç mekân"),
         ("gorseller/ic-mekan-2.webp", "Park Ardeşen AVM iç mekân"),
-        ("markalar/" + MAG["lc-waikiki"]["logo"], "LC Waikiki"),
-        ("markalar/" + MAG["migros"]["logo"], "Migros"),
-        ("markalar/" + MAG["burger-king"]["logo"], "Burger King"),
     ]
     kartlar = "\n".join(
         '<div class="pa-galeri-kart">%s</div>' % img(onek + PA + p, a)
