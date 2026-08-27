@@ -29,6 +29,7 @@ TEL_HREF   = "tel:+904647153030"
 EPOSTA     = "muhasebe@parkardesen.com"
 ADRES_HTML = ("Cumhuriyet Mah. Sultan Alparslan Cad. No: 2/1,<br/>\n"
               "53400 Ardeşen / Rize<br/>\nTürkiye")
+ENLEM, BOYLAM = 41.190868, 40.987404
 HARITA     = "https://www.google.com/maps/search/?api=1&query=Park+Arde%C5%9Fen+AVM+Cumhuriyet+Mah.+Sultan+Alparslan+Cad.+Arde%C5%9Fen+Rize"
 INSTAGRAM  = "https://www.instagram.com/parkardesenavm/"
 FACEBOOK   = "https://www.facebook.com/parkardesen"
@@ -208,18 +209,31 @@ YASAL_MENU = (
     '<li><a href="{onek}kullanim-kosullari/index.html">Kullanım Koşulları</a></li>')
 
 
-# Footer'daki mini harita: derleme sırasında üretilmiş yerel bir görsel
-# (bkz. _uyarla/14_harita.py). Gömme harita kullanmıyoruz — her ziyarette
-# üçüncü taraf sunucuya bağlanır, rıza gerektirir ve WebGL isteyebilir.
+# Footer'daki mini harita.
+#
+# Görünen katman: derleme sırasında üretilmiş yerel bir harita görseli
+# (bkz. 14_harita.py). Üçüncü tarafa bağlanmadığı için rıza gerektirmez ve
+# herkeste görünür.
+# Rıza verildiyse pa-cerez.js bunun yerine etkileşimli Google Haritalar'ı
+# yüklüyor. Google gömme haritası çerez bırakıp IP'yi dışarı verdiği için
+# rızasız yüklenmiyor.
 HARITA_BLOK = (
-    '<a class="pa-mini-harita" href="{harita}" target="_blank" rel="noopener" '
+    '<!--PA-HARITA-->'
+    '<div class="pa-mini-harita" data-pa-harita '
+    'data-embed="https://maps.google.com/maps?q={enlem},{boylam}&amp;z=16&amp;output=embed">'
+    '<a class="pa-harita-onizleme" href="{harita}" target="_blank" rel="noopener" '
     'aria-label="Park Ardeşen AVM konumu — Google Haritalar\'da aç">'
     '<img src="{onek}wp-content/uploads/pa/gorseller/harita.png" '
     'alt="Park Ardeşen AVM\'in Ardeşen, Rize\'deki konumunu gösteren harita" '
-    'loading="lazy" decoding="async" width="380" height="190">'
-    '<span class="pa-harita-yol">Yol tarifi al</span>'
-    '<span class="pa-harita-katki">&copy; OpenStreetMap katkıcıları</span>'
-    "</a>")
+    'loading="lazy" decoding="async" width="380" height="190"></a>'
+    '<a class="pa-harita-yol" href="{harita}" target="_blank" rel="noopener">Yol tarifi al</a>'
+    '<span class="pa-harita-katki">&copy; OpenStreetMap</span>'
+    '</div>'
+    '<!--/PA-HARITA-->')
+
+ESKI_HARITA = re.compile(r'(?s)<!--PA-HARITA-->.*?<!--/PA-HARITA-->'
+                         r'|<div class="pa-mini-harita".*?</div>\s*</div>'
+                         r'|<a class="pa-mini-harita".*?</a>')
 
 
 def footer(s, onek=""):
@@ -228,10 +242,11 @@ def footer(s, onek=""):
     s = s.replace("<h2>CONTACT INFO</h2>", "<h2>İLETİŞİM</h2>")
     s = re.sub(r"Dubai Outlet Mall,<br/>\s*Dubai Al-Ain Road \(Route 66\),<br/>\s*Dubai, UAE\.",
                ADRES_HTML, s)
-    # adresin hemen altına küçük harita
-    if "pa-mini-harita" not in s:
-        s = s.replace(ADRES_HTML, ADRES_HTML + "\n" +
-                      HARITA_BLOK.format(harita=HARITA, onek=onek), 1)
+    # adresin hemen altına küçük harita (eski sürüm varsa değiştirilir)
+    s = ESKI_HARITA.sub("", s)
+    s = s.replace(ADRES_HTML, ADRES_HTML + "\n" +
+                  HARITA_BLOK.format(harita=HARITA, onek=onek,
+                                     enlem=ENLEM, boylam=BOYLAM), 1)
     s = re.sub(r'<a href="tel:\+971 44234666">\+971 44234666</a>',
                '<a href="%s">%s</a>' % (TEL_HREF, TEL_GOSTER), s)
     s = re.sub(r"©dubaioutletmall \d{4}, All Rights Reserved",

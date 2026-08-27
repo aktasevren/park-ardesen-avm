@@ -166,6 +166,41 @@
     });
   }
 
+  /* --- Footer haritası ------------------------------------------------
+     Varsayılan görünüm, derleme sırasında üretilmiş yerel bir harita
+     görselidir; hiçbir dış bağlantı gerektirmez. Ziyaretçi tercih
+     çerezlerine izin verdiyse yerine etkileşimli Google Haritalar
+     yükleniyor (çerez bırakır ve IP'yi Google'a iletir, bu yüzden
+     rızasız yüklenmiyor). */
+  function harita() {
+    var k = document.querySelector("[data-pa-harita]");
+    if (!k) return;
+
+    function yukle() {
+      if (k.querySelector("iframe")) return;
+      var f = document.createElement("iframe");
+      f.src = k.getAttribute("data-embed");
+      f.title = "Park Ardeşen AVM konumu";
+      f.loading = "lazy";
+      f.referrerPolicy = "no-referrer-when-downgrade";
+      f.setAttribute("allowfullscreen", "");
+      var onizleme = k.querySelector(".pa-harita-onizleme");
+      var katki = k.querySelector(".pa-harita-katki");
+      if (onizleme) onizleme.remove();
+      if (katki) katki.remove();
+      k.insertBefore(f, k.firstChild);
+      k.classList.add("pa-harita-canli");
+    }
+
+    if (window.paCerezIzni && window.paCerezIzni("tercih")) {
+      yukle();
+      return;
+    }
+    document.addEventListener("pa:cerez-secildi", function (e) {
+      if (e.detail && e.detail.tercih) yukle();
+    });
+  }
+
   /* Footer'daki "Çerez Ayarları" bağlantısı paneli açar */
   function baglantiyiBagla() {
     document.addEventListener("click", function (e) {
@@ -178,6 +213,7 @@
 
   function basla() {
     baglantiyiBagla();
+    harita();
     if (!izinOku()) bantGoster();
   }
 

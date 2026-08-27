@@ -165,16 +165,15 @@ oluşturuyordu.
 
 ## Footer haritası
 
-Adresin altındaki küçük harita, **derleme sırasında üretilmiş yerel bir PNG**
-(`14_harita.py`). Gömme (iframe) harita kullanılmadı çünkü:
+İki katmanlı:
 
-- her ziyarette üçüncü taraf sunucuya bağlanır, KVKK/GDPR açısından rıza gerektirir
-  ve ziyaretçinin IP'sini dışarı verir,
-- OpenStreetMap'in yeni gömme haritası WebGL istiyor; desteklemeyen cihazlarda
-  hata metni görünüyor.
-
-Tıklanınca Google Haritalar'da yol tarifi açılır. Görsel © OpenStreetMap
-katkıcıları; atıf haritanın üzerinde yer alıyor.
+- **Varsayılan** — derleme sırasında üretilmiş yerel bir harita görseli
+  (`14_harita.py`, OpenStreetMap karolarından). Dış bağlantı gerektirmez,
+  herkeste görünür, WebGL istemez. Tıklanınca Google Haritalar'da yol tarifi açılır.
+- **Tercih çerezlerine izin verildiyse** — yerine etkileşimli **Google Haritalar**
+  yüklenir (`pa-cerez.js`). Google gömme haritası çerez bırakıp ziyaretçinin
+  IP'sini Google'a ilettiği için rızasız yüklenmiyor; çerez politikasında
+  üçüncü taraf olarak listelenmiştir.
 
 **Koordinat** `14_harita.py` içindeki `KONUM` sabitinde ve `11_seo.py` içindeki
 `ENLEM/BOYLAM` değerlerinde tanımlı. Şu an Cumhuriyet Mahallesi merkezidir

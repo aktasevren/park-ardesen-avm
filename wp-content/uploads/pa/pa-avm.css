@@ -566,6 +566,9 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   border:1px solid #333338;line-height:0;
 }
 .pa-mini-harita img{width:100%;height:auto;display:block}
+.pa-harita-onizleme{display:block;line-height:0}
+.pa-mini-harita.pa-harita-canli{height:190px}
+.pa-mini-harita iframe{width:100%;height:100%;border:0;display:block}
 .pa-mini-harita:hover{border-color:#55555d}
 .pa-harita-yol{
   position:absolute;right:8px;bottom:8px;

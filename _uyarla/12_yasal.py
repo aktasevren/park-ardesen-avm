@@ -156,6 +156,12 @@ bağlantısından değiştirebilir veya rızanızı geri alabilirsiniz.</p>
 <tr><td>pa-panel, pa-panel-s</td><td>Zorunlu</td>
     <td>Yönetim paneli oturumu (yalnızca yetkili personel)</td>
     <td>Oturum süresi</td><td>Birinci taraf</td></tr>
+<tr><td>Google Haritalar gömme</td><td>Tercih</td>
+    <td>Sayfa altındaki harita. <strong>Yalnızca tercih çerezlerine izin
+        verdiyseniz</strong> yüklenir; izin yoksa yerine dış bağlantı
+        gerektirmeyen bir harita görseli gösterilir. Yüklendiğinde Google
+        çerez bırakabilir.</td>
+    <td>Google'ın politikasına tabi</td><td>Üçüncü taraf (Google)</td></tr>
 <tr><td>pa-veri</td><td>Zorunlu</td>
     <td>Yönetim panelinde düzenlenen site içeriğinin geçici kaydı
         (yalnızca yetkili personel)</td>
@@ -164,8 +170,10 @@ bağlantısından değiştirebilir veya rızanızı geri alabilirsiniz.</p>
 </table>
 </div>
 <p>Bu sitede <strong>üçüncü taraf ölçümleme veya reklam çerezi
-kullanılmamaktadır</strong>. İleride eklenmesi hâlinde bu tablo güncellenecek
-ve söz konusu çerezler yalnızca açık rızanızla çalıştırılacaktır.</p>
+kullanılmamaktadır</strong>. Tek üçüncü taraf içerik, sayfa altındaki Google
+Haritalar gömme haritasıdır ve yalnızca tercih çerezlerine izin verdiğinizde
+yüklenir. İleride başka araç eklenmesi hâlinde bu tablo güncellenecek ve söz
+konusu çerezler yalnızca açık rızanızla çalıştırılacaktır.</p>
 
 <h3 class="wp-block-heading">Tarayıcı ayarları</h3>
 <p>Çerezleri tarayıcı ayarlarınızdan da silebilir veya engelleyebilirsiniz.
