@@ -91,8 +91,15 @@ Her duyurunun tarih aralığı var; süresi dolan duyuru siteden kendiliğinden 
 `panel/veri.json` tek kaynak. Site `pa-veri.js` ile bu dosyayı **çalışma anında** okur ve
 ilgili blokları çizer — içerik değişince sayfaların yeniden üretilmesi gerekmez.
 
-Okuma sırası: `localStorage['pa-veri']` → `panel/veri.json`. Yani panelde **Kaydet**'e
-basınca aynı tarayıcıdaki site anında güncellenir (sunum için yeterli). **Yayınla**
+Okuma sırası: `panel/veri.json` okunur, üzerine `localStorage['pa-veri']`
+bindirilir — **panelde bulunan alanlar kazanır, panelde hiç olmayan alanlar
+dosyadan gelir**. Bu birleştirme şart: siteye sonradan yeni bir alan
+eklendiğinde (ör. `tesisler`) tarayıcıda duran eski kopyada o alan
+bulunmadığı için içerik görünmez oluyor, üstelik ilk "Yayınla"da dosyadan
+da siliniyordu. Aynı birleştirme panelde de yapılıyor.
+
+Panelde **Kaydet**'e basınca aynı tarayıcıdaki site anında güncellenir
+(sunum için yeterli). **Yayınla**
 düğmesi veriyi `/api/kaydet` uç noktasına gönderir; o da `panel/veri.json`'u GitHub'a
 commit'ler ve Vercel dağıtımı (~1 dk) herkes için yayımlar.
 

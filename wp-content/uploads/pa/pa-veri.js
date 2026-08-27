@@ -117,12 +117,24 @@
     } catch (e) { return null; }
   }
 
+  /* Panelde kaydedilen kopya tarayıcıda tutuluyor ve yayımlanmış dosyadan
+     önce geliyor. Ancak siteye sonradan yeni bir alan eklendiğinde (ör.
+     "tesisler") eski kopyada o alan hiç bulunmuyor ve içerik görünmez
+     oluyordu. Bu yüzden iki kaynağı birleştiriyoruz: paneldeki alanlar
+     kazanır, panelde hiç olmayan alanlar dosyadan gelir. */
   function veriGetir() {
     var yerel = yerelVeri();
-    if (yerel) return Promise.resolve(yerel);
     return fetch(veriUrl(), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; });
+      .catch(function () { return null; })
+      .then(function (dosya) {
+        if (!dosya) return yerel;
+        if (!yerel) return dosya;
+        var sonuc = {};
+        Object.keys(dosya).forEach(function (k) { sonuc[k] = dosya[k]; });
+        Object.keys(yerel).forEach(function (k) { sonuc[k] = yerel[k]; });
+        return sonuc;
+      });
   }
 
   /* ---------------------------------------------------------- parçalar */

@@ -650,11 +650,24 @@
   }
 
   /* ---------------------------------------------------------- başlat */
+  /* Tarayıcıdaki kopya ile yayımlanmış dosyayı birleştiriyoruz: paneldeki
+     alanlar kazanır, panelin bilmediği/eski kopyada olmayan alanlar
+     dosyadan gelir. Aksi hâlde siteye sonradan eklenen alanlar ilk
+     "Yayınla"da silinirdi. */
   function veriYukle() {
     var yerel = null;
     try { yerel = JSON.parse(localStorage.getItem(ANAHTAR) || "null"); } catch (e) {}
-    if (yerel) return Promise.resolve(yerel);
-    return fetch("/panel/veri.json", { cache: "no-store" }).then(function (r) { return r.json(); });
+    return fetch("/panel/veri.json", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (dosya) {
+        if (!dosya) return yerel || {};
+        if (!yerel) return dosya;
+        var sonuc = {};
+        Object.keys(dosya).forEach(function (k) { sonuc[k] = dosya[k]; });
+        Object.keys(yerel).forEach(function (k) { sonuc[k] = yerel[k]; });
+        return sonuc;
+      });
   }
 
   function ac() {
