@@ -302,8 +302,7 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   font-size:14px;
   line-height:1.4;
 }
-.pa-serit.pa-onem-onemli{background:#e11f26}
-.pa-serit.pa-onem-acil{background:#b8860b;color:#fff}
+.pa-serit.pa-serit-dikkat{background:#e11f26}
 .pa-serit-ic{
   max-width:1200px;
   margin:0 auto;
@@ -388,8 +387,7 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   padding:22px 24px;
   background:#fff;
 }
-.pa-duyuru.pa-onem-onemli{border-left-color:#e11f26}
-.pa-duyuru.pa-onem-acil{border-left-color:#b8860b}
+.pa-duyuru.pa-duyuru-dikkat{border-left-color:#e11f26}
 .pa-duyuru-ust{
   display:flex;align-items:center;justify-content:space-between;
   gap:12px;margin-bottom:12px;

@@ -58,11 +58,66 @@
     sosyal:   "❤️ Sosyal sorumluluk",
     acil:     "⚠️ Acil duyuru"
   };
-  var ONEMLER = { normal: "Normal", onemli: "Önemli", acil: "Acil" };
+  /* Duyurunun nerede görüneceğini yazıyla anlatmak yerine küçük birer
+     site maketiyle gösteriyoruz; ilk kez giren biri de anlasın. */
   var YERLER = {
-    "ust-serit": "Üst şerit (tüm sayfalar)",
-    "acilis-penceresi": "Açılış penceresi (anasayfa)",
-    "duyurular": "Duyurular listesi"
+    "ust-serit": {
+      ad: "Üst şerit",
+      aciklama: "Her sayfanın en üstünde ince bir bant. Kısa duyurular için.",
+      maket:
+        '<rect x="1" y="1" width="86" height="54" rx="4" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="1" y="1" width="86" height="9" rx="4" fill="#e11f26"/>' +
+        '<rect x="6" y="4.5" width="40" height="2.4" rx="1.2" fill="#fff" opacity=".9"/>' +
+        '<rect x="6" y="16" width="76" height="16" rx="2" fill="#ececed"/>' +
+        '<rect x="6" y="36" width="34" height="3" rx="1.5" fill="#dcdce0"/>' +
+        '<rect x="6" y="43" width="52" height="3" rx="1.5" fill="#e6e6e8"/>'
+    },
+    "acilis-penceresi": {
+      ad: "Açılış penceresi",
+      aciklama: "Anasayfaya girenin karşısına çıkan pencere. En dikkat çekeni.",
+      maket:
+        '<rect x="1" y="1" width="86" height="54" rx="4" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="1" y="1" width="86" height="54" rx="4" fill="#171717" opacity=".45"/>' +
+        '<rect x="20" y="11" width="48" height="34" rx="4" fill="#fff"/>' +
+        '<rect x="20" y="11" width="48" height="13" rx="4" fill="#c9ccd1"/>' +
+        '<rect x="25" y="28" width="30" height="3.2" rx="1.6" fill="#2b2b2e"/>' +
+        '<rect x="25" y="34" width="38" height="2.4" rx="1.2" fill="#c9ccd1"/>' +
+        '<rect x="25" y="38.6" width="16" height="4.4" rx="2.2" fill="#171717"/>'
+    },
+    "duyurular": {
+      ad: "Duyurular listesi",
+      aciklama: "Anasayfadaki duyurular bölümü ve Duyurular sayfası.",
+      maket:
+        '<rect x="1" y="1" width="86" height="54" rx="4" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="6" y="7" width="30" height="4" rx="2" fill="#2b2b2e"/>' +
+        '<rect x="6" y="17" width="24" height="31" rx="3" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="9" y="21" width="14" height="2.6" rx="1.3" fill="#e11f26"/>' +
+        '<rect x="9" y="27" width="17" height="2.4" rx="1.2" fill="#c9ccd1"/>' +
+        '<rect x="32" y="17" width="24" height="31" rx="3" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="35" y="21" width="14" height="2.6" rx="1.3" fill="#8a8a94"/>' +
+        '<rect x="35" y="27" width="17" height="2.4" rx="1.2" fill="#c9ccd1"/>' +
+        '<rect x="58" y="17" width="24" height="31" rx="3" fill="#fff" stroke="#dcdce0"/>' +
+        '<rect x="61" y="21" width="14" height="2.6" rx="1.3" fill="#8a8a94"/>' +
+        '<rect x="61" y="27" width="17" height="2.4" rx="1.2" fill="#c9ccd1"/>'
+    }
+  };
+
+  /* Buton bağlantısı serbest metin yerine site sayfalarından seçiliyor. */
+  var SAYFALAR_BAG = {
+    "": "— buton yok —",
+    "shops/": "Mağazalar",
+    "mall-map/": "Kat Planı",
+    "deals/": "Kampanyalar",
+    "bargain-monday/": "Fırsat Günleri",
+    "duyurular/": "Duyurular",
+    "about-dom/": "Hakkımızda",
+    "services/": "Hizmetlerimiz",
+    "contact-us/": "İletişim",
+    "faq/": "Sıkça Sorulan Sorular",
+    "leasing/": "Mağaza Kiralama",
+    "outlet-plus-card/": "Park Kart",
+    "careers/": "Kariyer",
+    "tourism/": "Ulaşım"
   };
   var DURUMLAR = { bos: "Boş", rezerve: "Rezerve", dolu: "Dolu" };
 
@@ -161,11 +216,30 @@
     return '<div class="alan' + (genis ? " genis" : "") + '"><label>' + kacis(etiket) +
       '</label><select data-a="' + ad + '">' + o + "</select></div>";
   }
-  function onay(ad, etiket, deger) {
-    return '<div class="alan"><label>&nbsp;</label><label class="kutucuk">' +
-      '<input type="checkbox" data-a="' + ad + '"' + (deger ? " checked" : "") + "> " +
-      kacis(etiket) + "</label></div>";
+  function onay(ad, etiket, deger, genis) {
+    return '<div class="alan' + (genis ? " genis" : "") + '">' +
+      (genis ? "" : '<label>&nbsp;</label>') +
+      '<label class="kutucuk"><input type="checkbox" data-a="' + ad + '"' +
+      (deger ? " checked" : "") + "> " + kacis(etiket) + "</label></div>";
   }
+  /* Maketli çoklu seçim — "nerede gösterilsin" için */
+  function maketSecim(ad, etiket, secili, secenekler, ipucu) {
+    secili = secili || [];
+    var k = Object.keys(secenekler).map(function (v) {
+      var o = secenekler[v];
+      return '<label class="maket' + (secili.indexOf(v) >= 0 ? " secili" : "") + '">' +
+        '<input type="checkbox" data-c="' + ad + '" value="' + kacis(v) + '"' +
+        (secili.indexOf(v) >= 0 ? " checked" : "") + ">" +
+        '<svg class="maket-gorsel" viewBox="0 0 88 56" aria-hidden="true">' + o.maket + "</svg>" +
+        '<span class="maket-ad">' + kacis(o.ad) + "</span>" +
+        '<span class="maket-aciklama">' + kacis(o.aciklama) + "</span>" +
+        "</label>";
+    }).join("");
+    return '<div class="alan genis"><label>' + kacis(etiket) + "</label>" +
+      (ipucu ? '<span class="ipucu">' + kacis(ipucu) + "</span>" : "") +
+      '<div class="maketler">' + k + "</div></div>";
+  }
+
   function cokluSecim(ad, etiket, secili, secenekler) {
     secili = secili || [];
     var k = Object.keys(secenekler).map(function (v) {
@@ -266,9 +340,17 @@
           ? new Date(veri.guncelleme).toLocaleString("tr-TR") : "—") + "</small></div></div>", "");
   }
 
+  function bolumGirisi(metin) {
+    return '<p class="bolum-giris">' + metin + "</p>";
+  }
+
   function ciz_duyurular() {
     var liste = veri.duyurular || [];
-    var html = '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="duyurular">+ Yeni duyuru</button></div>';
+    var html = bolumGirisi(
+      "Çalışma saati değişikliği, yeni mağaza açılışı, etkinlik gibi " +
+      "haberleri buradan girersiniz. Her duyuru için nerede görüneceğini " +
+      "seçersiniz; bitiş tarihi geçince kendiliğinden kalkar.") +
+      '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="duyurular">+ Yeni duyuru</button></div>';
     if (!liste.length) html += '<div class="kutu bos">Henüz duyuru yok.</div>';
     liste.forEach(function (d) {
       var s = yayinDurumu(d);
@@ -276,27 +358,34 @@
       if (duzenlenen && duzenlenen.bolum === "duyurular" && duzenlenen.id === d.id) {
         html += kartKabugu("Duyuru düzenle", rozet,
           '<div class="alanlar" data-form>' +
-            secim("tur", "Tür", d.tur, TURLER) +
-            secim("onem", "Önem", d.onem, ONEMLER) +
-            onay("yayinda", "Yayında", d.yayinda !== false) +
-            metinAlani("baslik", "Başlık", d.baslik, true) +
-            yaziAlani("metin", "Metin", d.metin) +
-            tarihAlani("baslangic", "Başlangıç") .replace('value=""', 'value="' + kacis(d.baslangic || "") + '"') +
-            tarihAlani("bitis", "Bitiş").replace('value=""', 'value="' + kacis(d.bitis || "") + '"') +
-            cokluSecim("yerler", "Nerede gösterilsin?", d.yerler, YERLER) +
-            metinAlani("bagLabel", "Buton yazısı", d.bagLabel, false, "Boş bırakılırsa buton çıkmaz") +
-            metinAlani("bagUrl", "Buton bağlantısı", d.bagUrl, false, "Örn. shops/ veya duyurular/") +
-            secim("gorsel", "Görsel (açılış penceresi için)", d.gorsel || "",
-                  gorselSecenekleri(), true) +
+            metinAlani("baslik", "Başlık", d.baslik, true,
+                       "Kısa ve net olsun. Örn. “Bayramda 23:00’e kadar açığız”") +
+            yaziAlani("metin", "Açıklama", d.metin) +
+            secim("tur", "Konu (başındaki simgeyi belirler)", d.tur, TURLER) +
+            onay("yayinda", "Sitede yayında", d.yayinda !== false, true) +
+            maketSecim("yerler", "Nerede gösterilsin?", d.yerler, YERLER,
+                       "Birden fazla yer seçebilirsiniz.") +
+            tarihAlani("baslangic", "Başlangıç tarihi")
+              .replace('value=""', 'value="' + kacis(d.baslangic || "") + '"') +
+            tarihAlani("bitis", "Bitiş tarihi")
+              .replace('value=""', 'value="' + kacis(d.bitis || "") + '"') +
+            '<div class="alan genis"><span class="ipucu">Bitiş tarihi geçince ' +
+            'duyuru siteden kendiliğinden kalkar. Boş bırakırsanız siz ' +
+            'kapatana kadar yayında kalır.</span></div>' +
+            secim("bagUrl", "Duyuruya buton eklensin mi?", d.bagUrl || "", SAYFALAR_BAG) +
+            metinAlani("bagLabel", "Buton yazısı", d.bagLabel, false,
+                       "Boş bırakılırsa sayfanın adı yazılır") +
+            secim("gorsel", "Görsel (yalnızca açılış penceresinde görünür)",
+                  d.gorsel || "", gorselSecenekleri(), true) +
           "</div>", formDugmeleri());
       } else {
         html += kartKabugu(kacis(d.baslik || "(başlıksız)"), rozet,
           '<div class="satir"><div class="govde">' +
             "<small>" + kacis(TURLER[d.tur] || d.tur) + " &middot; " +
-            kacis(ONEMLER[d.onem] || "Normal") + " &middot; " +
             tarihYaz(d.baslangic) + " – " + tarihYaz(d.bitis) + "</small>" +
-            "<small>" + (d.yerler || []).map(function (y) { return YERLER[y] || y; }).join(", ") +
-            "</small></div></div>" +
+            "<small>" + ((d.yerler || []).map(function (y) {
+              return (YERLER[y] || {}).ad || y;
+            }).join(" · ") || "Hiçbir yerde gösterilmiyor") + "</small></div></div>" +
           "<p>" + kacis(d.metin || "") + "</p>",
           duzenleDugmeleri("duyurular", d.id));
       }
@@ -312,7 +401,10 @@
 
   function ciz_kampanyalar() {
     var liste = veri.kampanyalar || [];
-    var html = '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="kampanyalar">+ Yeni kampanya</button></div>';
+    var html = bolumGirisi(
+      "Mağazaların indirim ve kampanyaları. Mağazayı seçtiğinizde logosu " +
+      "kendiliğinden gelir. Kampanyalar sayfasında ve anasayfada görünür.") +
+      '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="kampanyalar">+ Yeni kampanya</button></div>';
     if (!liste.length) html += '<div class="kutu bos">Henüz kampanya yok.</div>';
     liste.forEach(function (k) {
       var s = yayinDurumu(k), m = magaza(k.magaza);
@@ -347,7 +439,10 @@
 
   function ciz_firsat() {
     var f = veri.firsatGunleri = veri.firsatGunleri || { katilimcilar: [] };
-    var html = kartKabugu("Fırsat Günleri ayarları",
+    var html = bolumGirisi(
+      "Belirli günlerde yapılan toplu indirim dönemi. Metni ve katılan " +
+      "mağazaları buradan düzenlersiniz.") +
+      kartKabugu("Fırsat Günleri ayarları",
       '<span class="rozet ' + (f.yayinda === false ? "kapali" : "yayinda") + '">' +
         (f.yayinda === false ? "Kapalı" : "Yayında") + "</span>",
       '<div class="alanlar" data-form-firsat>' +
@@ -379,7 +474,10 @@
 
   function ciz_kiralama() {
     var kr = veri.kiralama = veri.kiralama || { birimler: [] };
-    var html = kartKabugu("Sayfa metni", "",
+    var html = bolumGirisi(
+      "Kiralanabilir boş mağaza, kiosk ve reklam alanları. " +
+      "Mağaza Kiralama sayfasında liste olarak görünür.") +
+      kartKabugu("Sayfa metni", "",
       '<div class="alanlar" data-form-kiralama>' +
         yaziAlani("girisMetni", "Giriş metni", kr.girisMetni) +
         metinAlani("iletisimAd", "İletişim kişisi / ekip", kr.iletisimAd, true) +
@@ -416,11 +514,15 @@
 
   function ciz_magazalar() {
     var kat = {};
+    var giris = bolumGirisi(
+      "Merkezdeki mağazalar. Mağazalar sayfası, kat planı ve kampanya " +
+      "kartlarındaki logolar bu listeden beslenir.");
     (veri.kategoriler || []).forEach(function (k) { kat[k.slug] = k.ad; });
     var logolar = { "": "— logosuz —" };
     (veri.logolar || []).forEach(function (l) { logolar[l] = l; });
 
-    var html = '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="magaza">+ Yeni mağaza</button></div>';
+    var html = giris +
+      '<div style="margin-bottom:16px"><button class="dugme ana" data-ekle="magaza">+ Yeni mağaza</button></div>';
     (veri.magazalar || []).forEach(function (m) {
       if (duzenlenen && duzenlenen.bolum === "magaza" && duzenlenen.id === m.slug) {
         html += kartKabugu("Mağaza düzenle", "",
@@ -488,7 +590,7 @@
   }
 
   function yeniOge(bolum) {
-    if (bolum === "duyurular") return { id: yeniId("d"), tur: "etkinlik", onem: "normal",
+    if (bolum === "duyurular") return { id: yeniId("d"), tur: "etkinlik",
       baslik: "", metin: "", baslangic: bugun(), bitis: "", yayinda: true,
       yerler: ["duyurular"], bagLabel: "", bagUrl: "", gorsel: "" };
     if (bolum === "kampanyalar") return { id: yeniId("k"),
@@ -569,7 +671,14 @@
     if (t.closest("[data-tamam]")) {
       var form = $("[data-form]");
       var oge = ogeBul(duzenlenen.bolum, duzenlenen.id);
-      if (form && oge) formuOku(form, oge);
+      if (form && oge) {
+        formuOku(form, oge);
+        // buton yazısı boş bırakıldıysa seçilen sayfanın adını kullan
+        if (oge.bagUrl && !String(oge.bagLabel || "").trim()) {
+          oge.bagLabel = SAYFALAR_BAG[oge.bagUrl] || "Detay";
+        }
+        if (!oge.bagUrl) oge.bagLabel = "";
+      }
       duzenlenen = null; otoKaydet(); ciz();
       bildir("Kaydedildi. Site aynı tarayıcıda güncellendi.", "basarili");
       return;

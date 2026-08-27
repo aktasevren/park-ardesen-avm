@@ -79,6 +79,10 @@
   }
 
   /* ---------------------------------------------------------- duyuru türleri */
+  /* Şerit rengi ayrı bir "önem" alanı yerine türden türetiliyor —
+     panelde bir alan eksilsin diye. */
+  var DIKKAT_TURLERI = ["acil", "bakim"];
+
   var TURLER = {
     saat:     { ad: "Çalışma saati", ikon: "🕒" },
     acilis:   { ad: "Yeni mağaza",   ikon: "🎉" },
@@ -172,7 +176,8 @@
     if (kapatildi) return;
 
     var el = document.createElement("div");
-    el.className = "pa-serit pa-onem-" + (d.onem || "normal");
+    el.className = "pa-serit" +
+      (DIKKAT_TURLERI.indexOf(d.tur) >= 0 ? " pa-serit-dikkat" : "");
     el.innerHTML =
       '<div class="pa-serit-ic">' +
         '<span class="pa-serit-ikon">' + tur(d.tur).ikon + "</span>" +
@@ -246,7 +251,8 @@
   /* ============================================================ DUYURULAR */
   function duyuruKarti(d) {
     var t = tur(d.tur);
-    return '<article class="pa-duyuru pa-onem-' + (d.onem || "normal") + '">' +
+    return '<article class="pa-duyuru' +
+      (DIKKAT_TURLERI.indexOf(d.tur) >= 0 ? " pa-duyuru-dikkat" : "") + '">' +
       '<div class="pa-duyuru-ust">' +
         '<span class="pa-etiket">' + t.ikon + " " + kacis(t.ad) + "</span>" +
         '<time>' + kacis(tarihYaz(d.baslangic)) + "</time>" +

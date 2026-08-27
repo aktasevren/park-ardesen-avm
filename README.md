@@ -86,6 +86,16 @@ Duyuru türleri: çalışma saati, yeni mağaza açılışı, yakında açılıy
 kampanya, yeni hizmet, bakım, ulaşım & otopark, sosyal sorumluluk, acil duyuru.
 Her duyurunun tarih aralığı var; süresi dolan duyuru siteden kendiliğinden düşer.
 
+Panel formları bilerek sade tutuldu:
+
+- Ayrı bir "önem" alanı yok; şerit rengi türden türetiliyor (acil ve bakım
+  kırmızı, diğerleri koyu).
+- **"Nerede gösterilsin?"** üç küçük site maketiyle gösteriliyor — üst şerit,
+  açılış penceresi, duyurular listesi. Metin okumadan da anlaşılıyor.
+- Buton bağlantısı serbest metin değil, **site sayfalarından seçim**. Buton
+  yazısı boş bırakılırsa sayfanın adı kullanılır.
+- Her bölümün başında ne işe yaradığını anlatan kısa bir açıklama var.
+
 ### Veri akışı
 
 `panel/veri.json` tek kaynak. Site `pa-veri.js` ile bu dosyayı **çalışma anında** okur ve
