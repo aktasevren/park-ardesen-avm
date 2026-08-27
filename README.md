@@ -98,6 +98,12 @@ eklendiğinde (ör. `tesisler`) tarayıcıda duran eski kopyada o alan
 bulunmadığı için içerik görünmez oluyor, üstelik ilk "Yayınla"da dosyadan
 da siliniyordu. Aynı birleştirme panelde de yapılıyor.
 
+`veri.json` içindeki **`veriSurumu`** alanı bu kuralın üstündedir: yayımlanan
+sürüm tarayıcıdaki kopyadan yeniyse yerel kopya tamamen bırakılır ve dosya
+kullanılır. İçeriği toplu değiştirmek/sıfırlamak için `veriSurumu` değerini
+artırmak yeterli; ziyaretçilerin ve yöneticinin tarayıcısındaki eski kopya
+kendiliğinden güncellenir. Panel de "Yayınla"da bu değeri artırır.
+
 Panelde **Kaydet**'e basınca aynı tarayıcıdaki site anında güncellenir
 (sunum için yeterli). **Yayınla**
 düğmesi veriyi `/api/kaydet` uç noktasına gönderir; o da `panel/veri.json`'u GitHub'a

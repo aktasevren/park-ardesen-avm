@@ -619,6 +619,10 @@
     $("#btn-yayinla").addEventListener("click", function () {
       if (!confirm("Veri sunucuya gönderilip herkes için yayımlanacak. Devam edilsin mi?")) return;
       if (kirli) kaydet(true);
+      // sürümü artırıyoruz: başka tarayıcılardaki eski kopyalar bu
+      // yayımlanan sürümle değiştirilsin
+      veri.veriSurumu = (Number(veri.veriSurumu) || 0) + 1;
+      kaydet(true);
       var d = $("#btn-yayinla");
       d.disabled = true; d.textContent = "Yayınlanıyor…";
       fetch(API, {
@@ -663,6 +667,11 @@
       .then(function (dosya) {
         if (!dosya) return yerel || {};
         if (!yerel) return dosya;
+        // yayımlanan sürüm daha yeniyse yerel kopya bırakılır
+        if ((dosya.veriSurumu || 0) > (yerel.veriSurumu || 0)) {
+          try { localStorage.setItem(ANAHTAR, JSON.stringify(dosya)); } catch (e) {}
+          return dosya;
+        }
         var sonuc = {};
         Object.keys(dosya).forEach(function (k) { sonuc[k] = dosya[k]; });
         Object.keys(yerel).forEach(function (k) { sonuc[k] = yerel[k]; });

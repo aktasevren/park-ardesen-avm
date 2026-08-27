@@ -130,6 +130,13 @@
       .then(function (dosya) {
         if (!dosya) return yerel;
         if (!yerel) return dosya;
+        // Yayımlanan sürüm daha yeniyse tarayıcıdaki kopya tamamen bırakılır.
+        // İçerik sıfırlandığında/toplu değiştiğinde eski kopyanın dosyayı
+        // ezmeye devam etmesini böyle engelliyoruz.
+        if ((dosya.veriSurumu || 0) > (yerel.veriSurumu || 0)) {
+          try { localStorage.setItem(ANAHTAR, JSON.stringify(dosya)); } catch (e) {}
+          return dosya;
+        }
         var sonuc = {};
         Object.keys(dosya).forEach(function (k) { sonuc[k] = dosya[k]; });
         Object.keys(yerel).forEach(function (k) { sonuc[k] = yerel[k]; });
@@ -296,7 +303,14 @@
         ? gosterilecek.map(function (k) { return kampanyaKarti(k, mag, true); }).join("")
         : "";
       var bolum = anaRow.closest(".home-deals");
-      if (bolum) bolum.style.display = gosterilecek.length ? "" : "none";
+      if (bolum) {
+        bolum.style.display = gosterilecek.length ? "" : "none";
+        // kart yoksa üstündeki başlık bloğu da gizlensin, öksüz kalmasın
+        var baslik = bolum.previousElementSibling;
+        if (baslik && baslik.classList.contains("tdb")) {
+          baslik.style.display = gosterilecek.length ? "" : "none";
+        }
+      }
     }
 
     // Kampanyalar sayfası
