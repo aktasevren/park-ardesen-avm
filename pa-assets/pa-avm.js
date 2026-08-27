@@ -115,6 +115,69 @@
     });
   }
 
+  /* --- İletişim formu -----------------------------------------------
+     Site statik; sunucuya form gönderilemiyor. Alanları doğrulayıp
+     kullanıcının kendi e-posta uygulamasında hazır bir mesaj açıyoruz —
+     böylece form gerçekten işe yarıyor, "gönderildi" yalanı olmuyor. */
+  function iletisimFormu() {
+    var f = document.querySelector("[data-pa-iletisim]");
+    if (!f) return;
+    var durum = f.querySelector(".pa-form-durum");
+
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var eksik = [];
+      ["ad", "eposta", "mesaj"].forEach(function (ad) {
+        var el = f.elements[ad];
+        el.classList.toggle("pa-hata", !el.value.trim());
+        if (!el.value.trim()) eksik.push(ad);
+      });
+      var kvkk = f.elements.kvkk;
+      kvkk.closest(".pa-form-onay").classList.toggle("pa-hata", !kvkk.checked);
+      if (!kvkk.checked) eksik.push("kvkk");
+
+      var ep = f.elements.eposta;
+      if (ep.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ep.value.trim())) {
+        ep.classList.add("pa-hata");
+        eksik.push("eposta-bicim");
+      }
+
+      if (eksik.length) {
+        durum.textContent = eksik.indexOf("kvkk") >= 0 && eksik.length === 1
+          ? "Devam etmek için aydınlatma metnini onaylayın."
+          : "Lütfen işaretli alanları doldurun.";
+        durum.className = "pa-form-durum hata";
+        return;
+      }
+
+      var d = f.elements;
+      var govde = [
+        "Ad Soyad : " + d.ad.value.trim(),
+        "E-posta  : " + d.eposta.value.trim(),
+        "Telefon  : " + (d.telefon.value.trim() || "-"),
+        "Konu     : " + d.konu.value,
+        "", d.mesaj.value.trim(), "",
+        "— parkardesen.com iletişim formu"
+      ].join("\n");
+
+      var hedef = "muhasebe@parkardesen.com";
+      var konu = "[Park Ardeşen AVM] " + d.konu.value + " — " + d.ad.value.trim();
+      window.location.href = "mailto:" + hedef +
+        "?subject=" + encodeURIComponent(konu) +
+        "&body=" + encodeURIComponent(govde);
+
+      durum.textContent = "E-posta uygulamanız açılıyor. Açılmazsa " + hedef +
+                          " adresine yazabilirsiniz.";
+      durum.className = "pa-form-durum basarili";
+    });
+
+    f.addEventListener("input", function (e) {
+      e.target.classList.remove("pa-hata");
+      var o = e.target.closest(".pa-form-onay");
+      if (o) o.classList.remove("pa-hata");
+    });
+  }
+
   /* --- Sayfa içi bağlantı düzeltmeleri -------------------------------
      Klonda kalan ?shop-category=... bağlantılarını mağaza listesine yönlendir. */
   function bagDuzelt() {
@@ -129,7 +192,7 @@
     } else { fn(); }
   }
 
-  hazir(function () { magazaFiltresi(); bagDuzelt(); menuKapatma(); });
+  hazir(function () { magazaFiltresi(); bagDuzelt(); menuKapatma(); iletisimFormu(); });
 
   /* pa-veri.js mağaza ızgarasını ve kategori listesini yeniden çizdiğinde
      filtrenin olay bağları kopuyor; yeniden kuruyoruz. */

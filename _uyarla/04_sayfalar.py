@@ -425,6 +425,54 @@ def entry2(s, ic):
                   lambda m: m.group(1) + "\n" + ic + "\n" + m.group(2), s, count=1)
 
 
+ILETISIM_FORM = """<div class="pa-form-kutu">
+  <h2 class="h2">Bize yazın</h2>
+  <p class="pa-form-giris">Formu doldurduğunuzda mesajınız e-posta uygulamanızda
+  hazır hâlde açılır; göndermek için tek yapmanız gereken &ldquo;Gönder&rdquo;
+  demek. Dilerseniz doğrudan <a href="mailto:{eposta}">{eposta}</a> adresine de
+  yazabilirsiniz.</p>
+  <form class="pa-form" data-pa-iletisim novalidate>
+    <div class="pa-form-satir">
+      <label><span class="pa-form-etiket">Ad Soyad <b>*</b></span>
+        <input name="ad" required autocomplete="name" placeholder="Adınız ve soyadınız">
+      </label>
+      <label><span class="pa-form-etiket">E-posta <b>*</b></span>
+        <input name="eposta" type="email" required autocomplete="email"
+               placeholder="ornek@eposta.com">
+      </label>
+    </div>
+    <div class="pa-form-satir">
+      <label><span class="pa-form-etiket">Telefon</span>
+        <input name="telefon" type="tel" autocomplete="tel" placeholder="05xx xxx xx xx">
+      </label>
+      <label><span class="pa-form-etiket">Konu</span>
+        <select name="konu">
+          <option>Genel bilgi</option>
+          <option>Mağaza kiralama</option>
+          <option>Kariyer / iş başvurusu</option>
+          <option>Kayıp eşya</option>
+          <option>Öneri ve şikâyet</option>
+          <option>Basın</option>
+        </select>
+      </label>
+    </div>
+    <label class="pa-form-genis">Mesajınız <span aria-hidden="true">*</span>
+      <textarea name="mesaj" rows="6" required placeholder="Mesajınızı yazın"></textarea>
+    </label>
+    <label class="pa-form-onay">
+      <input type="checkbox" name="kvkk" required>
+      <span><a href="{onek}gizlilik-politikasi/">Gizlilik Politikası ve KVKK
+      Aydınlatma Metni</a>ni okudum; mesajımı yanıtlayabilmeniz için kişisel
+      verilerimin işlenmesini kabul ediyorum.</span>
+    </label>
+    <div class="pa-form-alt">
+      <button type="submit" class="btn">Mesajı hazırla</button>
+      <span class="pa-form-durum" role="status"></span>
+    </div>
+  </form>
+</div>"""
+
+
 SAYFALAR = {}
 
 def sayfa(ad):
@@ -447,8 +495,12 @@ def _(s, onek):
 @sayfa("contact-us")
 def _(s, onek):
     s = entry(s, bicim(ILETISIM, onek))
-    s = s.replace('<h2 class="gform_title">Quick Contact</h2>',
-                  '<h2 class="gform_title">Bize yazın</h2>')
+    # Gravity Forms formu sunucusuz klonda çalışmıyordu ve KVKK açık rıza
+    # kutusu yoktu; yerine e-posta uygulamasını açan kendi formumuz geçiyor.
+    s = re.sub(r'(?s)(<div class="contact-form">).*?(</div>\s*</div>\s*</div>)',
+               lambda m: m.group(1) + "\n" +
+               ILETISIM_FORM.format(eposta=EPOSTA, onek=onek) + "\n" + m.group(2),
+               s, count=1)
     for en, tr in (("Full Name", "Ad Soyad"), ("Email Address", "E-posta adresi"),
                    ("Phone Number", "Telefon"), ("Do you have any questions?", "Konu"),
                    ("Message", "Mesajınız")):
@@ -459,11 +511,6 @@ def _(s, onek):
         s = s.replace("placeholder='%s'" % en, "placeholder='%s'" % tr)
     s = s.replace("value='Send message'", "value='Gönder'")
     # statik klonda form gönderilemez; kullanıcıyı telefon/e-postaya yönlendir
-    s = s.replace("</form>",
-                  "</form>\n<p class=\"pa-form-not\">Bu form demo amaçlıdır ve şu anda "
-                  "gönderilmemektedir. Bize <a href=\"tel:+904647153030\">%s</a> "
-                  "numarasından veya <a href=\"mailto:%s\">%s</a> adresinden "
-                  "ulaşabilirsiniz.</p>" % (TEL, EPOSTA, EPOSTA), 1)
     for en, tr in (("Careers", "Kariyer"), ("Media Center", "Medya Merkezi"),
                    ("Press", "Basında Biz")):
         s = s.replace("<h3>%s</h3>" % en, "<h3>%s</h3>" % tr)

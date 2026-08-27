@@ -197,7 +197,14 @@ def menuler(s):
     s = re.sub(r'href="[^"]*page/\d+/index\.html(#[^"]*)"', r'href="\1"', s)
     return s
 
-def footer(s):
+YASAL_MENU = (
+    '<li><a href="{onek}gizlilik-politikasi/index.html">Gizlilik Politikası ve KVKK</a></li>'
+    '<li><a href="{onek}cerez-politikasi/index.html">Çerez Politikası</a></li>'
+    '<li><a href="#" data-pa-cerez-ayar>Çerez Ayarları</a></li>'
+    '<li><a href="{onek}kullanim-kosullari/index.html">Kullanım Koşulları</a></li>')
+
+
+def footer(s, onek=""):
     s = s.replace("<h2>ABOUT US</h2>", "<h2>KURUMSAL</h2>")
     s = s.replace("<h2>VISITORS INFORMATION</h2>", "<h2>ZİYARETÇİ BİLGİLERİ</h2>")
     s = s.replace("<h2>CONTACT INFO</h2>", "<h2>İLETİŞİM</h2>")
@@ -207,6 +214,9 @@ def footer(s):
                '<a href="%s">%s</a>' % (TEL_HREF, TEL_GOSTER), s)
     s = re.sub(r"©dubaioutletmall \d{4}, All Rights Reserved",
                "© %s %s. Tüm hakları saklıdır." % ("2026", MARKA_KISA), s)
+    # footer yasal bağlantıları — çerez ayarları dahil (rıza geri alınabilmeli)
+    s = re.sub(r'(?s)(<div class="terms-privacy">\s*<ul>).*?(</ul>)',
+               lambda m: m.group(1) + YASAL_MENU.format(onek=onek) + m.group(2), s)
     return s
 
 CF_MAIL = re.compile(
@@ -274,10 +284,11 @@ def enjekte(s, onek):
                        '<meta name="pa-veri-url" content="%spanel/veri.json">' % onek, s)
             s = re.sub(r'<meta name="pa-site-kok" content="[^"]*">',
                        '<meta name="pa-site-kok" content="%s">' % onek, s)
-        if "pa-veri.js" not in s:
-            s = s.replace("</body>",
-                          '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n'
-                          % onek + "</body>", 1)
+        for betik in ("pa-veri.js", "pa-cerez.js"):
+            if betik not in s:
+                s = s.replace("</body>",
+                              '<script src="%swp-content/uploads/pa/%s"></script>\n'
+                              % (onek, betik) + "</body>", 1)
         return s
     bas = ('\n<meta name="pa-veri-url" content="%spanel/veri.json">\n'
            '<meta name="pa-site-kok" content="%s">\n'
@@ -286,7 +297,9 @@ def enjekte(s, onek):
            % (onek, onek, onek, onek))
     s = s.replace("</head>", bas + "</head>", 1)
     js = ('\n<script src="%swp-content/uploads/pa/pa-avm.js"></script>\n'
-          '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n' % (onek, onek))
+          '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n'
+          '<script src="%swp-content/uploads/pa/pa-cerez.js"></script>\n'
+          % (onek, onek, onek))
     s = s.replace("</body>", js + "</body>", 1)
     return s
 
@@ -298,7 +311,8 @@ def main():
         onek = kok_oneki(f)
         s = s0
         s = dil(s); s = baslik(s); s = logolar(s, onek); s = header(s, onek)
-        s = sosyal(s); s = whatsapp_ikonu(s); s = menuler(s); s = footer(s); s = eposta(s)
+        s = sosyal(s); s = whatsapp_ikonu(s); s = menuler(s)
+        s = footer(s, onek); s = eposta(s)
         s = temizle(s); s = cerez(s); s = marka(s); s = enjekte(s, onek)
         if s != s0:
             open(f, "w", encoding="utf-8").write(s)

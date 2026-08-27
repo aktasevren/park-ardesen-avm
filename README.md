@@ -45,6 +45,9 @@ Tamamı yeniden çalıştırılabilir. Zinciri baştan kurmak için:
 | `07_font_duzelt.py` | Golos Text'in bozuk `ğ/Ğ` gliflerini onarır |
 | `08_cloudflare.py` | Cloudflare Rocket Loader izlerini ve ölü eklenti dosyalarını temizler (zincirde **ilk** çalışır) |
 | `09_duyurular.py` | `duyurular/` sayfasını üretir ve menüye ekler |
+| `10_temizlik.py` | Kaldırılan eklentilerin ölü etiketlerini ve WordPress uçlarını (feed, xmlrpc, wp-json, emoji, izleme kodları) siler |
+| `11_seo.py` | Başlık/açıklama, canonical, Open Graph, Twitter, coğrafi meta, JSON-LD (ShoppingCenter, BreadcrumbList, FAQPage), `sitemap.xml`, `robots.txt` |
+| `12_yasal.py` | KVKK aydınlatma metni, gizlilik ve çerez politikası, iletişim sayfasındaki işletme bilgileri |
 
 Yardımcılar (sunucu 8001'de açıkken):
 
@@ -128,6 +131,48 @@ olarak duruyor; kalıcı değişiklikleri panelden yapın.
 Marka listesi ve logoları `parkardesen.com/referanslar` sayfasından, Grand Bowling ile
 V&K Prestij ise AVM dış cephe fotoğrafındaki tabelalardan alındı.
 **Kat ve mağaza numaraları temsilidir.**
+
+## SEO
+
+`11_seo.py` içindeki **`SITE_URL`** sabiti canonical, Open Graph ve sitemap
+adreslerini belirler. Kendi alan adına geçildiğinde **yalnızca bu satırı**
+güncelleyip zinciri yeniden çalıştırmak yeterli:
+
+    SITE_URL = "https://park-ardesen-avm.vercel.app"
+
+Yapısal veri (schema.org `ShoppingCenter`) adres, koordinat, telefon, çalışma
+saatleri ve hizmet verilen ilçeleri içerir. SSS sayfasındaki 12 soru `FAQPage`
+olarak işaretlenir (Google'da zengin sonuç).
+
+Koordinatlar Ardeşen merkezine göre yaklaşıktır (41.1917, 40.9856); kesin konum
+için Google Maps'ten alınan değerle güncelleyin.
+
+## Yasal
+
+| Sayfa | İçerik |
+|---|---|
+| `gizlilik-politikasi/` | KVKK aydınlatma metni: veri sorumlusu, işlenen veriler, amaçlar ve hukuki sebepler, aktarım, saklama, KVKK m.11 hakları, başvuru usulü |
+| `cerez-politikasi/` | Çerez kategorileri ve sitede kullanılan her kaydın tablosu (ad, amaç, süre, taraf) |
+| `kullanim-kosullari/` | Sitenin kullanımı, içerik doğruluğu, kampanyalar, fikri mülkiyet |
+| `contact-us/` | Resmî işletme bilgileri tablosu |
+
+**Çerez rızası** (`pa-cerez.js`): Kabul et / Reddet / Ayarlar. Zorunlu dışındaki
+kategoriler varsayılan olarak kapalı; rıza footer'daki "Çerez Ayarları"
+bağlantısından geri alınabilir. Üçüncü taraf araç eklenirse
+`window.paCerezIzni("olcumleme")` ile koşullandırın.
+
+**İletişim formu** e-posta uygulamasını açar (arka uç yok, sahte "gönderildi"
+mesajı yok) ve KVKK açık rıza kutusu içerir.
+
+### ⚠️ Yayın öncesi doldurulması gerekenler
+
+Metinlerde `[DOLDURULACAK]` olarak işaretli alanlar işletmenin resmî
+bilgileridir ve uydurulamaz:
+
+- Ticari unvan · Vergi dairesi ve numarası · MERSİS numarası · KEP adresi
+
+Bunlar `_uyarla/12_yasal.py` başındaki sabitlerde tanımlı. Metinlerin yayına
+alınmadan önce bir hukuk danışmanınca gözden geçirilmesi önerilir.
 
 ## Fontlar
 

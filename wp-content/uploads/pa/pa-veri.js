@@ -161,6 +161,17 @@
     // yalnızca anasayfada. (Tema, iç sayfalarda da <main class="home">
     // kullanıyor; bu yüzden anasayfaya özel duyuru bölümünü işaret alıyoruz.)
     if (!q("[data-pa-duyuru-bolum]")) return;
+
+    // Çerez rıza bandı açıkken duyuru penceresini göstermiyoruz; iki
+    // pencere aynı anda çıkınca ikisi de okunmuyor.
+    var izinVerildi = false;
+    try { izinVerildi = !!localStorage.getItem("pa-cerez-izni"); } catch (e) {}
+    if (!izinVerildi) {
+      document.addEventListener("pa:cerez-secildi", function () {
+        setTimeout(function () { acilisPenceresi(v); }, 400);
+      }, { once: true });
+      return;
+    }
     var liste = (v.duyurular || []).filter(function (d) {
       return aktif(d) && (d.yerler || []).indexOf("acilis-penceresi") >= 0;
     });

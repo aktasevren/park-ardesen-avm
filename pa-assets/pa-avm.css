@@ -430,3 +430,130 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
 
 /* ---- kampanya kartında tarih ---- */
 .pa-magaza-bilgi .pa-tarih{color:#a0a0a0;font-size:12px;margin-top:2px}
+
+/* ==================================================================
+   ÇEREZ RIZA BANDI (pa-cerez.js)
+   ================================================================== */
+.pa-cerez{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  background:#171717;color:#e8e8ea;
+  box-shadow:0 -8px 30px rgba(0,0,0,.28);
+  transform:translateY(110%);
+  transition:transform ease .3s;
+}
+.pa-cerez.acik{transform:none}
+.pa-cerez-ic{
+  max-width:1200px;margin:0 auto;padding:20px 24px;
+  display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+}
+.pa-cerez-metin{flex:1;min-width:280px;font-size:14px;line-height:1.5}
+.pa-cerez-metin strong{display:block;font-size:15px;margin-bottom:4px;color:#fff}
+.pa-cerez-metin p{margin:0;color:#b9b9bf}
+.pa-cerez-metin a{color:#fff;text-decoration:underline}
+.pa-cerez-dugmeler{display:flex;gap:10px;flex-wrap:wrap}
+.pa-cerez-btn{
+  border:1px solid #4a4a52;background:transparent;color:#e8e8ea;
+  padding:11px 20px;border-radius:99px;cursor:pointer;
+  font-size:14px;font-weight:500;white-space:nowrap;
+}
+.pa-cerez-btn:hover{border-color:#7a7a84;color:#fff}
+.pa-cerez-btn.birincil{background:#e11f26;border-color:#e11f26;color:#fff}
+.pa-cerez-btn.birincil:hover{background:#c9151c;border-color:#c9151c}
+@media (max-width:767px){
+  .pa-cerez-ic{padding:16px;gap:14px}
+  .pa-cerez-dugmeler{width:100%}
+  .pa-cerez-btn{flex:1;padding:11px 12px;text-align:center}
+}
+
+/* ---- ayar penceresi ---- */
+.pa-cerez-ortu{
+  position:fixed;inset:0;z-index:80;
+  background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;transition:opacity ease .3s;
+}
+.pa-cerez-ortu.acik{opacity:1}
+.pa-cerez-panel{
+  background:#fff;color:#2b2b2e;border-radius:14px;
+  max-width:620px;width:100%;max-height:88vh;overflow-y:auto;
+  padding:32px;position:relative;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.pa-cerez-panel h2{font-size:1.6rem;margin:0 0 10px}
+.pa-cerez-giris{color:#666;font-size:14.5px;margin:0 0 22px}
+.pa-cerez-kapat{
+  position:absolute;right:14px;top:14px;
+  width:34px;height:34px;border:0;border-radius:50%;
+  background:#f1f1f3;color:#171717;font-size:22px;line-height:1;cursor:pointer;
+}
+.pa-cerez-satir{
+  display:flex;gap:13px;align-items:flex-start;
+  padding:15px 0;border-top:1px solid #eee;cursor:pointer;
+}
+.pa-cerez-satir input{margin-top:3px;width:17px;height:17px;flex-shrink:0}
+.pa-cerez-satir strong{display:block;font-size:15px}
+.pa-cerez-satir em{display:block;font-style:normal;color:#777;font-size:13.5px;margin-top:2px}
+.pa-cerez-panel-alt{
+  display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;
+  margin-top:24px;padding-top:20px;border-top:1px solid #eee;
+}
+.pa-cerez-panel-alt .pa-cerez-btn{border-color:#d8d8dc;color:#2b2b2e}
+.pa-cerez-panel-alt .pa-cerez-btn:hover{border-color:#a8a8b0}
+.pa-cerez-panel-alt .pa-cerez-btn.birincil{color:#fff}
+@media (max-width:767px){
+  .pa-cerez-panel{padding:24px 20px}
+  .pa-cerez-panel-alt .pa-cerez-btn{flex:1;text-align:center}
+}
+
+/* ---- yasal metin tabloları ---- */
+.pa-tablo-sar{overflow-x:auto;margin:18px 0 24px}
+.pa-tablo{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+.pa-tablo th,.pa-tablo td{
+  border:1px solid #e6e6e8;padding:10px 13px;text-align:left;vertical-align:top;
+}
+.pa-tablo thead th{background:#f6f6f8;font-weight:600;white-space:nowrap}
+.pa-tablo tbody th{background:#fafafa;font-weight:600;width:200px}
+.pa-yasal-not{
+  margin-top:32px;padding:16px 20px;border-left:3px solid #e11f26;
+  background:#fbf4f4;font-size:14px;
+}
+.entry-content h3.wp-block-heading{margin-top:30px;margin-bottom:10px}
+.entry-content ul{margin:0 0 16px 20px}
+.entry-content ul li{margin-bottom:6px}
+.pa-isletme{margin-top:34px}
+
+/* ---------------- İletişim formu ---------------- */
+.pa-form-kutu{
+  border:1px solid #e6e6e8;border-radius:14px;padding:32px;background:#fff;
+}
+.pa-form-giris{color:#666;font-size:14.5px;margin:0 0 24px}
+.pa-form{display:flex;flex-direction:column;gap:16px}
+.pa-form-satir{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pa-form label{display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:600;color:#5a5a61}
+.pa-form label span[aria-hidden]{color:#e11f26}
+.pa-form input,.pa-form select,.pa-form textarea{
+  font:inherit;font-weight:400;color:#2b2b2e;
+  border:1px solid #dcdce0;border-radius:9px;padding:11px 13px;background:#fff;width:100%;
+}
+.pa-form textarea{resize:vertical;line-height:1.5}
+.pa-form input:focus,.pa-form select:focus,.pa-form textarea:focus{
+  outline:none;border-color:#1580c4;box-shadow:0 0 0 3px rgba(21,128,196,.12);
+}
+.pa-form .pa-hata{border-color:#e11f26;background:#fdf6f6}
+.pa-form-onay{
+  flex-direction:row !important;align-items:flex-start;gap:11px;
+  font-weight:400 !important;font-size:13.5px;color:#555;line-height:1.5;
+  padding:12px;border:1px solid transparent;border-radius:9px;
+}
+.pa-form-onay.pa-hata{border-color:#e11f26;background:#fdf6f6}
+.pa-form-onay input{width:17px;height:17px;margin-top:2px;flex-shrink:0}
+.pa-form-alt{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+.pa-form-durum{font-size:13.5px}
+.pa-form-durum.hata{color:#e11f26}
+.pa-form-durum.basarili{color:#3f8f2c}
+@media (max-width:767px){
+  .pa-form-kutu{padding:22px 18px}
+  .pa-form-satir{grid-template-columns:1fr}
+}
+.pa-form-etiket{display:block}
+.pa-form-etiket b{color:#e11f26;font-weight:600}
