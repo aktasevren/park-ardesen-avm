@@ -189,11 +189,12 @@ def menuler(s):
     for eski, yeni in DUZELTME.items():
         s = s.replace(">%s</a>" % eski, ">%s</a>" % yeni)
         s = s.replace(">%s</span>" % eski, ">%s</span>" % yeni)
-    # Mağazalar bağlantısı sayfalı sürüme gidiyordu
-    s = s.replace('href="shops/page/1/index.html"', 'href="shops/index.html"')
-    s = s.replace('href="../shops/page/1/index.html"', 'href="../shops/index.html"')
-    s = s.replace('href="../../shops/page/1/index.html"', 'href="../../shops/index.html"')
-    s = s.replace('href="../../../shops/page/1/index.html"', 'href="../../../shops/index.html"')
+    # Mağazalar bağlantısı, artık silinmiş olan sayfalı listeye gidiyordu
+    s = re.sub(r'href="((?:\.\./)*)shops/page/\d+/index\.html"',
+               r'href="\1shops/index.html"', s)
+    s = re.sub(r'href="page/\d+/index\.html"', 'href="index.html"', s)
+    # çerez bildirimindeki "#" bağlantısı sayfa yoluna yapışmıştı
+    s = re.sub(r'href="[^"]*page/\d+/index\.html(#[^"]*)"', r'href="\1"', s)
     return s
 
 def footer(s):
