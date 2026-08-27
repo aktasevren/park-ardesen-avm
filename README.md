@@ -48,6 +48,8 @@ Tamamı yeniden çalıştırılabilir. Zinciri baştan kurmak için:
 | `10_temizlik.py` | Kaldırılan eklentilerin ölü etiketlerini ve WordPress uçlarını (feed, xmlrpc, wp-json, emoji, izleme kodları) siler |
 | `11_seo.py` | Başlık/açıklama, canonical, Open Graph, Twitter, coğrafi meta, JSON-LD (ShoppingCenter, BreadcrumbList, FAQPage), `sitemap.xml`, `robots.txt` |
 | `12_yasal.py` | KVKK aydınlatma metni, gizlilik ve çerez politikası, iletişim sayfasındaki işletme bilgileri |
+| `13_kaldirilan_sayfalar.py` | Siteden çıkarılan sayfaları menülerden ve iç bağlantılardan temizler |
+| `14_harita.py` | Footer'daki mini harita görselini OpenStreetMap karolarından üretir (zincirde **ilk** çalışır) |
 
 Yardımcılar (sunucu 8001'de açıkken):
 
@@ -147,6 +149,24 @@ olarak işaretlenir (Google'da zengin sonuç).
 Koordinatlar Ardeşen merkezine göre yaklaşıktır (41.1917, 40.9856); kesin konum
 için Google Maps'ten alınan değerle güncelleyin.
 
+## Footer haritası
+
+Adresin altındaki küçük harita, **derleme sırasında üretilmiş yerel bir PNG**
+(`14_harita.py`). Gömme (iframe) harita kullanılmadı çünkü:
+
+- her ziyarette üçüncü taraf sunucuya bağlanır, KVKK/GDPR açısından rıza gerektirir
+  ve ziyaretçinin IP'sini dışarı verir,
+- OpenStreetMap'in yeni gömme haritası WebGL istiyor; desteklemeyen cihazlarda
+  hata metni görünüyor.
+
+Tıklanınca Google Haritalar'da yol tarifi açılır. Görsel © OpenStreetMap
+katkıcıları; atıf haritanın üzerinde yer alıyor.
+
+**Koordinat** `14_harita.py` içindeki `KONUM` sabitinde ve `11_seo.py` içindeki
+`ENLEM/BOYLAM` değerlerinde tanımlı. Şu an Cumhuriyet Mahallesi merkezidir
+(41.190868, 40.987404 — Nominatim). Binanın tam konumunu Google Haritalar'dan
+alıp iki yeri de güncelleyin.
+
 ## Yasal
 
 | Sayfa | İçerik |
@@ -216,7 +236,15 @@ Kullanıcı isteğiyle uyarlanamayan orijinal sayfalar **silinmedi**:
 - `shop/*` — Dubai Outlet Mall mağaza detay sayfaları (13 adet)
 - `deal/*` — orijinal kampanya detay sayfaları (8 adet)
 - `shops/page/2..12` — orijinal sayfalı mağaza listeleri
-- `_yedek-ayna/` — wget'in ürettiği ikinci aynanın tamamı (dağıtıma girmez)
+- `_yedek-ayna/` — wget'in ürettiği ikinci aynanın tamamı (silindi)
+
+## Siteden çıkarılan sayfalar
+
+Broşürler, Basında Biz, Medya Merkezi ve Çalışma Saatleri sayfaları
+kaldırıldı. Bunlara giden bağlantılar `13_kaldirilan_sayfalar.py` tarafından
+şu sayfalara yönlendirilir: Medya Merkezi → Mağazalar, Basında Biz →
+Duyurular, Broşürler → Kat Planı, Çalışma Saatleri → İletişim (çalışma
+saatleri kartı orada).
 
 Menüden erişilen sayfaların tamamı uyarlandı; bunlar menüde yer almıyor.
 

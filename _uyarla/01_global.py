@@ -129,8 +129,12 @@ def logolar(s, onek):
 SHOP_ONLINE = re.compile(
     r'\s*<a class="btn-reset btn d-none d-md-block"[^>]*>\s*SHOP ONLINE\s*</a>', re.I)
 
+# sitede arama yok; başlıktaki büyüteç yanıltıcıydı
+ARAMA = re.compile(r'(?s)\s*<a class="btn-reset btn-search"[^>]*>.*?</a>')
+
 def header(s, onek):
     s = SHOP_ONLINE.sub("", s)
+    s = ARAMA.sub("", s)
     s = s.replace("<span>Menu</span>", "<span>Menü</span>")
     s = s.replace("<h2>Menu</h2>", "<h2>Menü</h2>")
     s = s.replace("<span>Map</span>", "<span>Harita</span>")
@@ -204,12 +208,30 @@ YASAL_MENU = (
     '<li><a href="{onek}kullanim-kosullari/index.html">Kullanım Koşulları</a></li>')
 
 
+# Footer'daki mini harita: derleme sırasında üretilmiş yerel bir görsel
+# (bkz. _uyarla/14_harita.py). Gömme harita kullanmıyoruz — her ziyarette
+# üçüncü taraf sunucuya bağlanır, rıza gerektirir ve WebGL isteyebilir.
+HARITA_BLOK = (
+    '<a class="pa-mini-harita" href="{harita}" target="_blank" rel="noopener" '
+    'aria-label="Park Ardeşen AVM konumu — Google Haritalar\'da aç">'
+    '<img src="{onek}wp-content/uploads/pa/gorseller/harita.png" '
+    'alt="Park Ardeşen AVM\'in Ardeşen, Rize\'deki konumunu gösteren harita" '
+    'loading="lazy" decoding="async" width="380" height="190">'
+    '<span class="pa-harita-yol">Yol tarifi al</span>'
+    '<span class="pa-harita-katki">&copy; OpenStreetMap katkıcıları</span>'
+    "</a>")
+
+
 def footer(s, onek=""):
     s = s.replace("<h2>ABOUT US</h2>", "<h2>KURUMSAL</h2>")
     s = s.replace("<h2>VISITORS INFORMATION</h2>", "<h2>ZİYARETÇİ BİLGİLERİ</h2>")
     s = s.replace("<h2>CONTACT INFO</h2>", "<h2>İLETİŞİM</h2>")
     s = re.sub(r"Dubai Outlet Mall,<br/>\s*Dubai Al-Ain Road \(Route 66\),<br/>\s*Dubai, UAE\.",
                ADRES_HTML, s)
+    # adresin hemen altına küçük harita
+    if "pa-mini-harita" not in s:
+        s = s.replace(ADRES_HTML, ADRES_HTML + "\n" +
+                      HARITA_BLOK.format(harita=HARITA, onek=onek), 1)
     s = re.sub(r'<a href="tel:\+971 44234666">\+971 44234666</a>',
                '<a href="%s">%s</a>' % (TEL_HREF, TEL_GOSTER), s)
     s = re.sub(r"©dubaioutletmall \d{4}, All Rights Reserved",

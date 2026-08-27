@@ -13,7 +13,7 @@ for f in _orijinal/*.html; do
   esac
 done
 
-for s in 08_cloudflare 01_global 02_anasayfa 03_magazalar 04_sayfalar 05_ek_sayfalar 09_duyurular 06_baglantilar 10_temizlik 11_seo 12_yasal 07_font_duzelt; do
+for s in 14_harita 08_cloudflare 01_global 02_anasayfa 03_magazalar 04_sayfalar 05_ek_sayfalar 09_duyurular 06_baglantilar 10_temizlik 11_seo 12_yasal 13_kaldirilan_sayfalar 07_font_duzelt; do
   echo "→ $s"
   python3 "_uyarla/$s.py"
 done

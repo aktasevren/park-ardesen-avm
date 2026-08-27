@@ -23,7 +23,7 @@ TEL_YAZI = "0464 715 30 30"
 EPOSTA = "muhasebe@parkardesen.com"
 ADRES = "Cumhuriyet Mah. Sultan Alparslan Cad. No: 2/1"
 ILCE, IL, PK = "Ardeşen", "Rize", "53400"
-ENLEM, BOYLAM = 41.1917, 40.9856          # Ardeşen merkez (yaklaşık)
+ENLEM, BOYLAM = 41.190868, 40.987404      # Cumhuriyet Mah., Ardeşen (yaklaşık)
 GORSEL = "/wp-content/uploads/pa/gorseller/avm-dis-cephe.jpg"
 INSTAGRAM = "https://www.instagram.com/parkardesenavm/"
 FACEBOOK = "https://www.facebook.com/parkardesen"
@@ -86,22 +86,13 @@ SAYFALAR = {
                 "Park Ardeşen AVM'ye nasıl gidilir? Karadeniz Sahil Yolu, dolmuş ve "
                 "otobüs hatları, ücretsiz otopark ve çevre ilçelere uzaklıklar."),
 
-    "bus-schedule": ("Çalışma Saatleri ve Servis — Park Ardeşen AVM | Ardeşen",
-                     "Park Ardeşen AVM her gün 10:00–22:00 açık. Otopark, servis ve "
-                     "ulaşım bilgileri; bayram ve özel gün saatleri."),
 
     "outlet-plus-card": ("Park Kart — Park Ardeşen AVM | Ardeşen, Rize",
                          "Park Kart ile katılımcı mağazalarda ekstra indirim. "
                          "Ücretsiz kartınızı zemin kattaki danışma bankosundan alın."),
 
-    "media-center": ("Medya Merkezi — Park Ardeşen AVM | Ardeşen, Rize",
-                     "Park Ardeşen AVM fotoğrafları ve basın için görsel talepleri."),
 
-    "press": ("Basında Biz — Park Ardeşen AVM | Ardeşen, Rize",
-              "Park Ardeşen AVM ile ilgili basın bültenleri ve haberler."),
 
-    "brochure": ("Broşürler — Park Ardeşen AVM | Ardeşen, Rize",
-                 "Park Ardeşen AVM kat planı ve mağaza rehberi broşürleri."),
 
     "gizlilik-politikasi": ("Gizlilik Politikası ve KVKK Aydınlatma Metni — " + AD,
                             "Park Ardeşen AVM internet sitesinde kişisel verilerin "
@@ -124,9 +115,9 @@ MENU_ADI = {
     "about-dom": "Hakkımızda", "services": "Hizmetlerimiz",
     "contact-us": "İletişim", "faq": "Sıkça Sorulan Sorular",
     "leasing": "Mağaza Kiralama", "careers": "Kariyer", "tourism": "Ulaşım",
-    "bus-schedule": "Çalışma Saatleri", "outlet-plus-card": "Park Kart",
-    "media-center": "Medya Merkezi", "press": "Basında Biz",
-    "brochure": "Broşürler", "gizlilik-politikasi": "Gizlilik Politikası",
+     "outlet-plus-card": "Park Kart",
+     
+     "gizlilik-politikasi": "Gizlilik Politikası",
     "kullanim-kosullari": "Kullanım Koşulları",
     "cerez-politikasi": "Çerez Politikası",
 }
