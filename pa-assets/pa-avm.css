@@ -649,3 +649,16 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   .pa-kat3d-satir{grid-template-columns:1fr;gap:18px}
   .pa-kat3d-bilgi h3{font-size:1.5rem}
 }
+
+/* kat şemasındaki tesisler (giriş, WC, danışma…) */
+.pa-kat3d-etiket{font-family:"Golos Text",sans-serif;letter-spacing:.02em}
+.pa-kat3d-tesis{
+  list-style:none;margin:16px 0 0;padding:14px 0 0;
+  border-top:1px solid #ececee;
+  display:flex;flex-wrap:wrap;gap:9px 14px;
+}
+.pa-kat3d-tesis li{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#5a5a61}
+.pa-kat3d-tesis-rozet{
+  color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.03em;
+  padding:3px 8px;border-radius:5px;
+}

@@ -428,6 +428,20 @@
     kozmetik:  "#D6489B", market:   "#E4572E", "yeme-icme": "#2FA36B",
     eglence:   "#F2B705", hizmet:   "#7A8794"
   };
+  /* Mağaza dışı birimler: giriş, WC, danışma… Koridora yerleştiriliyor. */
+  var TESIS = {
+    giris:   { etiket: "GİRİŞ",   renk: "#e11f26", genis: 2.6 },
+    wc:      { etiket: "WC",      renk: "#4a4a55", genis: 1.7 },
+    danisma: { etiket: "DANIŞMA", renk: "#1580c4", genis: 2.4 },
+    mescit:  { etiket: "MESCİT",  renk: "#3f8f2c", genis: 2.2 },
+    asansor: { etiket: "ASANSÖR", renk: "#7a5af8", genis: 2.2 },
+    atm:     { etiket: "ATM",     renk: "#8a8a94", genis: 1.7 }
+  };
+  function tesisTur(t) {
+    return TESIS[t] || { etiket: String(t || "").toLocaleUpperCase("tr"),
+                         renk: "#8a8a94", genis: 2.2 };
+  }
+
   var U = 32;                       // birim boy (piksel)
   var GENISLIK = 15, DERINLIK = 7;  // plan ızgarası
 
@@ -470,6 +484,26 @@
       sira + "</text></g>";
   }
 
+  /* Koridordaki tesis plakası: alçak kutu + üstünde etiket */
+  function tesisPlakasi(x, y, w, d, tur) {
+    var t = tesisTur(tur);
+    var g = kutu(x, y, w, d, 0.28, t.renk);
+    var p = iso(x + w / 2, y + d / 2, 0.3);
+    g += '<text x="' + p[0].toFixed(1) + '" y="' + (p[1] + 4).toFixed(1) +
+         '" text-anchor="middle" font-size="12" font-weight="700" ' +
+         'fill="#fff" class="pa-kat3d-etiket">' + kacis(t.etiket) + "</text>";
+    return g;
+  }
+
+  /* Giriş oku — ön cepheden içeri doğru */
+  function girisOku(x, y) {
+    var a = iso(x, y + 1.9, 0.05), b = iso(x, y, 0.05);
+    return '<line x1="' + nokta(a).replace(",", '" y1="') + '" x2="' +
+      nokta(b).replace(",", '" y2="') +
+      '" stroke="#e11f26" stroke-width="3" stroke-dasharray="6 4" ' +
+      'marker-end="url(#paOk2)"/>';
+  }
+
   /* Yürüyen merdiven — referans çizimdeki gibi kırmızı */
   function merdiven(x, y) {
     var g = dortgen(x, y, 3.4, 1.6, "#e11f26", "rgba(0,0,0,.15)");
@@ -486,7 +520,7 @@
     return g;
   }
 
-  function katCizimi(magazalar) {
+  function katCizimi(magazalar, tesisler) {
     // numaralar planda soldan sağa okunabilsin diye: ilk yarı ön sıra,
     // ikinci yarı arka sıra (dönüşümlü dağıtmak numaraları dağıtıyordu)
     var kesme = Math.ceil(magazalar.length / 2);
@@ -498,7 +532,7 @@
     // koridor
     parcalar.push(dortgen(0, 2.6, GENISLIK, 1.8, "#f7f7f8", "rgba(0,0,0,.08)"));
 
-    var rozetler = [], sira = 0, yerlesim = [];
+    var rozetler = [], sira = 0, yerlesim = [], girisVar = false;
 
     function satirCiz(liste, y0, derinlik) {
       var gen = GENISLIK / Math.max(liste.length, 1);
@@ -512,17 +546,43 @@
       });
     }
 
-    // çizim sırası önemli: arkadaki kutular önce, sonra merdiven, sonra ön sıra
+    // çizim sırası önemli: arkadaki kutular önce, sonra koridor, sonra ön sıra
     var sayacBaslangic = on.length;
     sira = sayacBaslangic;            // arka sıra numaraları ön sıradan sonra
     satirCiz(arka, 0.25, 2.2);
+
+    // koridor: solda/sağda tesisler, ortada yürüyen merdiven
+    var solX = 0.3, sagX = GENISLIK - 0.3;
+    (tesisler || []).forEach(function (t, i) {
+      var bilgi = tesisTur(t.tur);
+      if (t.tur === "giris") {
+        // giriş, ön cephede — plakanın dışında kalsın ki mağaza bloklarıyla
+        // üst üste binmesin
+        girisVar = true;
+        var gx = GENISLIK - bilgi.genis - 1.4;
+        parcalar.push(tesisPlakasi(gx, DERINLIK + 0.55, bilgi.genis, 1.1, t.tur));
+        parcalar.push(girisOku(gx + bilgi.genis / 2, DERINLIK - 0.6));
+        return;
+      }
+      if (i % 2 === 0) {
+        parcalar.push(tesisPlakasi(solX, 2.85, bilgi.genis, 1.3, t.tur));
+        solX += bilgi.genis + 0.3;
+      } else {
+        sagX -= bilgi.genis;
+        parcalar.push(tesisPlakasi(sagX, 2.85, bilgi.genis, 1.3, t.tur));
+        sagX -= 0.3;
+      }
+    });
     parcalar.push(merdiven(GENISLIK / 2 - 1.7, 2.9));
+
     sira = 0;
     satirCiz(on, 4.55, 2.2);
     yerlesim.sort(function (a, b) { return a.no - b.no; });
 
-    var minx = iso(0, DERINLIK, 0)[0], maxx = iso(GENISLIK, 0, 0)[0];
-    var miny = iso(0, 0, 1)[1], maxy = iso(GENISLIK, DERINLIK, 0)[1];
+    var minx = iso(0, DERINLIK + (girisVar ? 1.7 : 0), 0)[0];
+    var maxx = iso(GENISLIK, 0, 0)[0];
+    var miny = iso(0, 0, 1)[1];
+    var maxy = iso(GENISLIK, DERINLIK + (girisVar ? 1.7 : 0), 0)[1];
     var p = 34;
     var vb = [minx - p, miny - p, (maxx - minx) + p * 2, (maxy - miny) + p * 2];
 
@@ -530,7 +590,10 @@
       svg: '<svg viewBox="' + vb.map(function (n) { return n.toFixed(1); }).join(" ") +
         '" role="img" aria-label="Kat şeması">' +
         '<defs><marker id="paOk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" ' +
-        'markerHeight="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff"/></marker></defs>' +
+        'markerHeight="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff"/></marker>' +
+        '<marker id="paOk2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" ' +
+        'markerHeight="4" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#e11f26"/></marker>' +
+        "</defs>" +
         parcalar.join("") + rozetler.join("") + "</svg>",
       yerlesim: yerlesim
     };
@@ -549,6 +612,10 @@
       var k = katAdi(m.kat);
       (katlar[k] = katlar[k] || []).push(m);
     });
+    (v.tesisler || []).forEach(function (t) {
+      var k = katAdi(t.kat);
+      katlar[k] = katlar[k] || [];
+    });
     var adlar = SIRA.filter(function (k) { return katlar[k]; })
       .concat(Object.keys(katlar).filter(function (k) { return SIRA.indexOf(k) < 0; }));
 
@@ -556,7 +623,10 @@
       var liste = katlar[ad].slice().sort(function (a, b) {
         return String(a.no).localeCompare(String(b.no));
       });
-      var c = katCizimi(liste);
+      var kattakiTesis = (v.tesisler || []).filter(function (t) {
+        return katAdi(t.kat) === ad;
+      });
+      var c = katCizimi(liste, kattakiTesis);
       return '<article class="pa-kat3d-satir">' +
         '<div class="pa-kat3d-gorsel">' + c.svg + "</div>" +
         '<div class="pa-kat3d-bilgi"><h3>' + kacis(ad) + "</h3>" +
@@ -567,7 +637,15 @@
               '<em>' + kacis(o.m.no || "") + " &middot; " +
               kacis(katAd[o.m.kategori] || "") + "</em></span></li>";
           }).join("") +
-        "</ol></div></article>";
+        "</ol>" +
+        (kattakiTesis.length
+          ? '<ul class="pa-kat3d-tesis">' + kattakiTesis.map(function (t) {
+              var b = tesisTur(t.tur);
+              return '<li><span class="pa-kat3d-tesis-rozet" style="background:' +
+                b.renk + '">' + kacis(b.etiket) + "</span>" + kacis(t.ad) + "</li>";
+            }).join("") + "</ul>"
+          : "") +
+        "</div></article>";
     }).join("") +
     '<p class="pa-kat-not">Çizim yönlendirme amaçlı şematiktir; birimlerin ' +
     'gerçek yerleşimi ve ölçüleri farklıdır. Kırmızı bant yürüyen merdiveni ' +

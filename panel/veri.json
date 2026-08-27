@@ -487,5 +487,43 @@
     "gorseller/avm-dis-cephe.jpg",
     "gorseller/ic-mekan-1.webp",
     "gorseller/ic-mekan-2.webp"
+  ],
+  "tesisler": [
+    {
+      "id": "t1",
+      "ad": "AVM Girişi",
+      "tur": "giris",
+      "kat": "Zemin Kat"
+    },
+    {
+      "id": "t2",
+      "ad": "Danışma",
+      "tur": "danisma",
+      "kat": "Zemin Kat"
+    },
+    {
+      "id": "t3",
+      "ad": "WC",
+      "tur": "wc",
+      "kat": "Zemin Kat"
+    },
+    {
+      "id": "t4",
+      "ad": "WC",
+      "tur": "wc",
+      "kat": "1. Kat"
+    },
+    {
+      "id": "t5",
+      "ad": "WC",
+      "tur": "wc",
+      "kat": "2. Kat"
+    },
+    {
+      "id": "t6",
+      "ad": "Mescit",
+      "tur": "mescit",
+      "kat": "1. Kat"
+    }
   ]
 }

@@ -158,6 +158,13 @@ numaralar yandaki listeye karşılık gelir; kırmızı bant yürüyen merdivend
 Yönlendirme amaçlı şematik bir çizimdir, mimari proje değildir; sayfadaki
 not bunu belirtiyor.
 
+Mağaza dışı birimler (AVM girişi, WC, danışma, mescit, asansör, ATM)
+`panel/veri.json` içindeki **`tesisler`** dizisinde tutulur ve şemada
+koridora yerleştirilir; giriş, ön cephenin dışına oka bağlı olarak çizilir.
+Yeni birim eklemek için diziye `{"id","ad","tur","kat"}` eklemek yeterli
+(`tur`: `giris` · `wc` · `danisma` · `mescit` · `asansor` · `atm`).
+Bu bölümün panel arayüzü henüz yok; şimdilik JSON'dan düzenleniyor.
+
 Kat adları panelde açılır listeden seçilir (Zemin Kat / 1. Kat / 2. Kat).
 Eski kayıtlarda "1" gibi serbest yazımlar olabildiği için site tarafında
 `katAdi()` ile normalleştirilir; aksi hâlde her yazım ayrı bir kat grubu
