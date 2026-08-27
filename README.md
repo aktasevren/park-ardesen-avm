@@ -149,6 +149,20 @@ olarak işaretlenir (Google'da zengin sonuç).
 Koordinatlar Ardeşen merkezine göre yaklaşıktır (41.1917, 40.9856); kesin konum
 için Google Maps'ten alınan değerle güncelleyin.
 
+## Kat planı şeması
+
+`mall-map/` sayfasındaki izometrik kat şeması `pa-veri.js` içinde
+(`katPlani3D`) **mağaza verisinden çizilir** — panelden mağaza eklenip
+çıkarıldığında şema da kendiliğinden güncellenir. Blok renkleri kategoriye,
+numaralar yandaki listeye karşılık gelir; kırmızı bant yürüyen merdivendir.
+Yönlendirme amaçlı şematik bir çizimdir, mimari proje değildir; sayfadaki
+not bunu belirtiyor.
+
+Kat adları panelde açılır listeden seçilir (Zemin Kat / 1. Kat / 2. Kat).
+Eski kayıtlarda "1" gibi serbest yazımlar olabildiği için site tarafında
+`katAdi()` ile normalleştirilir; aksi hâlde her yazım ayrı bir kat grubu
+oluşturuyordu.
+
 ## Footer haritası
 
 Adresin altındaki küçük harita, **derleme sırasında üretilmiş yerel bir PNG**

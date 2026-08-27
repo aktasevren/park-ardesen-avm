@@ -75,6 +75,9 @@ def kat_plani(onek):
             for m in sorted(katlar[k], key=lambda x: x.get("no", "")))
         bloklar.append('<div class="pa-kat"><h3>%s</h3><ul>%s</ul></div>' % (k, satirlar))
     return ('<div class="container">\n'
+            # izometrik şema (pa-veri.js çiziyor); JS yoksa aşağıdaki liste kalır
+            '<div class="pa-kat3d" data-pa-kat3d></div>\n'
+            '<h2 class="h2 pa-kat-liste-baslik">Kat kat mağaza listesi</h2>\n'
             '<div class="pa-kat-plani">\n%s\n</div>\n'
             '<p class="pa-kat-not">Kat ve mağaza numaraları temsilidir; '
             'kesin yerleşim için AVM danışma bankosuna başvurabilirsiniz.</p>\n'

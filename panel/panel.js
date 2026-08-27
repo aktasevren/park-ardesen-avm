@@ -66,6 +66,21 @@
   };
   var DURUMLAR = { bos: "Boş", rezerve: "Rezerve", dolu: "Dolu" };
 
+  /* Kat serbest metin olduğunda "1" gibi yazımlar site tarafında ayrı bir
+     kat grubu yaratıyordu; açılır listeye çevirdik. */
+  var KATLAR = { "Zemin Kat": "Zemin Kat", "1. Kat": "1. Kat", "2. Kat": "2. Kat" };
+
+  function katNormal(k) {
+    var t = String(k == null ? "" : k).trim();
+    if (KATLAR[t]) return t;
+    var l = t.toLocaleLowerCase("tr");
+    if (/^(z|zemin|0\b)/.test(l)) return "Zemin Kat";
+    if (/birinci/.test(l)) return "1. Kat";
+    if (/ikinci/.test(l)) return "2. Kat";
+    var m = l.match(/(\d+)/);
+    return m && KATLAR[m[1] + ". Kat"] ? m[1] + ". Kat" : "Zemin Kat";
+  }
+
   var BOLUMLER = [
     { id: "ozet",       ad: "Genel Bakış",     ikon: "📊" },
     { id: "duyurular",  ad: "Duyurular",       ikon: "📢" },
@@ -380,7 +395,7 @@
         html += kartKabugu("Birim düzenle", rozet,
           '<div class="alanlar" data-form>' +
             metinAlani("birim", "Birim no", b.birim, false, "Örn. Z-14") +
-            metinAlani("kat", "Kat", b.kat, false, "Zemin Kat / 1. Kat / 2. Kat") +
+            secim("kat", "Kat", katNormal(b.kat), KATLAR) +
             sayiAlani("m2", "Alan (m²)", b.m2) +
             metinAlani("kategori", "Uygun kategori", b.kategori) +
             secim("durum", "Durum", b.durum, DURUMLAR) +
@@ -413,7 +428,7 @@
             metinAlani("ad", "Mağaza adı", m.ad) +
             metinAlani("slug", "Kısa ad (slug)", m.slug, false, "Benzersiz olmalı") +
             secim("kategori", "Kategori", m.kategori, kat) +
-            metinAlani("kat", "Kat", m.kat) +
+            secim("kat", "Kat", katNormal(m.kat), KATLAR) +
             metinAlani("no", "Mağaza no", m.no) +
             secim("logo", "Logo", m.logo || "", logolar) +
             yaziAlani("aciklama", "Açıklama", m.aciklama) +

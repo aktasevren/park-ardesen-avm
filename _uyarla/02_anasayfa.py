@@ -37,6 +37,19 @@ KAMPANYA = [
 ]
 
 
+IG_LOGO = (
+    '<svg class="pa-ig-logo" viewBox="0 0 48 48" role="img" '
+    'aria-label="Instagram" focusable="false">'
+    '<defs><linearGradient id="paIgG" x1="0" y1="1" x2="1" y2="0">'
+    '<stop offset="0" stop-color="#FEDA75"/><stop offset=".25" stop-color="#FA7E1E"/>'
+    '<stop offset=".5" stop-color="#D62976"/><stop offset=".75" stop-color="#962FBF"/>'
+    '<stop offset="1" stop-color="#4F5BD5"/></linearGradient></defs>'
+    '<rect x="3" y="3" width="42" height="42" rx="12" fill="url(#paIgG)"/>'
+    '<rect x="10.5" y="10.5" width="27" height="27" rx="8" fill="none" '
+    'stroke="#fff" stroke-width="3.2"/>'
+    '<circle cx="24" cy="24" r="6.6" fill="none" stroke="#fff" stroke-width="3.2"/>'
+    '<circle cx="33.6" cy="14.4" r="2.3" fill="#fff"/></svg>')
+
 def logo_yolu(slug, onek):
     m = MAG.get(slug) or {}
     if m.get("logo"):
@@ -232,8 +245,10 @@ def uyarla(s, onek):
             s = s[:i] + s[j:]
 
     # ---- 10. Instagram ---------------------------------------------------
-    s = s.replace("<h2>DOM @<br>Instagram</h2>",
-                  "<h2>Park Ardeşen @<br>Instagram</h2>")
+    # "@ Instagram" yerine Instagram logosu
+    s = re.sub(r'<h2>(?:DOM|Park Ardeşen) @<br>Instagram</h2>',
+               '<h2 class="pa-ig-h2">Park Ardeşen<span class="pa-ig-satir">'
+               + IG_LOGO + 'Instagram</span></h2>', s, count=1)
     s = re.sub(r'<a href="https://www\.instagram\.com/dubaioutletmall/" class="btn">Follow us</a>',
                '<a href="https://www.instagram.com/parkardesenavm/" class="btn" target="_blank" rel="noopener">Takip et</a>', s)
     yeni_galeri = galeri_html(onek)

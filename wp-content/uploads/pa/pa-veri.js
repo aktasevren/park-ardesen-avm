@@ -94,6 +94,21 @@
   };
   function tur(t) { return TURLER[t] || { ad: "Duyuru", ikon: "📢" }; }
 
+  /* Kat adları panelde elle girilebildiği için "1", "1.kat", "Birinci"
+     gibi yazımlar oluşabiliyor; hepsini tek biçime indiriyoruz. */
+  function katAdi(k) {
+    var t = String(k == null ? "" : k).trim();
+    if (!t) return "Diğer";
+    var l = t.toLocaleLowerCase("tr");
+    if (/^(z|zemin|0\b|giri[sş])/.test(l)) return "Zemin Kat";
+    if (/bodrum/.test(l)) return "Bodrum Kat";
+    if (/birinci/.test(l)) return "1. Kat";
+    if (/ikinci/.test(l)) return "2. Kat";
+    if (/[uü][cç][uü]nc[uü]/.test(l)) return "3. Kat";
+    var m = l.match(/(\d+)/);
+    return m ? m[1] + ". Kat" : t;
+  }
+
   /* ---------------------------------------------------------- veri */
   function yerelVeri() {
     try {
@@ -359,7 +374,7 @@
           '<div class="card card-shop"><div>' +
             '<div class="pa-logo-kutu pa-magaza-logo">' + markaGorsel(m) + "</div>" +
             "<h2>" + kacis(m.ad) + "</h2>" +
-            '<div class="pa-magaza-bilgi"><span>' + kacis(m.kat) +
+            '<div class="pa-magaza-bilgi"><span>' + kacis(katAdi(m.kat)) +
               " &middot; No: " + kacis(m.no) + "</span><span>" +
               kacis(katAd[m.kategori] || "") + "</span></div>" +
           "</div></div></div>";
@@ -382,7 +397,8 @@
       var SIRA = ["Zemin Kat", "1. Kat", "2. Kat"];
       var katlar = {};
       mag.forEach(function (m) {
-        (katlar[m.kat || "Diğer"] = katlar[m.kat || "Diğer"] || []).push(m);
+        var k = katAdi(m.kat);
+        (katlar[k] = katlar[k] || []).push(m);
       });
       var adlar = SIRA.filter(function (k) { return katlar[k]; })
         .concat(Object.keys(katlar).filter(function (k) { return SIRA.indexOf(k) < 0; }));
@@ -398,6 +414,166 @@
     }
   }
 
+
+  /* ====================================================== İZOMETRİK KAT PLANI
+     Kat Planı sayfasında, katları üst üste gösteren şematik bir çizim.
+     Mağaza verisinden üretiliyor; panelden mağaza eklenip çıkarıldığında
+     plan da kendiliğinden güncelleniyor.
+
+     Gerçek mimari proje değil, yönlendirme amaçlı şematik bir gösterimdir —
+     sayfadaki not bunu açıkça söylüyor. */
+
+  var KAT_RENK = {
+    moda:      "#4C7FE0", ayakkabi: "#7A5AF8", "ev-yasam": "#E08A3C",
+    kozmetik:  "#D6489B", market:   "#E4572E", "yeme-icme": "#2FA36B",
+    eglence:   "#F2B705", hizmet:   "#7A8794"
+  };
+  var U = 32;                       // birim boy (piksel)
+  var GENISLIK = 15, DERINLIK = 7;  // plan ızgarası
+
+  function koyu(hex, oran) {
+    var n = parseInt(hex.slice(1), 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    return "rgb(" + [r, g, b].map(function (c) {
+      return Math.round(c * oran);
+    }).join(",") + ")";
+  }
+
+  function iso(x, y, z) {
+    return [(x - y) * U, (x + y) * U * 0.5 - (z || 0) * U];
+  }
+  function nokta(p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }
+
+  /* İzometrik kutu: üst yüz + iki yan yüz */
+  function kutu(x, y, w, d, h, renk) {
+    var ust = [iso(x, y, h), iso(x + w, y, h), iso(x + w, y + d, h), iso(x, y + d, h)];
+    var sol = [iso(x, y + d, h), iso(x + w, y + d, h), iso(x + w, y + d, 0), iso(x, y + d, 0)];
+    var sag = [iso(x + w, y, h), iso(x + w, y + d, h), iso(x + w, y + d, 0), iso(x + w, y, 0)];
+    return '<polygon points="' + sol.map(nokta).join(" ") + '" fill="' + koyu(renk, 0.66) + '"/>' +
+           '<polygon points="' + sag.map(nokta).join(" ") + '" fill="' + koyu(renk, 0.82) + '"/>' +
+           '<polygon points="' + ust.map(nokta).join(" ") + '" fill="' + renk +
+           '" stroke="rgba(255,255,255,.55)" stroke-width="1"/>';
+  }
+
+  function dortgen(x, y, w, d, dolgu, cizgi) {
+    var p = [iso(x, y, 0), iso(x + w, y, 0), iso(x + w, y + d, 0), iso(x, y + d, 0)];
+    return '<polygon points="' + p.map(nokta).join(" ") + '" fill="' + dolgu +
+           '" stroke="' + (cizgi || "none") + '" stroke-width="1.2"/>';
+  }
+
+  function rozet(x, y, sira) {
+    var p = iso(x, y, 0.95);
+    return '<g class="pa-kat3d-no"><circle cx="' + p[0].toFixed(1) + '" cy="' +
+      p[1].toFixed(1) + '" r="11" fill="#fff" stroke="rgba(0,0,0,.18)"/>' +
+      '<text x="' + p[0].toFixed(1) + '" y="' + (p[1] + 4).toFixed(1) +
+      '" text-anchor="middle" font-size="13" font-weight="700" fill="#2b2b2e">' +
+      sira + "</text></g>";
+  }
+
+  /* Yürüyen merdiven — referans çizimdeki gibi kırmızı */
+  function merdiven(x, y) {
+    var g = dortgen(x, y, 3.4, 1.6, "#e11f26", "rgba(0,0,0,.15)");
+    for (var i = 0; i < 6; i++) {
+      var a = iso(x + 0.35 + i * 0.5, y + 0.3, 0.02);
+      var b = iso(x + 0.35 + i * 0.5, y + 1.3, 0.02);
+      g += '<line x1="' + nokta(a).replace(",", '" y1="') + '" x2="' +
+           nokta(b).replace(",", '" y2="') + '" stroke="rgba(255,255,255,.75)" stroke-width="1.6"/>';
+    }
+    var u1 = iso(x + 0.6, y + 0.8, 0.06), u2 = iso(x + 2.9, y + 0.8, 0.06);
+    g += '<line x1="' + nokta(u1).replace(",", '" y1="') + '" x2="' +
+         nokta(u2).replace(",", '" y2="') +
+         '" stroke="#fff" stroke-width="2.4" marker-end="url(#paOk)"/>';
+    return g;
+  }
+
+  function katCizimi(magazalar) {
+    // numaralar planda soldan sağa okunabilsin diye: ilk yarı ön sıra,
+    // ikinci yarı arka sıra (dönüşümlü dağıtmak numaraları dağıtıyordu)
+    var kesme = Math.ceil(magazalar.length / 2);
+    var on = magazalar.slice(0, kesme), arka = magazalar.slice(kesme);
+
+    var parcalar = [];
+    // zemin plakası
+    parcalar.push(dortgen(0, 0, GENISLIK, DERINLIK, "#ececed", "rgba(0,0,0,.18)"));
+    // koridor
+    parcalar.push(dortgen(0, 2.6, GENISLIK, 1.8, "#f7f7f8", "rgba(0,0,0,.08)"));
+
+    var rozetler = [], sira = 0, yerlesim = [];
+
+    function satirCiz(liste, y0, derinlik) {
+      var gen = GENISLIK / Math.max(liste.length, 1);
+      liste.forEach(function (m, i) {
+        sira++;
+        var x = i * gen + 0.18, w = gen - 0.36;
+        var renk = KAT_RENK[m.kategori] || "#8a8a94";
+        parcalar.push(kutu(x, y0, w, derinlik, 0.9, renk));
+        rozetler.push(rozet(x + w / 2, y0 + derinlik / 2, sira));
+        yerlesim.push({ no: sira, m: m, renk: renk });
+      });
+    }
+
+    // çizim sırası önemli: arkadaki kutular önce, sonra merdiven, sonra ön sıra
+    var sayacBaslangic = on.length;
+    sira = sayacBaslangic;            // arka sıra numaraları ön sıradan sonra
+    satirCiz(arka, 0.25, 2.2);
+    parcalar.push(merdiven(GENISLIK / 2 - 1.7, 2.9));
+    sira = 0;
+    satirCiz(on, 4.55, 2.2);
+    yerlesim.sort(function (a, b) { return a.no - b.no; });
+
+    var minx = iso(0, DERINLIK, 0)[0], maxx = iso(GENISLIK, 0, 0)[0];
+    var miny = iso(0, 0, 1)[1], maxy = iso(GENISLIK, DERINLIK, 0)[1];
+    var p = 34;
+    var vb = [minx - p, miny - p, (maxx - minx) + p * 2, (maxy - miny) + p * 2];
+
+    return {
+      svg: '<svg viewBox="' + vb.map(function (n) { return n.toFixed(1); }).join(" ") +
+        '" role="img" aria-label="Kat şeması">' +
+        '<defs><marker id="paOk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" ' +
+        'markerHeight="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff"/></marker></defs>' +
+        parcalar.join("") + rozetler.join("") + "</svg>",
+      yerlesim: yerlesim
+    };
+  }
+
+  function katPlani3D(v) {
+    var hedef = q("[data-pa-kat3d]");
+    if (!hedef) return;
+
+    var katAd = {};
+    (v.kategoriler || []).forEach(function (k) { katAd[k.slug] = k.ad; });
+
+    var SIRA = ["2. Kat", "1. Kat", "Zemin Kat"];      // üstten alta
+    var katlar = {};
+    (v.magazalar || []).forEach(function (m) {
+      var k = katAdi(m.kat);
+      (katlar[k] = katlar[k] || []).push(m);
+    });
+    var adlar = SIRA.filter(function (k) { return katlar[k]; })
+      .concat(Object.keys(katlar).filter(function (k) { return SIRA.indexOf(k) < 0; }));
+
+    hedef.innerHTML = adlar.map(function (ad) {
+      var liste = katlar[ad].slice().sort(function (a, b) {
+        return String(a.no).localeCompare(String(b.no));
+      });
+      var c = katCizimi(liste);
+      return '<article class="pa-kat3d-satir">' +
+        '<div class="pa-kat3d-gorsel">' + c.svg + "</div>" +
+        '<div class="pa-kat3d-bilgi"><h3>' + kacis(ad) + "</h3>" +
+        '<ol class="pa-kat3d-liste">' +
+          c.yerlesim.map(function (o) {
+            return '<li><span class="pa-kat3d-rozet" style="background:' + o.renk + '">' +
+              o.no + '</span><span class="pa-kat3d-ad">' + kacis(o.m.ad) +
+              '<em>' + kacis(o.m.no || "") + " &middot; " +
+              kacis(katAd[o.m.kategori] || "") + "</em></span></li>";
+          }).join("") +
+        "</ol></div></article>";
+    }).join("") +
+    '<p class="pa-kat-not">Çizim yönlendirme amaçlı şematiktir; birimlerin ' +
+    'gerçek yerleşimi ve ölçüleri farklıdır. Kırmızı bant yürüyen merdiveni ' +
+    'gösterir.</p>';
+  }
+
   /* ============================================================ ÇALIŞTIR */
   function ciz(v) {
     if (!v) return;
@@ -408,6 +584,7 @@
     try { firsatGunleri(v); } catch (e) { console.warn("[pa] fırsat günleri", e); }
     try { kiralama(v); } catch (e) { console.warn("[pa] kiralama", e); }
     try { magazalar(v); } catch (e) { console.warn("[pa] mağazalar", e); }
+    try { katPlani3D(v); } catch (e) { console.warn("[pa] kat planı", e); }
     document.dispatchEvent(new CustomEvent("pa:veri-cizildi", { detail: v }));
   }
 
