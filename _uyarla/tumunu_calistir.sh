@@ -17,4 +17,8 @@ for s in 14_harita 08_cloudflare 01_global 02_anasayfa 03_magazalar 04_sayfalar 
   echo "→ $s"
   python3 "_uyarla/$s.py"
 done
+echo "→ dil sürümleri (/en/ /ka/ /ar/)"
+python3 "_dil/cikar.py" >/dev/null
+python3 "_dil/uret.py"
+
 echo "→ bitti"

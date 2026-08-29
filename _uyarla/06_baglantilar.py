@@ -4,7 +4,7 @@
 import re, os, glob, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git', '_dil', 'en', 'ka', 'ar')
 
 
 def site_dosyalari(desen=("*.html",)):

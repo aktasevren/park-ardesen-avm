@@ -11,7 +11,7 @@ hem gereksiz istek hem de "bu bir WordPress klonu" izi.
 import re, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git', '_dil', 'en', 'ka', 'ar')
 
 # cookie-notice eklentisi yalnızca "Tamam" düğmesi sunuyordu; KVKK/GDPR
 # için reddetme seçeneği şart olduğundan yerine kendi rıza bandımız geçti

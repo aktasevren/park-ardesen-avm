@@ -19,7 +19,7 @@ def durum(url):
 
 
 def main():
-    HARIC = ("_yedek-ayna", "_orijinal", "_uyarla", "panel", "api", "pa-assets", ".git")
+    HARIC = ("_yedek-ayna", "_orijinal", "_uyarla", "panel", "api", "pa-assets", ".git", '_dil', 'en', 'ka', 'ar')
     dosyalar = []
     for kok, dizinler, dsy in os.walk(ROOT):
         dizinler[:] = [d for d in dizinler if d not in HARIC]

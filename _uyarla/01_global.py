@@ -9,7 +9,7 @@ import re, os, glob, shutil, html
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Site artık depo kökünde duruyor (URL'lerde klasör adı görünmesin diye).
 # Aşağıdaki dizinler siteye ait değil, taranmaz.
-HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git', '_dil', 'en', 'ka', 'ar')
 
 
 def site_dosyalari(desen="*.html"):
@@ -340,6 +340,21 @@ def enjekte(s, onek):
     s = s.replace("</body>", js + "</body>", 1)
     return s
 
+# --- Türkçe kaynakta kalan İngilizce parçalar -------------------------------
+ICERIGE_GEC = [
+    (">Skip to content<", ">İçeriğe geç<"),
+    (">Close<", ">Kapat<"),
+    ('aria-label="Close"', 'aria-label="Kapat"'),
+    ('title="Close"', 'title="Kapat"'),
+]
+
+
+def ingilizce_kalintilari(s):
+    for eski, yeni in ICERIGE_GEC:
+        s = s.replace(eski, yeni)
+    return s
+
+
 def main():
     varliklari_kopyala()
     n = 0
@@ -350,7 +365,8 @@ def main():
         s = dil(s); s = baslik(s); s = logolar(s, onek); s = header(s, onek)
         s = sosyal(s); s = whatsapp_ikonu(s); s = menuler(s)
         s = footer(s, onek); s = eposta(s)
-        s = temizle(s); s = cerez(s); s = marka(s); s = enjekte(s, onek)
+        s = temizle(s); s = cerez(s); s = marka(s)
+        s = ingilizce_kalintilari(s); s = enjekte(s, onek)
         if s != s0:
             open(f, "w", encoding="utf-8").write(s)
             n += 1
@@ -358,3 +374,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

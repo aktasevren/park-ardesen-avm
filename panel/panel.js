@@ -196,6 +196,32 @@
       '</label><input data-a="' + ad + '" value="' + kacis(deger || "") + '">' +
       (ipucu ? '<span class="ipucu">' + kacis(ipucu) + "</span>" : "") + "</div>";
   }
+  /* Çok dilli metin alanı: TR/EN/KA/AR sekmeleri.
+     Boş bırakılan dil sitede Türkçesini gösterir (pa-dil.js → paMetin).
+     Değer yalnızca Türkçe doluysa veri düz metin olarak saklanır; böylece
+     panel kullanılmadan da veri.json sade kalır. */
+  var ML_DILLER = [["tr", "TR"], ["en", "EN"], ["ka", "KA"], ["ar", "AR"]];
+
+  function cokDilliAlan(ad, etiket, deger, cokSatir, ipucu) {
+    var v = (deger && typeof deger === "object") ? deger : { tr: deger || "" };
+    var sekmeler = ML_DILLER.map(function (d, i) {
+      return '<button type="button" class="ml-sekme' + (i === 0 ? " aktif" : "") +
+        '" data-ml-sekme="' + ad + "|" + d[0] + '">' + d[1] + "</button>";
+    }).join("");
+    var girisler = ML_DILLER.map(function (d, i) {
+      var deg = kacis(v[d[0]] || "");
+      var sinif = "ml-giris" + (i === 0 ? "" : " gizli");
+      var yon = d[0] === "ar" ? ' dir="rtl"' : "";
+      return cokSatir
+        ? '<textarea class="' + sinif + '" data-ml="' + ad + "|" + d[0] + '"' + yon + ">" + deg + "</textarea>"
+        : '<input class="' + sinif + '" data-ml="' + ad + "|" + d[0] + '"' + yon + ' value="' + deg + '">';
+    }).join("");
+    return '<div class="alan genis cokdil"><label>' + kacis(etiket) +
+      '<span class="ml-not">boş bırakılan dil Türkçesini gösterir</span></label>' +
+      '<div class="ml-sekmeler">' + sekmeler + "</div>" + girisler +
+      (ipucu ? '<span class="ipucu">' + kacis(ipucu) + "</span>" : "") + "</div>";
+  }
+
   function sayiAlani(ad, etiket, deger) {
     return '<div class="alan"><label>' + kacis(etiket) +
       '</label><input type="number" data-a="' + ad + '" value="' + kacis(deger || "") + '"></div>';
@@ -263,6 +289,23 @@
   }
 
   /* formdaki değerleri nesneye yaz */
+  /* Çok dilli alan sekmeleri */
+  document.addEventListener("click", function (e) {
+    var d = e.target.closest ? e.target.closest("[data-ml-sekme]") : null;
+    if (!d) return;
+    e.preventDefault();
+    var ad = d.getAttribute("data-ml-sekme").split("|")[0];
+    var kap = d.closest(".cokdil");
+    if (!kap) return;
+    $$("[data-ml-sekme]", kap).forEach(function (b) {
+      b.classList.toggle("aktif", b === d);
+    });
+    var secilen = d.getAttribute("data-ml-sekme");
+    $$("[data-ml]", kap).forEach(function (g) {
+      g.classList.toggle("gizli", g.getAttribute("data-ml") !== secilen);
+    });
+  });
+
   function formuOku(kok, hedef) {
     $$("[data-a]", kok).forEach(function (el) {
       var ad = el.getAttribute("data-a");
@@ -277,6 +320,23 @@
       if (el.checked) gruplar[ad].push(el.value);
     });
     Object.keys(gruplar).forEach(function (ad) { hedef[ad] = gruplar[ad]; });
+
+    // çok dilli alanlar
+    var ml = {};
+    $$("[data-ml]", kok).forEach(function (el) {
+      var p = el.getAttribute("data-ml").split("|");
+      (ml[p[0]] = ml[p[0]] || {})[p[1]] = el.value;
+    });
+    Object.keys(ml).forEach(function (ad) {
+      var dolu = {};
+      Object.keys(ml[ad]).forEach(function (k) {
+        var t = (ml[ad][k] || "").trim();
+        if (t) dolu[k] = t;
+      });
+      var k = Object.keys(dolu);
+      // yalnız Türkçe doluysa düz metin sakla — veri sade kalsın
+      hedef[ad] = k.length === 0 ? "" : (k.length === 1 && k[0] === "tr") ? dolu.tr : dolu;
+    });
     return hedef;
   }
 
@@ -358,9 +418,9 @@
       if (duzenlenen && duzenlenen.bolum === "duyurular" && duzenlenen.id === d.id) {
         html += kartKabugu("Duyuru düzenle", rozet,
           '<div class="alanlar" data-form>' +
-            metinAlani("baslik", "Başlık", d.baslik, true,
+            cokDilliAlan("baslik", "Başlık", d.baslik, false,
                        "Kısa ve net olsun. Örn. “Bayramda 23:00’e kadar açığız”") +
-            yaziAlani("metin", "Açıklama", d.metin) +
+            cokDilliAlan("metin", "Açıklama", d.metin, true) +
             secim("tur", "Konu (başındaki simgeyi belirler)", d.tur, TURLER) +
             onay("yayinda", "Sitede yayında", d.yayinda !== false, true) +
             maketSecim("yerler", "Nerede gösterilsin?", d.yerler, YERLER,
@@ -373,7 +433,7 @@
             'duyuru siteden kendiliğinden kalkar. Boş bırakırsanız siz ' +
             'kapatana kadar yayında kalır.</span></div>' +
             secim("bagUrl", "Duyuruya buton eklensin mi?", d.bagUrl || "", SAYFALAR_BAG) +
-            metinAlani("bagLabel", "Buton yazısı", d.bagLabel, false,
+            cokDilliAlan("bagLabel", "Buton yazısı", d.bagLabel, false,
                        "Boş bırakılırsa sayfanın adı yazılır") +
             secim("gorsel", "Görsel (yalnızca açılış penceresinde görünür)",
                   d.gorsel || "", gorselSecenekleri(), true) +
@@ -416,9 +476,9 @@
             magazaSecimi("magaza", "Mağaza", k.magaza) +
             onay("yayinda", "Yayında", k.yayinda !== false) +
             onay("oneCikar", "Anasayfada öne çıkar", !!k.oneCikar) +
-            metinAlani("baslik", "Kampanya başlığı", k.baslik, true,
+            cokDilliAlan("baslik", "Kampanya başlığı", k.baslik, false,
                        "Örn. Sezon sonunda %50'ye varan indirim") +
-            yaziAlani("aciklama", "Açıklama", k.aciklama) +
+            cokDilliAlan("aciklama", "Açıklama", k.aciklama, true) +
             tarihAlani("baslangic", "Başlangıç").replace('value=""', 'value="' + kacis(k.baslangic || "") + '"') +
             tarihAlani("bitis", "Bitiş").replace('value=""', 'value="' + kacis(k.bitis || "") + '"') +
             '<div class="alan genis"><span class="ipucu">Bitiş boş bırakılırsa kampanya ' +
@@ -446,10 +506,10 @@
       '<span class="rozet ' + (f.yayinda === false ? "kapali" : "yayinda") + '">' +
         (f.yayinda === false ? "Kapalı" : "Yayında") + "</span>",
       '<div class="alanlar" data-form-firsat>' +
-        metinAlani("baslik", "Başlık", f.baslik) +
-        metinAlani("donem", "Dönem", f.donem, false, "Örn. Her ayın ilk haftası") +
+        cokDilliAlan("baslik", "Başlık", f.baslik, false) +
+        cokDilliAlan("donem", "Dönem", f.donem, false, "Örn. Her ayın ilk haftası") +
         onay("yayinda", "Yayında", f.yayinda !== false) +
-        yaziAlani("aciklama", "Açıklama", f.aciklama) +
+        cokDilliAlan("aciklama", "Açıklama", f.aciklama, true) +
       "</div>" +
       '<div style="margin-top:10px"><button class="dugme ana kucuk" data-firsat-kaydet>Ayarları uygula</button></div>', "");
 
@@ -460,7 +520,7 @@
         html += kartKabugu("Katılımcı düzenle", "",
           '<div class="alanlar" data-form>' +
             magazaSecimi("magaza", "Mağaza", k.magaza) +
-            metinAlani("teklif", "Fırsat", k.teklif, true, "Örn. Sepette ek %20 indirim") +
+            cokDilliAlan("teklif", "Fırsat", k.teklif, false, "Örn. Sepette ek %20 indirim") +
           "</div>", formDugmeleri());
       } else {
         html += kartKabugu(kacis(magazaAdi(k.magaza)), "",
@@ -479,7 +539,7 @@
       "Mağaza Kiralama sayfasında liste olarak görünür.") +
       kartKabugu("Sayfa metni", "",
       '<div class="alanlar" data-form-kiralama>' +
-        yaziAlani("girisMetni", "Giriş metni", kr.girisMetni) +
+        cokDilliAlan("girisMetni", "Giriş metni", kr.girisMetni, true) +
         metinAlani("iletisimAd", "İletişim kişisi / ekip", kr.iletisimAd, true) +
       "</div>" +
       '<div style="margin-top:10px"><button class="dugme ana kucuk" data-kiralama-kaydet>Metni uygula</button></div>', "");
@@ -498,7 +558,7 @@
             metinAlani("kategori", "Uygun kategori", b.kategori) +
             secim("durum", "Durum", b.durum, DURUMLAR) +
             onay("yayinda", "Sitede göster", b.yayinda !== false) +
-            yaziAlani("aciklama", "Açıklama", b.aciklama) +
+            cokDilliAlan("aciklama", "Açıklama", b.aciklama, true) +
           "</div>", formDugmeleri());
       } else {
         html += kartKabugu(kacis(b.birim || "(numarasız)"), rozet,
@@ -533,7 +593,7 @@
             secim("kat", "Kat", katNormal(m.kat), KATLAR) +
             metinAlani("no", "Mağaza no", m.no) +
             secim("logo", "Logo", m.logo || "", logolar) +
-            yaziAlani("aciklama", "Açıklama", m.aciklama) +
+            cokDilliAlan("aciklama", "Açıklama", m.aciklama, true) +
           "</div>", formDugmeleri());
       } else {
         html += kartKabugu(kacis(m.ad), '<span class="rozet">' + kacis(kat[m.kategori] || "") + "</span>",

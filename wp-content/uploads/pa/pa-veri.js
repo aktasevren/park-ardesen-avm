@@ -84,7 +84,7 @@
   var DIKKAT_TURLERI = ["acil", "bakim"];
 
   var TURLER = {
-    saat:     { ad: "Çalışma saati", ikon: "🕒" },
+    saat:     { ad: paT("Çalışma saati"), ikon: "🕒" },
     acilis:   { ad: "Yeni mağaza",   ikon: "🎉" },
     yakinda:  { ad: "Yakında",       ikon: "🚧" },
     etkinlik: { ad: "Etkinlik",      ikon: "🎈" },
@@ -93,24 +93,24 @@
     hizmet:   { ad: "Yeni hizmet",   ikon: "✨" },
     bakim:    { ad: "Bakım",         ikon: "🛠️" },
     ulasim:   { ad: "Ulaşım",        ikon: "🅿️" },
-    sosyal:   { ad: "Sosyal sorumluluk", ikon: "❤️" },
+    sosyal:   { ad: paT("Sosyal sorumluluk"), ikon: "❤️" },
     acil:     { ad: "Acil duyuru",   ikon: "⚠️" }
   };
-  function tur(t) { return TURLER[t] || { ad: "Duyuru", ikon: "📢" }; }
+  function tur(t) { return TURLER[t] || { ad: paT("Duyuru"), ikon: "📢" }; }
 
   /* Kat adları panelde elle girilebildiği için "1", "1.kat", "Birinci"
      gibi yazımlar oluşabiliyor; hepsini tek biçime indiriyoruz. */
   function katAdi(k) {
     var t = String(k == null ? "" : k).trim();
-    if (!t) return "Diğer";
+    if (!t) return paT("Diğer");
     var l = t.toLocaleLowerCase("tr");
-    if (/^(z|zemin|0\b|giri[sş])/.test(l)) return "Zemin Kat";
-    if (/bodrum/.test(l)) return "Bodrum Kat";
-    if (/birinci/.test(l)) return "1. Kat";
-    if (/ikinci/.test(l)) return "2. Kat";
-    if (/[uü][cç][uü]nc[uü]/.test(l)) return "3. Kat";
+    if (/^(z|zemin|0\b|giri[sş])/.test(l)) return paT("Zemin Kat");
+    if (/bodrum/.test(l)) return paT("Bodrum Kat");
+    if (/birinci/.test(l)) return paT("1. Kat");
+    if (/ikinci/.test(l)) return paT("2. Kat");
+    if (/[uü][cç][uü]nc[uü]/.test(l)) return paT("3. Kat");
     var m = l.match(/(\d+)/);
-    return m ? m[1] + ". Kat" : t;
+    return m ? m[1] + ". " + paT("Kat") : t;
   }
 
   /* ---------------------------------------------------------- veri */
@@ -181,10 +181,10 @@
     el.innerHTML =
       '<div class="pa-serit-ic">' +
         '<span class="pa-serit-ikon">' + tur(d.tur).ikon + "</span>" +
-        '<span class="pa-serit-metin"><strong>' + kacis(d.baslik) + "</strong></span>" +
+        '<span class="pa-serit-metin"><strong>' + kacis(paMetin(d.baslik)) + "</strong></span>" +
         (d.bagUrl ? '<a class="pa-serit-bag" href="' + kacis(sayfa(d.bagUrl)) + '">' +
-                    kacis(d.bagLabel || "Detay") + "</a>" : "") +
-        '<button class="pa-serit-kapat" aria-label="Duyuruyu kapat">&times;</button>' +
+                    kacis(paMetin(d.bagLabel) || paT("Detay")) + "</a>" : "") +
+        '<button class="pa-serit-kapat" aria-label="' + kacis(paT("Duyuruyu kapat")) + '">&times;</button>' +
       "</div>";
     document.body.insertBefore(el, document.body.firstChild);
     document.documentElement.classList.add("pa-serit-var");
@@ -227,10 +227,10 @@
                     '" alt=""></div>' : "") +
         '<div class="pa-pencere-govde">' +
           '<span class="pa-etiket">' + tur(d.tur).ikon + " " + kacis(tur(d.tur).ad) + "</span>" +
-          "<h2>" + kacis(d.baslik) + "</h2>" +
-          "<p>" + kacis(d.metin) + "</p>" +
+          "<h2>" + kacis(paMetin(d.baslik)) + "</h2>" +
+          "<p>" + kacis(paMetin(d.metin)) + "</p>" +
           (d.bagUrl ? '<a class="btn" href="' + kacis(sayfa(d.bagUrl)) + '">' +
-                      kacis(d.bagLabel || "Detay") + "</a>" : "") +
+                      kacis(paMetin(d.bagLabel) || paT("Detay")) + "</a>" : "") +
         "</div>" +
       "</div>";
     document.body.appendChild(ortu);
@@ -257,10 +257,10 @@
         '<span class="pa-etiket">' + t.ikon + " " + kacis(t.ad) + "</span>" +
         '<time>' + kacis(tarihYaz(d.baslangic)) + "</time>" +
       "</div>" +
-      "<h3>" + kacis(d.baslik) + "</h3>" +
-      "<p>" + kacis(d.metin) + "</p>" +
+      "<h3>" + kacis(paMetin(d.baslik)) + "</h3>" +
+      "<p>" + kacis(paMetin(d.metin)) + "</p>" +
       (d.bagUrl ? '<a class="pa-duyuru-bag" href="' + kacis(sayfa(d.bagUrl)) + '">' +
-                  kacis(d.bagLabel || "Detay") + " &rarr;</a>" : "") +
+                  kacis(paMetin(d.bagLabel) || paT("Detay")) + " &rarr;</a>" : "") +
       "</article>";
   }
 
@@ -283,8 +283,8 @@
         "<div>" +
           '<div class="pa-logo-kutu pa-magaza-logo">' + markaGorsel(m) + "</div>" +
           "<h2>" + kacis(m ? m.ad : k.magaza) + "</h2>" +
-          '<div class="pa-magaza-bilgi"><span>' + kacis(k.baslik) + "</span>" +
-          (!kisa && k.aciklama ? "<span>" + kacis(k.aciklama) + "</span>" : "") +
+          '<div class="pa-magaza-bilgi"><span>' + kacis(paMetin(k.baslik)) + "</span>" +
+          (!kisa && paMetin(k.aciklama) ? "<span>" + kacis(paMetin(k.aciklama)) + "</span>" : "") +
           (!kisa && k.bitis ? '<span class="pa-tarih">' + kacis(tarihYaz(k.bitis)) +
                               " tarihine kadar</span>" : "") +
           "</div>" +
@@ -339,7 +339,7 @@
     if (metin) {
       metin.innerHTML =
         (f.donem ? '<span class="pa-etiket">' + kacis(f.donem) + "</span>" : "") +
-        "<p>" + kacis(f.aciklama) + "</p>" +
+        "<p>" + kacis(paMetin(f.aciklama)) + "</p>" +
         (f.yayinda === false
           ? '<p class="pa-bos">Fırsat Günleri şu anda yayında değil.</p>' : "");
     }
@@ -365,7 +365,7 @@
   }
 
   /* ============================================================ KİRALAMA */
-  var DURUM = { bos: "Boş", rezerve: "Rezerve", dolu: "Dolu" };
+  var DURUM = { bos: paT("Boş"), rezerve: paT("Rezerve"), dolu: paT("Dolu") };
 
   function kiralama(v) {
     var hedef = q("[data-pa-kiralama]");
@@ -386,7 +386,7 @@
                 "<dt>Alan</dt><dd>" + kacis(b.m2) + " m²</dd>" +
                 "<dt>Uygun kategori</dt><dd>" + kacis(b.kategori) + "</dd>" +
               "</dl>" +
-              (b.aciklama ? "<p>" + kacis(b.aciklama) + "</p>" : "") +
+              (paMetin(b.aciklama) ? "<p>" + kacis(paMetin(b.aciklama)) + "</p>" : "") +
             "</div>";
           }).join("") + "</div>"
         : '<p class="pa-bos">Şu anda yayımlanmış boş birim bulunmuyor.</p>');
@@ -462,12 +462,12 @@
   };
   /* Mağaza dışı birimler: giriş, WC, danışma… Koridora yerleştiriliyor. */
   var TESIS = {
-    giris:   { etiket: "GİRİŞ",   renk: "#e11f26", genis: 2.6 },
-    wc:      { etiket: "WC",      renk: "#4a4a55", genis: 1.7 },
-    danisma: { etiket: "DANIŞMA", renk: "#1580c4", genis: 2.4 },
-    mescit:  { etiket: "MESCİT",  renk: "#3f8f2c", genis: 2.2 },
-    asansor: { etiket: "ASANSÖR", renk: "#7a5af8", genis: 2.2 },
-    atm:     { etiket: "ATM",     renk: "#8a8a94", genis: 1.7 }
+    giris:   { etiket: paT("GİRİŞ"),   renk: "#e11f26", genis: 2.6 },
+    wc:      { etiket: paT("WC"),      renk: "#4a4a55", genis: 1.7 },
+    danisma: { etiket: paT("DANIŞMA"), renk: "#1580c4", genis: 2.4 },
+    mescit:  { etiket: paT("MESCİT"),  renk: "#3f8f2c", genis: 2.2 },
+    asansor: { etiket: paT("ASANSÖR"), renk: "#7a5af8", genis: 2.2 },
+    atm:     { etiket: paT("ATM"),     renk: "#8a8a94", genis: 1.7 }
   };
   function tesisTur(t) {
     return TESIS[t] || { etiket: String(t || "").toLocaleUpperCase("tr"),
@@ -620,7 +620,7 @@
 
     return {
       svg: '<svg viewBox="' + vb.map(function (n) { return n.toFixed(1); }).join(" ") +
-        '" role="img" aria-label="Kat şeması">' +
+        '" role="img" aria-label=paT("Kat şeması")>' +
         '<defs><marker id="paOk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" ' +
         'markerHeight="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff"/></marker>' +
         '<marker id="paOk2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" ' +

@@ -14,7 +14,7 @@ import re, os, json, html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE_URL = "https://park-ardesen-avm.vercel.app"      # kendi alan adına geçince değiştirin
-HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+HARIC = ('_yedek-ayna', '_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git', '_dil', 'en', 'ka', 'ar')
 
 AD = "Park Ardeşen AVM"
 TAM_AD = "Park Ardeşen Alışveriş ve Yaşam Merkezi"
@@ -260,20 +260,37 @@ def sayfa_yaz(yol, baslik, aciklama, ek_veri):
     return True
 
 
+# Site dört dilde yayımlanıyor; her adres tüm dil sürümleriyle birlikte
+# (xhtml:link hreflang) bildiriliyor.
+DILLER_SM = [("tr", ""), ("en", "en"), ("ka", "ka"), ("ar", "ar")]
+
+
 def site_haritasi(yollar):
     from datetime import date
     bugun = date.today().isoformat()
     satir = []
     for yol in yollar:
-        tam = SITE_URL + ("/" if not yol else "/" + yol + "/")
         oncelik = "1.0" if not yol else ("0.9" if yol in
                   ("shops", "deals", "duyurular", "mall-map") else "0.7")
         sik = "daily" if yol in ("", "deals", "duyurular") else "weekly"
-        satir.append("  <url>\n    <loc>%s</loc>\n    <lastmod>%s</lastmod>\n"
-                     "    <changefreq>%s</changefreq>\n    <priority>%s</priority>\n"
-                     "  </url>" % (tam, bugun, sik, oncelik))
+        # her dilin kendi <url> girdisi, içinde tüm dillere hreflang bağlantısı
+        for kod, klasor in DILLER_SM:
+            onek = "/" + klasor if klasor else ""
+            tam = SITE_URL + onek + ("/" if not yol else "/" + yol + "/")
+            alt = []
+            for kod2, klasor2 in DILLER_SM:
+                onek2 = "/" + klasor2 if klasor2 else ""
+                adres2 = SITE_URL + onek2 + ("/" if not yol else "/" + yol + "/")
+                alt.append('    <xhtml:link rel="alternate" hreflang="%s" href="%s"/>'
+                           % (kod2, adres2))
+            alt.append('    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>'
+                       % (SITE_URL + ("/" if not yol else "/" + yol + "/")))
+            satir.append("  <url>\n    <loc>%s</loc>\n%s\n    <lastmod>%s</lastmod>\n"
+                         "    <changefreq>%s</changefreq>\n    <priority>%s</priority>\n"
+                         "  </url>" % (tam, "\n".join(alt), bugun, sik, oncelik))
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
-            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+            '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
             + "\n".join(satir) + "\n</urlset>\n")
 
 

@@ -312,3 +312,57 @@ depo kökü. Site kökte olduğu için ek yönlendirme gerekmiyor.
 
 Commit yazarının e-postası GitHub hesabına bağlı olmalı; aksi hâlde Vercel dağıtımı
 reddediyor. Bu depoda `evrenaktas@yahoo.com` kullanılıyor.
+
+## Dört dilli yayın
+
+Site Türkçe (varsayılan), İngilizce, Gürcüce ve Arapça yayımlanır:
+
+    /               → Türkçe
+    /en/            → English
+    /ka/            → ქართული
+    /ar/            → العربية   (sağdan sola)
+
+Dil sürümleri derleme zincirinin **son adımında** üretilir:
+
+    bash _uyarla/tumunu_calistir.sh     # … → _dil/cikar.py → _dil/uret.py
+
+`en/`, `ka/`, `ar/` klasörleri üretilen çıktıdır; elle düzenlenmez. Türkçe
+sayfayı ya da `_dil/sozluk.json`'u düzeltip zinciri yeniden çalıştırın.
+Ara adımlar sayfaları yeniden ürettiği için dil klasörleri tüm `_uyarla`
+betiklerinin `HARIC` listesindedir.
+
+### İki katman
+
+1. **Statik metinler** — sayfa gövdesi, başlıklar, meta etiketler ve
+   `alt`/`aria-label` gibi öznitelikler derleme sırasında `_dil/sozluk.json`
+   üzerinden çevrilir.
+2. **Çalışma anında üretilen metinler** — `pa-assets/pa-dil.js`. Ay adları,
+   kat adları, tesis etiketleri, kiralama durumları, duyuru türleri, çerez
+   bandı ve boş durum mesajları buradaki sözlükten çevrilir. Sayfaya sonradan
+   eklenen bileşenler bir MutationObserver ile yakalanır.
+   `paT(metin)` arayüz metnini, `paMetin(deger)` panel içeriğini çözer.
+
+### Panel içeriği
+
+Panelde kampanya/duyuru/kiralama metin alanlarında **TR · EN · KA · AR**
+sekmeleri vardır. Boş bırakılan dil sitede Türkçesini gösterir. Yalnızca
+Türkçe doldurulmuşsa veri düz metin olarak saklanır; böylece `veri.json`
+gereksiz yere şişmez. Eski (tek dilli) kayıtlar olduğu gibi çalışmaya devam
+eder.
+
+### Dil seçici
+
+Başlığın sağ bölümünde (`.site-header-right`) yuvarlak bayraklı düğme;
+Arapçada sola geçer. Bayraklar satır içi SVG'dir — dış istek yoktur.
+
+### SEO
+
+`sitemap.xml` 68 adres içerir (17 sayfa × 4 dil) ve her adres tüm dillere
+`xhtml:link hreflang` bağlantısı taşır. Sayfalara `hreflang` ve dil başına
+`canonical` etiketi konur.
+
+### Yazı tipleri
+
+Gürcüce ve Arapça için Noto Sans Georgian / Noto Sans Arabic yerel olarak
+barındırılır (`pa-assets/yazitipi/`, ~200 KB) ve yalnızca ilgili dilde yüklenir.
+Site hiçbir dilde dış sunucuya istek atmaz.

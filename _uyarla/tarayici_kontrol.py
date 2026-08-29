@@ -85,7 +85,7 @@ def main():
     sayfalar = sys.argv[1:]
     if not sayfalar:
         HARIC = ("_yedek-ayna", "_orijinal", "_uyarla", "panel", "api", "pa-assets",
-                 "shop", "deal", "shops", "wp-content", "wp-includes")
+                 "shop", "deal", "shops", "wp-content", "wp-includes", '_dil', 'en', 'ka', 'ar')
         sayfalar = ["index.html"] + sorted(
             os.path.relpath(f, ROOT).replace(os.sep, "/")
             for f in glob.glob(os.path.join(ROOT, "*", "index.html"))

@@ -9,7 +9,7 @@ ulaşım bilgisi de Ulaşım sayfasında duruyor.
 import re, os, json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HARIC = ('_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git')
+HARIC = ('_orijinal', '_uyarla', 'panel', 'api', 'pa-assets', '.git', '_dil', 'en', 'ka', 'ar')
 
 KALDIRILAN = ["brochure", "press", "media-center", "bus-schedule"]
 

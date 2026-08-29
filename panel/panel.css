@@ -241,3 +241,19 @@ code{
   background:#f3f8fd;border-radius:0 9px 9px 0;
 }
 .alan.genis > .kutucuk{align-self:flex-start;white-space:nowrap}
+
+/* ---------------------------------------------------------------
+   Çok dilli metin alanı — TR / EN / KA / AR sekmeleri
+   Boş bırakılan dil sitede Türkçesini gösterir.
+   --------------------------------------------------------------- */
+.alan.cokdil label { display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.alan.cokdil .ml-not { font-weight: 400; font-size: 11px; opacity: .6; }
+.ml-sekmeler { display: flex; gap: 4px; margin: 0 0 6px; }
+.ml-sekme {
+  border: 1px solid #d9d9de; background: #fff; color: #555;
+  border-radius: 6px; padding: 3px 10px; font: inherit; font-size: 12px;
+  line-height: 1.6; cursor: pointer;
+}
+.ml-sekme:hover { border-color: #b5b5bd; }
+.ml-sekme.aktif { background: #171717; border-color: #171717; color: #fff; }
+.ml-giris.gizli { display: none; }

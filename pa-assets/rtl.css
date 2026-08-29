@@ -1,0 +1,36 @@
+/* ===============================================================
+   Arapça (sağdan sola) düzen düzeltmeleri — Park Ardeşen AVM
+   `dir="rtl"` düzenin çoğunu aynalar; burada temanın soldan sağa
+   varsaydığı yerler düzeltilir.
+   =============================================================== */
+
+/* yön bildiren simgeler aynalanır */
+[dir="rtl"] .pa-ok svg,
+[dir="rtl"] .btn svg,
+[dir="rtl"] .site-header-open-close svg,
+[dir="rtl"] .slick-prev, [dir="rtl"] .slick-next { transform: scaleX(-1); }
+
+/* metin hizaları */
+[dir="rtl"] body,
+[dir="rtl"] .container,
+[dir="rtl"] .site-footer,
+[dir="rtl"] .pa-kart,
+[dir="rtl"] .pa-magaza { text-align: right; }
+
+[dir="rtl"] ul, [dir="rtl"] ol { padding-right: 1.2em; padding-left: 0; }
+
+/* form alanları */
+[dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select { text-align: right; direction: rtl; }
+[dir="rtl"] input[type="tel"], [dir="rtl"] input[type="email"] { direction: ltr; text-align: right; }
+
+/* kayan şeritler ters yöne */
+[dir="rtl"] .pa-serit-kayan { animation-direction: reverse; }
+
+/* mağaza/kat listeleri ve tablolar */
+[dir="rtl"] table th, [dir="rtl"] table td { text-align: right; }
+
+/* dil seçici listesi sola açılır */
+[dir="rtl"] .yb-dil-liste { right: auto; left: 0; }
+
+/* kat planı SVG'si yön değiştirmemeli (harita gibi okunur) */
+[dir="rtl"] .pa-kat-plani svg { direction: ltr; }
