@@ -357,13 +357,29 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
 .pa-pencere-govde{padding:28px}
 .pa-pencere-govde h2{font-size:1.9rem;line-height:1.15;margin:10px 0 12px}
 .pa-pencere-govde p{margin-bottom:20px;color:#555}
+/* Kapatma düğmesi: eskiden "&times;" karakteriydi — tema yazı tipinde
+   ufak ve dikey olarak kaçık duruyordu. Artık çizilmiş bir X ikonu ve
+   flex ile tam ortalanmış bir daire. */
 .pa-pencere-kapat{
-  position:absolute;right:10px;top:10px;z-index:2;
-  width:34px;height:34px;border:0;border-radius:50%;
-  background:rgba(255,255,255,.92);color:#171717;
-  font-size:22px;line-height:1;cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.2);
+  position:absolute;right:12px;top:12px;z-index:2;
+  width:36px;height:36px;padding:0;border:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.94);color:#171717;
+  cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,.22);
+  transition:background .18s ease, transform .18s ease;
 }
+.pa-pencere-kapat svg{
+  width:16px;height:16px;display:block;
+  stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none;
+}
+.pa-pencere-kapat:hover{background:#fff;transform:scale(1.06)}
+.pa-pencere-kapat:focus-visible{outline:2px solid #171717;outline-offset:2px}
+/* görselsiz pencerede beyaz zemin üstünde kalıyor — kenarlık okunurluğu artırır */
+.pa-pencere:not(:has(.pa-pencere-gorsel)) .pa-pencere-kapat{
+  background:#f4f4f4;box-shadow:none;
+}
+.pa-pencere:not(:has(.pa-pencere-gorsel)) .pa-pencere-kapat:hover{background:#e8e8e8}
 
 /* ---- etiket ---- */
 .pa-etiket{

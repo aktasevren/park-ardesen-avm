@@ -70,13 +70,15 @@ def vitrin_html(onek):
         lg = logo_yolu(slug, onek)
         gorsel = (img(lg, m["ad"], "pa-marka-logo") if lg
                   else '<div class="pa-marka-yazi">%s</div>' % m["ad"])
+        # Marka adı yazılmıyor: logonun altında adı bir daha yazmak
+        # tekrar oluyordu. Erişilebilir ad, logonun alt metninden (ya da
+        # logosu olmayan markada kutunun kendi yazısından) geliyor.
         parcalar.append(
             '<div class="col %s">\n'
-            '  <a href="%sshops/index.html">\n'
+            '  <a href="%sshops/index.html" aria-label="%s">\n'
             '    <div class="featured-shops-img pa-logo-kutu">%s</div>\n'
-            '    <h2>%s</h2>\n'
             '  </a>\n'
-            '</div><!-- .col -->' % (kol, onek, gorsel, m["ad"]))
+            '</div><!-- .col -->' % (kol, onek, m["ad"], gorsel))
     return "\n".join(parcalar)
 
 

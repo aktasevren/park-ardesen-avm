@@ -63,25 +63,10 @@ DESENLER = [
     (re.compile(r'id=([\'"])dubaioutletmall-([^\'"]*)\1'), r'id=\1park-ardesen-\2\1'),
     # Dubai kiralama portalına giden canlı bağlantı
     (re.compile(r'https://leasing\.dubaioutletmall\.com/?'), "mailto:muhasebe@parkardesen.com"),
-    # üçüncü taraf bağlantı ipuçları
-    (re.compile(r'\s*<link[^>]*(?:preconnect|dns-prefetch)[^>]*google[^>]*>', re.I), ""),
-    # WooCommerce'ten kalan gövde sınıfı ve noscript stili
-    (re.compile(r'(?s)\s*<noscript><style>\.woocommerce[^<]*</style></noscript>', re.I), ""),
-    (re.compile(r'class="([^"]*)"'),
-     lambda m: 'class="%s"' % re.sub(
-         r'\s*\b(?:woocommerce-no-js|woocommerce-js|cookies-not-set|'
-         r'wp-theme-dubaioutletmall|theme-dubaioutletmall)\b', '', m.group(1)).strip()),
-    # eski/bozuk canonical — doğrusu SEO adımında yazılıyor
-    (re.compile(r'\s*<link[^>]*rel=["\']canonical["\'][^>]*>', re.I), ""),
-    # kaynak haritası yorumlarındaki eski alan adı
-    (re.compile(r'/\*# sourceURL=https?://[^*]*dubaioutletmall[^*]*\*/', re.I), ""),
-    # eski çerez bildirimi işaretlemesi
-    (re.compile(r'(?s)\s*<!-- Cookie Notice plugin.*?<!-- / Cookie Notice plugin -->'), ""),
-    (re.compile(r'(?s)\s*<div id="cookie-notice".*?</div>\s*</div>'), ""),
-    # kaldırılan izleme kodundan geriye kalan yorumlar
-    (re.compile(r'\s*<!--\s*Google tag[^>]*-->', re.I), ""),
-    (re.compile(r'\s*<!--\s*End Google tag[^>]*-->', re.I), ""),
-    (re.compile(r'\s*<!--[^>]*Site Kit[^>]*-->', re.I), ""),
+    # kaldırılan rıza eklentisinden geriye kalan boş yorum çifti
+    (re.compile(r'(?s)\s*<!--\s*Compliance by Hu-manity\.co.*?<!-- / Compliance by Hu-manity\.co plugin -->'), ""),
+    # WordPress'in XFN profil bağlantısı — statik sitede hiçbir işlevi yok
+    (re.compile(r'\s*<link[^>]*rel=["\']profile["\'][^>]*gmpg\.org[^>]*>', re.I), ""),
     # boşalan yorum satırları
     (re.compile(r'\n{3,}'), "\n\n"),
 ]

@@ -33,7 +33,6 @@ ENLEM, BOYLAM = 41.190868, 40.987404
 HARITA     = "https://www.google.com/maps/search/?api=1&query=Park+Arde%C5%9Fen+AVM+Cumhuriyet+Mah.+Sultan+Alparslan+Cad.+Arde%C5%9Fen+Rize"
 INSTAGRAM  = "https://www.instagram.com/parkardesenavm/"
 FACEBOOK   = "https://www.facebook.com/parkardesen"
-WHATSAPP   = "https://api.whatsapp.com/send?phone=904647153030"
 
 # ---------------------------------------------------------------- varlıklar
 def varliklari_kopyala():
@@ -147,7 +146,7 @@ SOSYAL = {
     "https://twitter.com/DubaiOutletMall": None,
     "https://www.youtube.com/user/OutletMallDubai": None,
     "https://www.linkedin.com/company/dubai-outlet-mall": None,
-    "https://www.tiktok.com/@dubaioutletmall": WHATSAPP,
+    "https://www.tiktok.com/@dubaioutletmall": None,
     "https://www.facebook.com/DubaiOutletMall": FACEBOOK,
     "https://www.instagram.com/dubaioutletmall/": INSTAGRAM,
 }
@@ -162,8 +161,13 @@ def sosyal(s):
                 return ""
             return blok.replace(url, hedef)
         return blok
-    return re.sub(r'<li>\s*<a href="(https://(?:www\.)?(?:twitter|facebook|instagram|youtube|linkedin|tiktok)\.com[^"]*)".*?</li>',
-                  rep, s, flags=re.S)
+    s = re.sub(r'<li>\s*<a href="(https://(?:www\.)?(?:twitter|facebook|instagram|youtube|linkedin|tiktok)\.com[^"]*)".*?</li>',
+               rep, s, flags=re.S)
+    # Daha önceki koşularda TikTok yerine konmuş WhatsApp bağlantısı. _orijinal/
+    # yedeği olmayan sayfalarda (ör. duyurular) kaynak metin geri gelmediği için
+    # dönüştürülmüş hâli temizlenmeli.
+    s = re.sub(r'<li>\s*<a href="https://api\.whatsapp\.com[^"]*".*?</li>', "", s, flags=re.S)
+    return s
 
 
 # Daha önceki geçişlerde konmuş Türkçe etiketleri düzelten harita
@@ -173,19 +177,6 @@ DUZELTME = {
     "Servis Saatleri": "Çalışma Saatleri",
 }
 
-
-# TikTok bağlantısını WhatsApp'a çevirirken ikonu da değiştirmek gerekiyor
-WHATSAPP_SVG = (
-    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" '
-    'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-    '<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.19-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.23-8.23 2.2 0 4.26.86 5.81 2.41a8.17 8.17 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.07-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.12-.14.16-.25.25-.41.08-.17.04-.31-.03-.44-.06-.12-.56-1.34-.76-1.83-.2-.48-.4-.42-.56-.42-.14 0-.31-.02-.47-.02-.17 0-.43.06-.66.31-.22.25-.85.83-.85 2.02s.87 2.35 1 2.51c.12.17 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.46-.07 1.42-.58 1.62-1.15.2-.56.2-1.05.14-1.15-.06-.1-.22-.16-.47-.29Z" fill="#171717"/></svg>')
-
-
-def whatsapp_ikonu(s):
-    return re.sub(
-        r'(<a href="' + re.escape(WHATSAPP) + r'"[^>]*>\s*<span class="wp-svg-img">)'
-        r'<svg.*?</svg>(\s*</span>)',
-        lambda m: m.group(1) + WHATSAPP_SVG + m.group(2), s, flags=re.S)
 
 def menuler(s):
     for en, tr in MENU_TR.items():
@@ -363,7 +354,7 @@ def main():
         onek = kok_oneki(f)
         s = s0
         s = dil(s); s = baslik(s); s = logolar(s, onek); s = header(s, onek)
-        s = sosyal(s); s = whatsapp_ikonu(s); s = menuler(s)
+        s = sosyal(s); s = menuler(s)
         s = footer(s, onek); s = eposta(s)
         s = temizle(s); s = cerez(s); s = marka(s)
         s = ingilizce_kalintilari(s); s = enjekte(s, onek)

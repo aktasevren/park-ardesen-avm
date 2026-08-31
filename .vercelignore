@@ -1,5 +1,6 @@
 # yalnızca yerel geliştirme/üretim araçları — dağıtıma girmesine gerek yok
 _uyarla/
+_dil/
 serve.py
 *.log
 

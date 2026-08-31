@@ -177,7 +177,9 @@ def ortak(s, onek):
 
     # --- fotoğraf galerisi ---------------------------------------------
     s = s.replace("<h2 class=\"h2\">Photo Gallery</h2>", "<h2 class=\"h2\">Fotoğraf Galerisi</h2>")
-    s = s.replace(">View more</a>", ">Tümünü gör</a>")
+    # "Tümünü gör" düğmesi orijinalde Medya Merkezi'ne gidiyordu; o sayfa
+    # kaldırıldı ve galerinin tamamı zaten bu şeritte görünüyor.
+    s = re.sub(r'\s*<a href="[^"]*media-center/?"[^>]*class="btn"[^>]*>View more</a>', "", s)
     s = re.sub(r'(?s)(<div class="photo-gallery-slider">).*?(</div><!-- \.row -->)',
                lambda m: m.group(1) + "\n" + galeri_slider(onek) + "\n" + m.group(2), s)
 

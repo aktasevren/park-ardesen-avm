@@ -358,6 +358,88 @@
 
   /* ============================================================ bölümler */
 
+  /* ====================================================== panel eğitimi
+     Genel Bakış'a ilk girişte açılan kısa tanıtım. "Anladım" denince
+     localStorage'a yazılır ve bir daha açılmaz; kartın altındaki
+     bağlantıdan istendiği zaman tekrar açılabilir. */
+  var EGITIM_ANAHTAR = "pa-panel-egitim-gorüldü";
+  var egitimAdim = 0;
+
+  function egitimGoruldu() {
+    try { return localStorage.getItem(EGITIM_ANAHTAR) === "1"; } catch (e) { return false; }
+  }
+
+  var EGITIM = [
+    { baslik: "Panele hoş geldiniz",
+      metin: "Bu panel siteyi kod yazmadan güncellemeniz için var. Soldaki menüden " +
+             "bir bölüm seçer, alanları doldurur, kaydedersiniz. Site aynı veriyi " +
+             "okuyup kendini günceller.",
+      ipucu: "Sitenin tasarımı buradan değişmez; yalnızca içerik değişir." },
+    { baslik: "1. Önce içeriği girin",
+      metin: "Duyurular, Kampanyalar, Fırsat Günleri, Mağaza Kiralama ve Mağazalar " +
+             "bölümlerinde “+ ... ekle” düğmesiyle yeni kayıt açar, alanları doldurup " +
+             "<strong>Tamam</strong>’a basarsınız.",
+      ipucu: "Her kaydın bir <strong>Yayında</strong> anahtarı vardır. Kapalıyken " +
+             "kayıt panelde durur ama ziyaretçi göremez." },
+    { baslik: "2. Nerede görüneceğini seçin",
+      metin: "Duyurularda “nerede gösterilsin” maketleri vardır: açılış penceresi, " +
+             "anasayfa şeridi ve Duyurular sayfası. Hiçbiri seçilmezse duyuru " +
+             "sitede görünmez.",
+      ipucu: "Açılış penceresi en dikkat çekenidir; aynı anda yalnızca bir duyuru çıkar." },
+    { baslik: "3. Kaydet — yalnızca sizin tarayıcınız",
+      metin: "<strong>Kaydet</strong> değişikliği bu tarayıcıya yazar. Siteyi aynı " +
+             "tarayıcıda açtığınızda hemen görürsünüz. Her düzenlemeden sonra " +
+             "kendiliğinden çalışır.",
+      ipucu: "Sunum yaparken tek gereken budur — internete bir şey gitmez." },
+    { baslik: "4. Yayınla — herkes için",
+      metin: "<strong>Yayınla</strong> aynı veriyi sunucuya gönderir. Veri depoya " +
+             "yazılır, site ~1 dakika içinde yeniden yayımlanır ve siteyi açan " +
+             "<em>herkes</em> değişikliği görür.",
+      ipucu: "Emin değilseniz önce <strong>Bağlantıyı test et</strong> ile " +
+             "yayınlama ucunun çalıştığını doğrulayın." },
+    { baslik: "5. Dört dil",
+      metin: "Metin alanlarının üstünde <strong>TR / EN / KA / AR</strong> sekmeleri " +
+             "vardır. Yalnızca Türkçeyi doldurursanız site diğer dillerde de " +
+             "Türkçesini gösterir; çeviri girerseniz o dile onu koyar.",
+      ipucu: "Diller: Türkçe (varsayılan), İngilizce, Gürcüce, Arapça." },
+    { baslik: "Yayına almadan önce",
+      metin: "Kısa kontrol listesi: içerik girildi mi · <strong>Yayında</strong> " +
+             "anahtarları açık mı · tarih aralıkları doğru mu · görseller yüklendi mi · " +
+             "<strong>Kaydet</strong> sonra <strong>Yayınla</strong>.",
+      ipucu: "Genel Bakış’taki sayaçlar yalnızca <em>yayındaki</em> kayıtları sayar — " +
+             "hızlı bir doğrulama aracıdır." }
+  ];
+
+  function egitimHtml() {
+    var a = EGITIM[egitimAdim];
+    return '<div class="kutu egitim" data-egitim>' +
+      '<div class="egitim-ust">' +
+        '<span class="egitim-sayac">' + (egitimAdim + 1) + " / " + EGITIM.length + "</span>" +
+        '<button class="egitim-kapat" data-egitim-kapat aria-label="Eğitimi kapat">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        "</button>" +
+      "</div>" +
+      "<h3>" + a.baslik + "</h3>" +
+      "<p>" + a.metin + "</p>" +
+      '<p class="ipucu">' + a.ipucu + "</p>" +
+      '<div class="egitim-alt">' +
+        '<div class="egitim-noktalar">' +
+          EGITIM.map(function (_, i) {
+            return '<button class="egitim-nokta' + (i === egitimAdim ? " secili" : "") +
+              '" data-egitim-git="' + i + '" aria-label="' + (i + 1) + ". adım\"></button>";
+          }).join("") +
+        "</div>" +
+        '<div class="egitim-dugmeler">' +
+          (egitimAdim > 0
+            ? '<button class="dugme kucuk" data-egitim-geri>Geri</button>' : "") +
+          (egitimAdim < EGITIM.length - 1
+            ? '<button class="dugme ana kucuk" data-egitim-ileri>İleri</button>'
+            : '<button class="dugme ana kucuk" data-egitim-kapat>Anladım</button>') +
+        "</div>" +
+      "</div>" +
+    "</div>";
+  }
+
   function ciz_ozet() {
     var d = (veri.duyurular || []).filter(function (x) { return yayinDurumu(x).sinif === "yayinda"; });
     var k = (veri.kampanyalar || []).filter(function (x) { return yayinDurumu(x).sinif === "yayinda"; });
@@ -366,7 +448,8 @@
     var kutu = function (sayi, etiket) {
       return '<div class="kutu"><div class="sayi">' + sayi + '</div><div class="etiket">' +
         etiket + "</div></div>"; };
-    return '<div class="ozet">' +
+    return (egitimGoruldu() ? "" : egitimHtml()) +
+      '<div class="ozet">' +
       kutu(d.length, "Yayındaki duyuru") +
       kutu(k.length, "Yayındaki kampanya") +
       kutu((veri.magazalar || []).length, "Mağaza") +
@@ -392,12 +475,21 @@
         '<p class="ipucu" style="margin-top:12px">Tarayıcıya kaydedilen değişiklikler ' +
         '<strong>yalnızca aynı adres</strong> üzerinde görünür. Siteyi ' +
         '<code>localhost</code> ile açtıysanız paneli de <code>localhost</code> ile açın ' +
-        '(<code>127.0.0.1</code> ile karıştırmayın). En güvenlisi yukarıdaki ' +
-        '<strong>Siteyi önizle</strong> düğmesini kullanmaktır.</p>', "") +
+        '(<code>127.0.0.1</code> ile karıştırmayın).</p>', "") +
       kartKabugu("Son değişiklikler", "",
         '<div class="satir"><div class="govde"><strong>Son kayıt</strong>' +
         "<small>" + (veri.guncelleme
-          ? new Date(veri.guncelleme).toLocaleString("tr-TR") : "—") + "</small></div></div>", "");
+          ? new Date(veri.guncelleme).toLocaleString("tr-TR") : "—") + "</small></div></div>", "") +
+      (egitimGoruldu()
+        ? '<p class="egitim-tekrar"><button class="dugme kucuk" data-egitim-ac>' +
+          "Panel eğitimini tekrar aç</button></p>" : "");
+  }
+
+  /* Çok dilli alan hem düz metin hem {tr,en,ka,ar} olabiliyor. */
+  function metinDegeri(v) {
+    if (!v) return "";
+    if (typeof v === "string") return v.trim();
+    return (v.tr || v.en || v.ka || v.ar || "").trim();
   }
 
   function bolumGirisi(metin) {
@@ -499,16 +591,29 @@
 
   function ciz_firsat() {
     var f = veri.firsatGunleri = veri.firsatGunleri || { katilimcilar: [] };
+    var kapali = f.yayinda === false;
+    // İçerik girilmiş ama bölüm kapalıysa uyar: kullanıcı metinleri doldurup
+    // sayfada "yayında değil" notunu görünce sebebini anlayamıyordu.
+    var doluMu = !!(metinDegeri(f.baslik) || metinDegeri(f.donem) ||
+                    metinDegeri(f.aciklama) || (f.katilimcilar || []).length);
+    var uyari = (kapali && doluMu)
+      ? '<div class="uyari-kutu"><span class="uyari-metin">' +
+          'İçerik girildi ama bölüm <strong>kapalı</strong> — ziyaretçiler sayfada ' +
+          '&ldquo;Fırsat Günleri şu anda yayında değil&rdquo; notunu görüyor.' +
+        "</span>" +
+        '<button class="dugme ana kucuk" data-firsat-ac>Yayına al</button></div>'
+      : "";
     var html = bolumGirisi(
       "Belirli günlerde yapılan toplu indirim dönemi. Metni ve katılan " +
       "mağazaları buradan düzenlersiniz.") +
       kartKabugu("Fırsat Günleri ayarları",
-      '<span class="rozet ' + (f.yayinda === false ? "kapali" : "yayinda") + '">' +
-        (f.yayinda === false ? "Kapalı" : "Yayında") + "</span>",
+      '<span class="rozet ' + (kapali ? "kapali" : "yayinda") + '">' +
+        (kapali ? "Kapalı" : "Yayında") + "</span>",
+      uyari +
       '<div class="alanlar" data-form-firsat>' +
+        onay("yayinda", "Bölüm sitede yayında", f.yayinda !== false, true) +
         cokDilliAlan("baslik", "Başlık", f.baslik, false) +
         cokDilliAlan("donem", "Dönem", f.donem, false, "Örn. Her ayın ilk haftası") +
-        onay("yayinda", "Yayında", f.yayinda !== false) +
         cokDilliAlan("aciklama", "Açıklama", f.aciklama, true) +
       "</div>" +
       '<div style="margin-top:10px"><button class="dugme ana kucuk" data-firsat-kaydet>Ayarları uygula</button></div>', "");
@@ -536,13 +641,8 @@
     var kr = veri.kiralama = veri.kiralama || { birimler: [] };
     var html = bolumGirisi(
       "Kiralanabilir boş mağaza, kiosk ve reklam alanları. " +
-      "Mağaza Kiralama sayfasında liste olarak görünür.") +
-      kartKabugu("Sayfa metni", "",
-      '<div class="alanlar" data-form-kiralama>' +
-        cokDilliAlan("girisMetni", "Giriş metni", kr.girisMetni, true) +
-        metinAlani("iletisimAd", "İletişim kişisi / ekip", kr.iletisimAd, true) +
-      "</div>" +
-      '<div style="margin-top:10px"><button class="dugme ana kucuk" data-kiralama-kaydet>Metni uygula</button></div>', "");
+      "Mağaza Kiralama sayfasında liste olarak görünür. " +
+      "Aşağıdaki düğmeden birim eklersiniz; sayfanın kendi metni sabittir.");
 
     html += '<div style="margin:20px 0 14px"><button class="dugme ana" data-ekle="birim">+ Yeni birim</button></div>';
     (kr.birimler || []).forEach(function (b) {
@@ -744,24 +844,38 @@
       return;
     }
 
+    if (t.closest("[data-egitim-ileri]")) {
+      egitimAdim = Math.min(egitimAdim + 1, EGITIM.length - 1); ciz(); return;
+    }
+    if (t.closest("[data-egitim-geri]")) {
+      egitimAdim = Math.max(egitimAdim - 1, 0); ciz(); return;
+    }
+    if (t.closest("[data-egitim-git]")) {
+      egitimAdim = Number(t.closest("[data-egitim-git]").getAttribute("data-egitim-git"));
+      ciz(); return;
+    }
+    if (t.closest("[data-egitim-kapat]")) {
+      try { localStorage.setItem(EGITIM_ANAHTAR, "1"); } catch (e) {}
+      ciz(); return;
+    }
+    if (t.closest("[data-egitim-ac]")) {
+      try { localStorage.removeItem(EGITIM_ANAHTAR); } catch (e) {}
+      egitimAdim = 0; ciz(); return;
+    }
+    if (t.closest("[data-firsat-ac]")) {
+      formuOku($("[data-form-firsat]"), veri.firsatGunleri);
+      veri.firsatGunleri.yayinda = true;
+      otoKaydet(); ciz(); bildir("Fırsat Günleri yayına alındı.", "basarili"); return;
+    }
     if (t.closest("[data-firsat-kaydet]")) {
       formuOku($("[data-form-firsat]"), veri.firsatGunleri);
       otoKaydet(); ciz(); bildir("Fırsat Günleri ayarları kaydedildi.", "basarili"); return;
-    }
-    if (t.closest("[data-kiralama-kaydet]")) {
-      formuOku($("[data-form-kiralama]"), veri.kiralama);
-      otoKaydet(); ciz(); bildir("Kiralama metni kaydedildi.", "basarili"); return;
     }
   });
 
   /* ---------------------------------------------------------- üst çubuk */
   function baglaUst() {
     $("#btn-kaydet").addEventListener("click", function () { kaydet(); });
-
-    $("#btn-onizle").addEventListener("click", function () {
-      if (kirli) kaydet(true);
-      window.open("/", "_blank");
-    });
 
     $("#btn-test").addEventListener("click", function () {
       var d = $("#btn-test");

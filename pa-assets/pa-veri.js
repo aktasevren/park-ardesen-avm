@@ -43,7 +43,7 @@
     return KOK;
   }
 
-  /* sayfadan sitenin (www.dubaioutletmall.com) köküne göreli önek */
+  /* sayfadan site köküne göreli önek */
   function siteKok() {
     var m = q('meta[name="pa-site-kok"]');
     return m ? m.getAttribute("content") : "";
@@ -222,7 +222,10 @@
     ortu.className = "pa-pencere-ortu";
     ortu.innerHTML =
       '<div class="pa-pencere" role="dialog" aria-modal="true" aria-label="Duyuru">' +
-        '<button class="pa-pencere-kapat" aria-label="Kapat">&times;</button>' +
+        '<button class="pa-pencere-kapat" type="button" aria-label="' + paT("Kapat") + '">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+            '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        "</button>" +
         (d.gorsel ? '<div class="pa-pencere-gorsel"><img src="' + varlik(d.gorsel) +
                     '" alt=""></div>' : "") +
         '<div class="pa-pencere-govde">' +
@@ -373,7 +376,6 @@
     if (!hedef || !k) return;
     var birimler = (k.birimler || []).filter(function (b) { return b.yayinda !== false; });
     hedef.innerHTML =
-      (k.girisMetni ? "<p>" + kacis(k.girisMetni) + "</p>" : "") +
       (birimler.length
         ? '<div class="pa-birimler">' + birimler.map(function (b) {
             return '<div class="pa-birim pa-durum-' + kacis(b.durum) + '">' +

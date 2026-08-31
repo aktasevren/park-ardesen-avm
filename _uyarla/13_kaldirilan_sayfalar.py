@@ -49,6 +49,13 @@ def baglantilari_yonlendir(s, onek):
         desen = re.compile(r'href="((?:\.\./)*)%s/index\.html"' % re.escape(eski))
         s, k = desen.subn(lambda m: 'href="%s%s/index.html"' % (m.group(1), yeni), s)
         n += k
+        # Kaldırılan sayfaya giden MUTLAK adresler. 06_baglantilar.py bunları
+        # yerelleştiremiyor: hedef dosya artık yok, o yüzden URL'yi olduğu gibi
+        # bırakıyor ve orijinal siteye giden canlı bir bağlantı kalıyordu.
+        mutlak = re.compile(
+            r'href="https?://(?:www\.)?dubaioutletmall\.com/+%s/?"' % re.escape(eski))
+        s, k = mutlak.subn('href="%s%s/index.html"' % (onek, yeni), s)
+        n += k
     return s, n
 
 
@@ -82,7 +89,9 @@ def main():
     for f in dosyalar():
         s0 = open(f, encoding="utf-8", errors="replace").read()
         s, a = menuden_cikar(s0)
-        s, b = baglantilari_yonlendir(s, "")
+        # kök-göreli değil sayfa-göreli yollar kullanılıyor: derinlik kadar "../"
+        derinlik = os.path.relpath(f, ROOT).count(os.sep)
+        s, b = baglantilari_yonlendir(s, "../" * derinlik)
         s = iletisim_kartlari(s)
         if s != s0:
             open(f, "w", encoding="utf-8").write(s)

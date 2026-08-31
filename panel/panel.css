@@ -257,3 +257,54 @@ code{
 .ml-sekme:hover { border-color: #b5b5bd; }
 .ml-sekme.aktif { background: #171717; border-color: #171717; color: #fff; }
 .ml-giris.gizli { display: none; }
+
+/* ---------------------------------------------------------- panel eğitimi
+   Genel Bakış'a ilk girişte açılan kısa tanıtım kartı. */
+.egitim{
+  border-left:3px solid var(--kirmizi);
+  background:linear-gradient(180deg,#fff 0%,#fcfcfd 100%);
+}
+.egitim-ust{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.egitim-sayac{
+  font-size:12px;font-weight:600;letter-spacing:.04em;
+  color:var(--soluk);text-transform:uppercase;
+}
+.egitim-kapat{
+  width:28px;height:28px;padding:0;border:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;color:var(--soluk);cursor:pointer;
+}
+.egitim-kapat:hover{background:var(--zemin);color:var(--metin)}
+.egitim-kapat svg{
+  width:14px;height:14px;
+  stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none;
+}
+.egitim h3{margin:0 0 8px;font-size:17px}
+.egitim p{margin:0 0 10px;max-width:62ch}
+.egitim .ipucu{color:var(--soluk);font-size:13.5px;margin-bottom:16px}
+.egitim-alt{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  border-top:1px solid var(--cizgi);padding-top:14px;flex-wrap:wrap;
+}
+.egitim-noktalar{display:flex;gap:6px}
+.egitim-nokta{
+  width:8px;height:8px;padding:0;border:0;border-radius:50%;
+  background:var(--cizgi);cursor:pointer;transition:background .15s ease;
+}
+.egitim-nokta:hover{background:var(--soluk)}
+.egitim-nokta.secili{background:var(--kirmizi)}
+.egitim-dugmeler{display:flex;gap:8px;margin-left:auto}
+.egitim-tekrar{margin-top:18px}
+
+/* ------------------------------------------------- bölüm içi uyarı kutusu */
+.uyari-kutu{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:#fff8e6;border:1px solid #f0dda6;border-radius:8px;
+  padding:12px 14px;margin-bottom:16px;
+  font-size:14px;line-height:1.45;color:#6b5411;
+}
+.uyari-metin{flex:1 1 320px;min-width:0}
+.uyari-kutu .dugme{flex:0 0 auto;margin-left:auto}
