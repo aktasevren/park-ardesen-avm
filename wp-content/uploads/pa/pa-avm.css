@@ -677,33 +677,3 @@ h1,h2,h3,h4,h5{ padding-bottom:.02em; }
   padding:3px 8px;border-radius:5px;
 }
 
-/* ---- kat planı (mimari projeden) ---- */
-.pa-kp-sekmeler{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
-.pa-kp-sekme{
-  font-family:"Golos Text",sans-serif;font-size:14px;font-weight:600;
-  padding:9px 18px;border-radius:99px;border:1px solid #d9d6d1;
-  background:#fff;color:#3c3a37;cursor:pointer;transition:all .16s ease;
-}
-.pa-kp-sekme:hover{border-color:#a8a49d}
-.pa-kp-sekme.secili{background:#171717;border-color:#171717;color:#fff}
-.pa-kp-tuval{
-  border:1px solid #e6e3de;border-radius:10px;overflow:hidden;background:#fbfaf8;
-}
-.pa-kp-tuval svg{width:100%;height:auto;display:block}
-.pa-kp-ad{
-  font-family:"Golos Text",sans-serif;font-size:15px;font-weight:600;fill:#1f1f22;
-  dominant-baseline:middle;
-}
-.pa-kp-ortak{font-family:"Golos Text",sans-serif;font-size:12.5px;fill:#7c8794}
-.pa-kp-ic{font-family:"Golos Text",sans-serif;font-size:12.5px;fill:#5a5a61;dominant-baseline:middle}
-.pa-kp-giris{font-family:"Golos Text",sans-serif;font-size:13px;font-weight:600;fill:#e11f26}
-.pa-kp-lejant{
-  list-style:none;margin:16px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 22px;
-}
-.pa-kp-lejant li{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#5a5a61}
-.pa-kp-lejant-ikon{width:17px;height:17px;flex:0 0 auto}
-@media screen and (max-width:600px){
-  .pa-kp-ad{font-size:19px}
-  .pa-kp-ortak,.pa-kp-ic{font-size:16px}
-  .pa-kp-giris{font-size:17px}
-}

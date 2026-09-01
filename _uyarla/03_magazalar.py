@@ -60,25 +60,26 @@ def filtre_menusu(onek):
     return "\n".join(bags)
 
 
+# Mimari projedeki 1/50 kat planlarından alınan yerleşim. Mağaza rehberi
+# panel verisinden gelir; kat planı bu tablodan çizilir. Adı olmayan birimler
+# henüz kiralanmamıştır — listede yer almaz, şemada gri görünür.
+PLAN = [
+    ("Zemin Kat", ["LC Waikiki", "Gratis", "Gloria Jean's", "Kokoş",
+                   "Bargello", "Migros", "Long Street"]),
+    ("1. Kat",    ["LC Waikiki", "Paul & Mark", "Paul & Mark", "Paul & Mark"]),
+    ("2. Kat",    ["Madame Coco", "Berru Park"]),
+    ("3. Kat",    ["Defne Cafe", "Chocolate Lounge", "Popeyes", "Burger King"]),
+]
+
+
 def kat_plani(onek):
-    kat_ad = {k["slug"]: k["ad"] for k in VERI["kategoriler"]}
-    katlar = {}
-    for m in VERI["magazalar"]:
-        katlar.setdefault(kat_adi(m), []).append(m)
-    siralı = [k for k in KAT_SIRA if k in katlar] + \
-             [k for k in katlar if k not in KAT_SIRA]
     bloklar = []
-    for k in siralı:
-        satirlar = "\n".join(
-            '<li><span>%s</span><em>%s &middot; %s</em></li>'
-            % (m["ad"], m.get("no", "-"), kat_ad.get(m["kategori"], ""))
-            for m in sorted(katlar[k], key=lambda x: x.get("no", "")))
-        bloklar.append('<div class="pa-kat"><h3>%s</h3><ul>%s</ul></div>' % (k, satirlar))
+    for kat, magazalar in PLAN:
+        satirlar = "\n".join("<li><span>%s</span></li>" % m for m in magazalar)
+        bloklar.append('<div class="pa-kat"><h3>%s</h3><ul>%s</ul></div>' % (kat, satirlar))
     return ('<div class="container">\n'
             '<h2 class="h2 pa-kat-liste-baslik">Kat kat mağaza listesi</h2>\n'
             '<div class="pa-kat-plani">\n%s\n</div>\n'
-            '<p class="pa-kat-not">Kat ve mağaza numaraları temsilidir; '
-            'kesin yerleşim için AVM danışma bankosuna başvurabilirsiniz.</p>\n'
             # izometrik şema (pa-veri.js çiziyor); JS yoksa yukarıdaki liste kalır
             '<h2 class="h2 pa-kat-liste-baslik pa-sema-baslik">Kat şeması</h2>\n'
             '<div class="pa-kat3d" data-pa-kat3d></div>\n'

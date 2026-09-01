@@ -312,8 +312,7 @@ def enjekte(s, onek):
                        '<meta name="pa-veri-url" content="%spanel/veri.json">' % onek, s)
             s = re.sub(r'<meta name="pa-site-kok" content="[^"]*">',
                        '<meta name="pa-site-kok" content="%s">' % onek, s)
-        # Zaten işlenmiş sayfalara sonradan eklenen betikler
-        for betik in ("pa-veri.js", "pa-kat.js", "pa-cerez.js"):
+        for betik in ("pa-veri.js", "pa-cerez.js"):
             if betik not in s:
                 s = s.replace("</body>",
                               '<script src="%swp-content/uploads/pa/%s"></script>\n'
@@ -327,9 +326,8 @@ def enjekte(s, onek):
     s = s.replace("</head>", bas + "</head>", 1)
     js = ('\n<script src="%swp-content/uploads/pa/pa-avm.js"></script>\n'
           '<script src="%swp-content/uploads/pa/pa-veri.js"></script>\n'
-          '<script src="%swp-content/uploads/pa/pa-kat.js"></script>\n'
           '<script src="%swp-content/uploads/pa/pa-cerez.js"></script>\n'
-          % (onek, onek, onek, onek))
+          % (onek, onek, onek))
     s = s.replace("</body>", js + "</body>", 1)
     return s
 

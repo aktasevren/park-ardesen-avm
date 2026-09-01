@@ -428,22 +428,13 @@
 
     var plan = q(".pa-kat-plani");
     if (plan) {
-      var SIRA = ["Zemin Kat", "1. Kat", "2. Kat"];
-      var katlar = {};
-      mag.forEach(function (m) {
-        var k = katAdi(m.kat);
-        (katlar[k] = katlar[k] || []).push(m);
-      });
-      var adlar = SIRA.filter(function (k) { return katlar[k]; })
-        .concat(Object.keys(katlar).filter(function (k) { return SIRA.indexOf(k) < 0; }));
-      plan.innerHTML = adlar.map(function (k) {
-        var satir = katlar[k].sort(function (a, b) {
-          return String(a.no).localeCompare(String(b.no));
-        }).map(function (m) {
-          return "<li><span>" + kacis(m.ad) + "</span><em>" + kacis(m.no) +
-                 " &middot; " + kacis(katAd[m.kategori] || "") + "</em></li>";
-        }).join("");
-        return '<div class="pa-kat"><h3>' + kacis(k) + "</h3><ul>" + satir + "</ul></div>";
+      // Kat listesi mimari plandan geliyor; panel verisiyle güncellenmiyor.
+      plan.innerHTML = PLAN_KATLAR.slice().reverse().map(function (kat) {
+        var satir = kat.magazalar.filter(function (m) { return !m.bos; })
+          .map(function (m) { return "<li><span>" + kacis(paT(m.ad)) + "</span></li>"; })
+          .join("");
+        return '<div class="pa-kat"><h3>' + kacis(paT(kat.ad)) + "</h3><ul>" +
+               satir + "</ul></div>";
       }).join("");
     }
   }
@@ -457,6 +448,45 @@
      Gerçek mimari proje değil, yönlendirme amaçlı şematik bir gösterimdir —
      sayfadaki not bunu açıkça söylüyor. */
 
+
+  /* ------------------------------------------------------- kat planı verisi
+     Mimari projedeki 1/50 kat planlarından alındı. Kat şeması bu tabloyu
+     kullanıyor; mağaza rehberindeki panel verisiyle karıştırılmıyor.
+     Birim adı boşsa henüz kiralanmamış: gri çizilir, listede yer almaz. */
+  var PLAN_KATLAR = [
+    { ad: "3. Kat", magazalar: [
+        { ad: "Defne Cafe",       kategori: "yeme-icme" },
+        { ad: "Chocolate Lounge", kategori: "yeme-icme" },
+        { ad: "Popeyes",          kategori: "yeme-icme" },
+        { ad: "Burger King",      kategori: "yeme-icme" },
+        { bos: true }, { bos: true }, { bos: true }],
+      tesisler: [{ tur: "teras", ad: "Açık Teras" }, { tur: "wc", ad: "WC" },
+                 { tur: "asansor", ad: "Asansör" }] },
+    { ad: "2. Kat", magazalar: [
+        { ad: "Madame Coco", kategori: "ev-yasam" },
+        { ad: "Berru Park",  kategori: "eglence" },
+        { bos: true }, { bos: true }],
+      tesisler: [{ tur: "wc", ad: "WC" }, { tur: "asansor", ad: "Asansör" },
+                 { tur: "ofis", ad: "Yönetim Ofisi" }] },
+    { ad: "1. Kat", magazalar: [
+        { ad: "LC Waikiki",  kategori: "moda" },
+        { ad: "Paul & Mark", kategori: "moda" },
+        { ad: "Paul & Mark", kategori: "moda" },
+        { ad: "Paul & Mark", kategori: "moda" }],
+      tesisler: [{ tur: "wc", ad: "WC" }, { tur: "asansor", ad: "Asansör" }] },
+    { ad: "Zemin Kat", magazalar: [
+        { ad: "LC Waikiki",    kategori: "moda" },
+        { ad: "Gratis",        kategori: "kozmetik" },
+        { ad: "Gloria Jean's", kategori: "yeme-icme" },
+        { ad: "Kokoş",         kategori: "moda" },
+        { ad: "Bargello",      kategori: "kozmetik" },
+        { ad: "Migros",        kategori: "market" },
+        { ad: "Long Street",   kategori: "moda" }],
+      tesisler: [{ tur: "asansor", ad: "Asansör" },
+                 { tur: "otopark", ad: "Otopark Girişi" },
+                 { tur: "giris", ad: "AVM Girişi" }] }
+  ];
+
   var KAT_RENK = {
     moda:      "#4C7FE0", ayakkabi: "#7A5AF8", "ev-yasam": "#E08A3C",
     kozmetik:  "#D6489B", market:   "#E4572E", "yeme-icme": "#2FA36B",
@@ -469,7 +499,10 @@
     danisma: { etiket: paT("DANIŞMA"), renk: "#1580c4", genis: 2.4 },
     mescit:  { etiket: paT("MESCİT"),  renk: "#3f8f2c", genis: 2.2 },
     asansor: { etiket: paT("ASANSÖR"), renk: "#7a5af8", genis: 2.2 },
-    atm:     { etiket: paT("ATM"),     renk: "#8a8a94", genis: 1.7 }
+    atm:     { etiket: paT("ATM"),     renk: "#8a8a94", genis: 1.7 },
+    otopark: { etiket: paT("OTOPARK"), renk: "#3c3a37", genis: 2.4 },
+    teras:   { etiket: paT("TERAS"),   renk: "#3f8f2c", genis: 2.2 },
+    ofis:    { etiket: paT("OFİS"),    renk: "#7a8794", genis: 2.0 }
   };
   function tesisTur(t) {
     return TESIS[t] || { etiket: String(t || "").toLocaleUpperCase("tr"),
@@ -571,8 +604,13 @@
     function satirCiz(liste, y0, derinlik) {
       var gen = GENISLIK / Math.max(liste.length, 1);
       liste.forEach(function (m, i) {
-        sira++;
         var x = i * gen + 0.18, w = gen - 0.36;
+        if (m.bos) {
+          // kiralanmamış birim: gri ve alçak, numarası ve liste kaydı yok
+          parcalar.push(kutu(x, y0, w, derinlik, 0.55, "#d7d5d1"));
+          return;
+        }
+        sira++;
         var renk = KAT_RENK[m.kategori] || "#8a8a94";
         parcalar.push(kutu(x, y0, w, derinlik, 0.9, renk));
         rozetler.push(rozet(x + w / 2, y0 + derinlik / 2, sira));
@@ -581,7 +619,7 @@
     }
 
     // çizim sırası önemli: arkadaki kutular önce, sonra koridor, sonra ön sıra
-    var sayacBaslangic = on.length;
+    var sayacBaslangic = on.filter(function (m) { return !m.bos; }).length;
     sira = sayacBaslangic;            // arka sıra numaraları ön sıradan sonra
     satirCiz(arka, 0.25, 2.2);
 
@@ -637,53 +675,31 @@
     var hedef = q("[data-pa-kat3d]");
     if (!hedef) return;
 
-    var katAd = {};
-    (v.kategoriler || []).forEach(function (k) { katAd[k.slug] = k.ad; });
-
-    var SIRA = ["2. Kat", "1. Kat", "Zemin Kat"];      // üstten alta
-    var katlar = {};
-    (v.magazalar || []).forEach(function (m) {
-      var k = katAdi(m.kat);
-      (katlar[k] = katlar[k] || []).push(m);
-    });
-    (v.tesisler || []).forEach(function (t) {
-      var k = katAdi(t.kat);
-      katlar[k] = katlar[k] || [];
-    });
-    var adlar = SIRA.filter(function (k) { return katlar[k]; })
-      .concat(Object.keys(katlar).filter(function (k) { return SIRA.indexOf(k) < 0; }));
-
-    hedef.innerHTML = adlar.map(function (ad) {
-      var liste = katlar[ad].slice().sort(function (a, b) {
-        return String(a.no).localeCompare(String(b.no));
-      });
-      var kattakiTesis = (v.tesisler || []).filter(function (t) {
-        return katAdi(t.kat) === ad;
-      });
-      var c = katCizimi(liste, kattakiTesis);
+    // Şema mimari plandan çiziliyor; mağaza rehberi panel verisinden gelir.
+    hedef.innerHTML = PLAN_KATLAR.map(function (kat) {
+      var c = katCizimi(kat.magazalar, kat.tesisler);
       return '<article class="pa-kat3d-satir">' +
         '<div class="pa-kat3d-gorsel">' + c.svg + "</div>" +
-        '<div class="pa-kat3d-bilgi"><h3>' + kacis(ad) + "</h3>" +
+        '<div class="pa-kat3d-bilgi"><h3>' + kacis(paT(kat.ad)) + "</h3>" +
         '<ol class="pa-kat3d-liste">' +
           c.yerlesim.map(function (o) {
             return '<li><span class="pa-kat3d-rozet" style="background:' + o.renk + '">' +
-              o.no + '</span><span class="pa-kat3d-ad">' + kacis(o.m.ad) +
-              '<em>' + kacis(o.m.no || "") + " &middot; " +
-              kacis(katAd[o.m.kategori] || "") + "</em></span></li>";
+              o.no + '</span><span class="pa-kat3d-ad">' + kacis(paT(o.m.ad)) +
+              "</span></li>";
           }).join("") +
         "</ol>" +
-        (kattakiTesis.length
-          ? '<ul class="pa-kat3d-tesis">' + kattakiTesis.map(function (t) {
+        (kat.tesisler.length
+          ? '<ul class="pa-kat3d-tesis">' + kat.tesisler.map(function (t) {
               var b = tesisTur(t.tur);
               return '<li><span class="pa-kat3d-tesis-rozet" style="background:' +
-                b.renk + '">' + kacis(b.etiket) + "</span>" + kacis(t.ad) + "</li>";
+                b.renk + '">' + kacis(b.etiket) + "</span>" + kacis(paT(t.ad)) + "</li>";
             }).join("") + "</ul>"
           : "") +
         "</div></article>";
     }).join("") +
-    '<p class="pa-kat-not">Çizim yönlendirme amaçlı şematiktir; birimlerin ' +
-    'gerçek yerleşimi ve ölçüleri farklıdır. Kırmızı bant yürüyen merdiveni ' +
-    'gösterir.</p>';
+    '<p class="pa-kat-not">' + paT("Çizim yönlendirme amaçlı şematiktir; " +
+      "birimlerin gerçek yerleşimi ve ölçüleri farklıdır. Gri bloklar henüz " +
+      "kiralanmamış birimlerdir.") + "</p>";
   }
 
   /* ============================================================ ÇALIŞTIR */
@@ -696,7 +712,7 @@
     try { firsatGunleri(v); } catch (e) { console.warn("[pa] fırsat günleri", e); }
     try { kiralama(v); } catch (e) { console.warn("[pa] kiralama", e); }
     try { magazalar(v); } catch (e) { console.warn("[pa] mağazalar", e); }
-    /* kat planı artık pa-kat.js tarafından çiziliyor (mimari projeden) */
+    try { katPlani3D(v); } catch (e) { console.warn("[pa] kat planı", e); }
     document.dispatchEvent(new CustomEvent("pa:veri-cizildi", { detail: v }));
   }
 
