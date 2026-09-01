@@ -696,7 +696,7 @@
     try { firsatGunleri(v); } catch (e) { console.warn("[pa] fırsat günleri", e); }
     try { kiralama(v); } catch (e) { console.warn("[pa] kiralama", e); }
     try { magazalar(v); } catch (e) { console.warn("[pa] mağazalar", e); }
-    try { katPlani3D(v); } catch (e) { console.warn("[pa] kat planı", e); }
+    /* kat planı artık pa-kat.js tarafından çiziliyor (mimari projeden) */
     document.dispatchEvent(new CustomEvent("pa:veri-cizildi", { detail: v }));
   }
 

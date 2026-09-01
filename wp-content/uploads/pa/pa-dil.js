@@ -24,6 +24,15 @@
 
   /* Arayüz sözlüğü: Türkçe metin → diğer diller */
   var S = {
+    "Yürüyen merdiven": ["Escalator", "ესკალატორი", "السلم الكهربائي"],
+    "Açık teras":        ["Open terrace", "ღია ტერასა", "تراس مفتوح"],
+    "AVM Ana Girişi":    ["Main Entrance", "მთავარი შესასვლელი", "المدخل الرئيسي"],
+    "Otopark Girişi":    ["Car Park Entrance", "ავტოსადგომის შესასვლელი", "مدخل المواقف"],
+    "Konut Girişi":      ["Residence Entrance", "საცხოვრებლის შესასვლელი", "مدخل السكن"],
+    "Merdiven":          ["Stairs", "კიბე", "الدرج"],
+    "Yönetim Ofisi":     ["Management Office", "ადმინისტრაციის ოფისი", "مكتب الإدارة"],
+    "Otopark":           ["Car Park", "ავტოსადგომი", "مواقف السيارات"],
+    "kat planı":         ["floor plan", "სართულის გეგმა", "مخطط الطابق"],
     // aylar
     "Ocak":    ["January", "იანვარი", "يناير"],
     "Şubat":   ["February", "თებერვალი", "فبراير"],
