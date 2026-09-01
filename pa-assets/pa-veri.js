@@ -430,7 +430,7 @@
     if (plan) {
       // Kat listesi mimari plandan geliyor; panel verisiyle güncellenmiyor.
       plan.innerHTML = PLAN_KATLAR.slice().reverse().map(function (kat) {
-        var satir = kat.magazalar.filter(function (m) { return !m.bos; })
+        var satir = kat.m.filter(function (m) { return !m.bos; })
           .map(function (m) { return "<li><span>" + kacis(paT(m.ad)) + "</span></li>"; })
           .join("");
         return '<div class="pa-kat"><h3>' + kacis(paT(kat.ad)) + "</h3><ul>" +
@@ -453,39 +453,56 @@
      Mimari projedeki 1/50 kat planlarından alındı. Kat şeması bu tabloyu
      kullanıyor; mağaza rehberindeki panel verisiyle karıştırılmıyor.
      Birim adı boşsa henüz kiralanmamış: gri çizilir, listede yer almaz. */
+  /* Birimler: [x, y, en, derinlik] — mimari plandaki 1/50 çizimden 16x13'lük
+     ızgaraya ölçeklendi. y ekseni çevrildi ki AVM ana girişi izometrik
+     görünümde öne düşsün. Adı olmayan birim kiralanmamıştır. */
   var PLAN_KATLAR = [
-    { ad: "3. Kat", magazalar: [
-        { ad: "Defne Cafe",       kategori: "yeme-icme" },
-        { ad: "Chocolate Lounge", kategori: "yeme-icme" },
-        { ad: "Popeyes",          kategori: "yeme-icme" },
-        { ad: "Burger King",      kategori: "yeme-icme" },
-        { bos: true }, { bos: true }, { bos: true }],
-      tesisler: [{ tur: "teras", ad: "Açık Teras" }, { tur: "wc", ad: "WC" },
-                 { tur: "asansor", ad: "Asansör" }] },
-    { ad: "2. Kat", magazalar: [
-        { ad: "Madame Coco", kategori: "ev-yasam" },
-        { ad: "Berru Park",  kategori: "eglence" },
-        { bos: true }, { bos: true }],
-      tesisler: [{ tur: "wc", ad: "WC" }, { tur: "asansor", ad: "Asansör" },
-                 { tur: "ofis", ad: "Yönetim Ofisi" }] },
-    { ad: "1. Kat", magazalar: [
-        { ad: "LC Waikiki",  kategori: "moda" },
-        { ad: "Paul & Mark", kategori: "moda" },
-        { ad: "Paul & Mark", kategori: "moda" },
-        { ad: "Paul & Mark", kategori: "moda" }],
-      tesisler: [{ tur: "wc", ad: "WC" }, { tur: "asansor", ad: "Asansör" }] },
-    { ad: "Zemin Kat", magazalar: [
-        { ad: "LC Waikiki",    kategori: "moda" },
-        { ad: "Gratis",        kategori: "kozmetik" },
-        { ad: "Gloria Jean's", kategori: "yeme-icme" },
-        { ad: "Kokoş",         kategori: "moda" },
-        { ad: "Bargello",      kategori: "kozmetik" },
-        { ad: "Migros",        kategori: "market" },
-        { ad: "Long Street",   kategori: "moda" }],
-      tesisler: [{ tur: "asansor", ad: "Asansör" },
-                 { tur: "otopark", ad: "Otopark Girişi" },
-                 { tur: "giris", ad: "AVM Girişi" }] }
+    { ad: "3. Kat",
+      m: [{ ad: "Defne Cafe",       k: "yeme-icme", r: [0,    8.65, 3.72, 4.35] },
+          { ad: "Chocolate Lounge", k: "yeme-icme", r: [12.80,8.65, 3.20, 4.35] },
+          { ad: "Burger King",      k: "yeme-icme", r: [12.51,3.73, 3.49, 4.77] },
+          { ad: "Popeyes",          k: "yeme-icme", r: [9.23, 2.98, 3.28, 2.24] },
+          { bos: 1, r: [0.22, 2.54, 3.50, 5.96] },
+          { bos: 1, r: [3.72, 0,    2.98, 2.54] },
+          { bos: 1, r: [10.72,0,    5.28, 2.54] }],
+      teras: [3.72, 8.65, 9.08, 4.35],
+      yurumerdiven: [4.55, 5.90],
+      t: [{ tur: "wc",      ad: "WC",      r: [6.90, 3.70, 2.0, 1.1] },
+          { tur: "asansor", ad: "Asansör", r: [6.90, 2.10, 2.2, 1.1] }] },
+
+    { ad: "2. Kat",
+      m: [{ ad: "Berru Park",  k: "eglence",  r: [11.61,0,    4.39, 13.0] },
+          { ad: "Madame Coco", k: "ev-yasam", r: [0,    2.39, 3.79, 6.11] },
+          { bos: 1, r: [0, 8.50, 11.61, 4.50] },
+          { bos: 1, r: [0, 0,     6.25, 2.39] }],
+      yurumerdiven: [4.60, 5.95],
+      t: [{ tur: "wc",      ad: "WC",             r: [6.55, 3.70, 2.0, 1.1] },
+          { tur: "asansor", ad: "Asansör",        r: [6.55, 2.10, 2.2, 1.1] },
+          { tur: "ofis",    ad: "Yönetim Ofisi",  r: [6.55, 0.50, 2.4, 1.1] }] },
+
+    { ad: "1. Kat",
+      m: [{ ad: "LC Waikiki",  k: "moda", r: [0,    8.65, 9.23, 4.35], ek: [0, 0, 3.72, 8.65] },
+          { ad: "Paul & Mark", k: "moda", r: [9.23, 8.65, 6.77, 4.35] },
+          { ad: "Paul & Mark", k: "moda", r: [11.68,5.22, 4.32, 3.43] },
+          { ad: "Paul & Mark", k: "moda", r: [9.23, 0,    6.77, 5.22] }],
+      yurumerdiven: [4.55, 5.95],
+      t: [{ tur: "wc",      ad: "WC",      r: [6.80, 3.70, 2.0, 1.1] },
+          { tur: "asansor", ad: "Asansör", r: [6.80, 2.10, 2.2, 1.1] }] },
+
+    { ad: "Zemin Kat",
+      m: [{ ad: "LC Waikiki",    k: "moda",      r: [0,    0,    3.50, 13.0] },
+          { ad: "Migros",        k: "market",    r: [11.80,0,    4.20, 10.10] },
+          { ad: "Bargello",      k: "kozmetik",  r: [9.20, 7.70, 2.60, 0.95] },
+          { ad: "Kokoş",         k: "moda",      r: [9.20, 8.80, 2.60, 1.30] },
+          { ad: "Gratis",        k: "kozmetik",  r: [4.10, 10.30,2.70, 2.70] },
+          { ad: "Gloria Jean's", k: "yeme-icme", r: [9.20, 10.30,6.80, 2.70] },
+          { ad: "Long Street",   k: "moda",      r: [4.90, 3.70, 1.90, 2.00] }],
+      yurumerdiven: [4.55, 5.95],
+      giris: [7.60, 10.30],
+      t: [{ tur: "asansor", ad: "Asansör",        r: [7.00, 1.90, 2.2, 1.1] },
+          { tur: "otopark", ad: "Otopark Girişi", r: [4.55, 0.30, 2.4, 1.1] }] }
   ];
+
 
   var KAT_RENK = {
     moda:      "#4C7FE0", ayakkabi: "#7A5AF8", "ev-yasam": "#E08A3C",
@@ -510,7 +527,7 @@
   }
 
   var U = 32;                       // birim boy (piksel)
-  var GENISLIK = 15, DERINLIK = 7;  // plan ızgarası
+  var GENISLIK = 16, DERINLIK = 13; // plan ızgarası (mimari plan oranı)
 
   function koyu(hex, oran) {
     var n = parseInt(hex.slice(1), 16);
@@ -587,86 +604,66 @@
     return g;
   }
 
-  function katCizimi(magazalar, tesisler) {
-    // numaralar planda soldan sağa okunabilsin diye: ilk yarı ön sıra,
-    // ikinci yarı arka sıra (dönüşümlü dağıtmak numaraları dağıtıyordu)
-    var kesme = Math.ceil(magazalar.length / 2);
-    var on = magazalar.slice(0, kesme), arka = magazalar.slice(kesme);
+  function katCizimi(kat) {
+    var parcalar = [], rozetler = [], yerlesim = [], sira = 0;
 
-    var parcalar = [];
     // zemin plakası
     parcalar.push(dortgen(0, 0, GENISLIK, DERINLIK, "#ececed", "rgba(0,0,0,.18)"));
-    // koridor
-    parcalar.push(dortgen(0, 2.6, GENISLIK, 1.8, "#f7f7f8", "rgba(0,0,0,.08)"));
-
-    var rozetler = [], sira = 0, yerlesim = [], girisVar = false;
-
-    function satirCiz(liste, y0, derinlik) {
-      var gen = GENISLIK / Math.max(liste.length, 1);
-      liste.forEach(function (m, i) {
-        var x = i * gen + 0.18, w = gen - 0.36;
-        if (m.bos) {
-          // kiralanmamış birim: gri ve alçak, numarası ve liste kaydı yok
-          parcalar.push(kutu(x, y0, w, derinlik, 0.55, "#d7d5d1"));
-          return;
-        }
-        sira++;
-        var renk = KAT_RENK[m.kategori] || "#8a8a94";
-        parcalar.push(kutu(x, y0, w, derinlik, 0.9, renk));
-        rozetler.push(rozet(x + w / 2, y0 + derinlik / 2, sira));
-        yerlesim.push({ no: sira, m: m, renk: renk });
-      });
+    if (kat.teras) {
+      var tr = kat.teras;
+      parcalar.push(dortgen(tr[0], tr[1], tr[2], tr[3], "#e4ede0", "rgba(63,143,44,.35)"));
     }
 
-    // çizim sırası önemli: arkadaki kutular önce, sonra koridor, sonra ön sıra
-    var sayacBaslangic = on.filter(function (m) { return !m.bos; }).length;
-    sira = sayacBaslangic;            // arka sıra numaraları ön sıradan sonra
-    satirCiz(arka, 0.25, 2.2);
-
-    // koridor: solda/sağda tesisler, ortada yürüyen merdiven
-    var solX = 0.3, sagX = GENISLIK - 0.3;
-    (tesisler || []).forEach(function (t, i) {
-      var bilgi = tesisTur(t.tur);
-      if (t.tur === "giris") {
-        // giriş, ön cephede — plakanın dışında kalsın ki mağaza bloklarıyla
-        // üst üste binmesin
-        girisVar = true;
-        var gx = GENISLIK - bilgi.genis - 1.4;
-        parcalar.push(tesisPlakasi(gx, DERINLIK + 0.55, bilgi.genis, 1.1, t.tur));
-        parcalar.push(girisOku(gx + bilgi.genis / 2, DERINLIK - 0.6));
-        return;
-      }
-      if (i % 2 === 0) {
-        parcalar.push(tesisPlakasi(solX, 2.85, bilgi.genis, 1.3, t.tur));
-        solX += bilgi.genis + 0.3;
-      } else {
-        sagX -= bilgi.genis;
-        parcalar.push(tesisPlakasi(sagX, 2.85, bilgi.genis, 1.3, t.tur));
-        sagX -= 0.3;
-      }
+    /* İzometrik görünümde x+y büyüdükçe öğe öne gelir; doğru örtüşme için
+       uzaktan yakına çiziyoruz. */
+    var cizilecek = [];
+    (kat.m || []).forEach(function (m) {
+      var renk = m.bos ? "#d7d5d1" : (KAT_RENK[m.k] || "#8a8a94");
+      var yuk = m.bos ? 0.5 : 0.9;
+      if (!m.bos) { sira++; yerlesim.push({ no: sira, ad: m.ad, renk: renk }); }
+      var no = m.bos ? 0 : sira;
+      cizilecek.push({ r: m.r, renk: renk, yuk: yuk, no: no });
+      if (m.ek) cizilecek.push({ r: m.ek, renk: renk, yuk: yuk, no: 0 });
     });
-    parcalar.push(merdiven(GENISLIK / 2 - 1.7, 2.9));
+    (kat.t || []).forEach(function (t) {
+      cizilecek.push({ r: t.r, tesis: t.tur });
+    });
+    if (kat.yurumerdiven)
+      cizilecek.push({ r: [kat.yurumerdiven[0], kat.yurumerdiven[1], 3.4, 1.6], ym: 1 });
 
-    sira = 0;
-    satirCiz(on, 4.55, 2.2);
-    yerlesim.sort(function (a, b) { return a.no - b.no; });
+    cizilecek.sort(function (a, b) {
+      return (a.r[0] + a.r[1]) - (b.r[0] + b.r[1]);
+    });
+    cizilecek.forEach(function (o) {
+      var r = o.r;
+      if (o.ym) { parcalar.push(merdiven(r[0], r[1])); return; }
+      if (o.tesis) { parcalar.push(tesisPlakasi(r[0], r[1], r[2], r[3], o.tesis)); return; }
+      parcalar.push(kutu(r[0], r[1], r[2], r[3], o.yuk, o.renk));
+      if (o.no) rozetler.push(rozet(r[0] + r[2] / 2, r[1] + r[3] / 2, o.no));
+    });
 
-    var minx = iso(0, DERINLIK + (girisVar ? 1.7 : 0), 0)[0];
-    var maxx = iso(GENISLIK, 0, 0)[0];
-    var miny = iso(0, 0, 1)[1];
-    var maxy = iso(GENISLIK, DERINLIK + (girisVar ? 1.7 : 0), 0)[1];
+    // ana giriş — ön cephenin dışında
+    var girisVar = false;
+    if (kat.giris) {
+      girisVar = true;
+      parcalar.push(tesisPlakasi(kat.giris[0], DERINLIK + 0.55, 2.6, 1.1, "giris"));
+      parcalar.push(girisOku(kat.giris[0] + 1.3, DERINLIK - 0.6));
+    }
+
+    var ekDerin = DERINLIK + (girisVar ? 1.7 : 0);
+    var minx = iso(0, ekDerin, 0)[0], maxx = iso(GENISLIK, 0, 0)[0];
+    var miny = iso(0, 0, 1)[1], maxy = iso(GENISLIK, ekDerin, 0)[1];
     var p = 34;
     var vb = [minx - p, miny - p, (maxx - minx) + p * 2, (maxy - miny) + p * 2];
 
     return {
       svg: '<svg viewBox="' + vb.map(function (n) { return n.toFixed(1); }).join(" ") +
-        '" role="img" aria-label=paT("Kat şeması")>' +
+        '" role="img" aria-label="' + kacis(paT("Kat şeması")) + '">' +
         '<defs><marker id="paOk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" ' +
         'markerHeight="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#fff"/></marker>' +
         '<marker id="paOk2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" ' +
         'markerHeight="4" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#e11f26"/></marker>' +
-        "</defs>" +
-        parcalar.join("") + rozetler.join("") + "</svg>",
+        "</defs>" + parcalar.join("") + rozetler.join("") + "</svg>",
       yerlesim: yerlesim
     };
   }
@@ -677,19 +674,19 @@
 
     // Şema mimari plandan çiziliyor; mağaza rehberi panel verisinden gelir.
     hedef.innerHTML = PLAN_KATLAR.map(function (kat) {
-      var c = katCizimi(kat.magazalar, kat.tesisler);
+      var c = katCizimi(kat);
       return '<article class="pa-kat3d-satir">' +
         '<div class="pa-kat3d-gorsel">' + c.svg + "</div>" +
         '<div class="pa-kat3d-bilgi"><h3>' + kacis(paT(kat.ad)) + "</h3>" +
         '<ol class="pa-kat3d-liste">' +
           c.yerlesim.map(function (o) {
             return '<li><span class="pa-kat3d-rozet" style="background:' + o.renk + '">' +
-              o.no + '</span><span class="pa-kat3d-ad">' + kacis(paT(o.m.ad)) +
+              o.no + '</span><span class="pa-kat3d-ad">' + kacis(paT(o.ad)) +
               "</span></li>";
           }).join("") +
         "</ol>" +
-        (kat.tesisler.length
-          ? '<ul class="pa-kat3d-tesis">' + kat.tesisler.map(function (t) {
+        ((kat.t || []).length
+          ? '<ul class="pa-kat3d-tesis">' + kat.t.map(function (t) {
               var b = tesisTur(t.tur);
               return '<li><span class="pa-kat3d-tesis-rozet" style="background:' +
                 b.renk + '">' + kacis(b.etiket) + "</span>" + kacis(paT(t.ad)) + "</li>";
@@ -697,9 +694,9 @@
           : "") +
         "</div></article>";
     }).join("") +
-    '<p class="pa-kat-not">' + paT("Çizim yönlendirme amaçlı şematiktir; " +
-      "birimlerin gerçek yerleşimi ve ölçüleri farklıdır. Gri bloklar henüz " +
-      "kiralanmamış birimlerdir.") + "</p>";
+    '<p class="pa-kat-not">' + paT("Çizim mimari kat planından uyarlanmıştır; " +
+      "yönlendirme amaçlı şematik bir görünümdür. Gri bloklar henüz kiralanmamış " +
+      "birimlerdir.") + "</p>";
   }
 
   /* ============================================================ ÇALIŞTIR */
