@@ -31,6 +31,44 @@ def karo(lat, lon, z):
             (1.0 - math.log(math.tan(lat_r) + 1 / math.cos(lat_r)) / math.pi) / 2.0 * n)
 
 
+def igne(gen, yuk, o=6):
+    """Konum iğnesi.
+
+    PIL kenar yumuşatma yapmadığı için doğrudan çizilen iğne tırtıklı
+    çıkıyordu; kuyruk da baştan kopuk duruyordu. Burada iğne o kat büyük
+    çizilip küçültülüyor (kenarlar yumuşuyor) ve kuyruğun üst kenarı
+    dairenin içine taşırılıyor, böylece birleşme yeri görünmüyor.
+    """
+    from PIL import Image, ImageDraw, ImageFilter
+    KIRMIZI = (225, 31, 38, 255)
+    K = Image.new("RGBA", (gen * o, yuk * o), (0, 0, 0, 0))
+    d = ImageDraw.Draw(K)
+    cx, cy = gen * o // 2, yuk * o // 2          # cy = iğnenin ucu
+    R = 15 * o                                    # baş yarıçapı
+    by = cy - 26 * o                              # baş merkezi
+
+    # zemine düşen yumuşak gölge
+    g = Image.new("RGBA", K.size, (0, 0, 0, 0))
+    ImageDraw.Draw(g).ellipse([cx - 12*o, cy - 3*o, cx + 12*o, cy + 4*o],
+                              fill=(0, 0, 0, 90))
+    g = g.filter(ImageFilter.GaussianBlur(3 * o))
+    K.alpha_composite(g)
+
+    # gövde: kuyruğun üst kenarı dairenin içinde kalıyor (dikiş görünmesin)
+    # kuyruğun üst köşeleri dairenin kenarına teğet: damla biçimi çıksın
+    d.polygon([(cx - R * 0.80, by + R * 0.60), (cx + R * 0.80, by + R * 0.60),
+               (cx, cy)], fill=KIRMIZI)
+    d.ellipse([cx - R, by - R, cx + R, by + R], fill=KIRMIZI)
+
+    # beyaz çember ve iç nokta
+    d.ellipse([cx - R, by - R, cx + R, by + R], outline=(255, 255, 255, 255),
+              width=int(2.6 * o))
+    d.ellipse([cx - R * 0.34, by - R * 0.34, cx + R * 0.34, by + R * 0.34],
+              fill=(255, 255, 255, 255))
+
+    return K.resize((gen, yuk), Image.LANCZOS)
+
+
 def main():
     try:
         from PIL import Image, ImageDraw
@@ -60,14 +98,9 @@ def main():
     im = tuval.crop((int(sol - x0 * 256), int(ust - y0 * 256),
                      int(sol - x0 * 256) + GEN, int(ust - y0 * 256) + YUK))
 
-    d = ImageDraw.Draw(im, "RGBA")
-    cx, cy = GEN // 2, YUK // 2
-    d.ellipse([cx - 16, cy + 6, cx + 16, cy + 16], fill=(0, 0, 0, 60))
-    d.polygon([(cx - 9, cy - 6), (cx + 9, cy - 6), (cx, cy + 12)],
-              fill=(225, 31, 38, 255))
-    d.ellipse([cx - 15, cy - 31, cx + 15, cy - 1], fill=(225, 31, 38, 255),
-              outline=(255, 255, 255, 255), width=3)
-    d.ellipse([cx - 6, cy - 22, cx + 6, cy - 10], fill=(255, 255, 255, 255))
+    im = im.convert("RGBA")
+    im.alpha_composite(igne(GEN, YUK))
+    im = im.convert("RGB")
 
     os.makedirs(os.path.dirname(HEDEF), exist_ok=True)
     im.save(HEDEF, optimize=True)
