@@ -11,11 +11,11 @@ Karo görüntüleri burada bir kez indirilip birleştiriliyor; sitede yalnızca
 yerel bir PNG var. Tıklanınca Google Haritalar'da yol tarifi açılıyor.
 
 Koordinat Cumhuriyet Mahallesi merkezidir (Nominatim). Binanın tam konumu
-Google Haritalar'dan alınıp KONUM sabitine yazılmalıdır.
+Google Haritalar'daki kayıtlı mekândan alındı.
 """
 import math, os, io, urllib.request
 
-KONUM = (41.190868, 40.987404)     # Cumhuriyet Mah., Ardeşen — yaklaşık
+KONUM = (41.1913335, 40.9864215)   # PARKARDEŞEN AVM — Google Haritalar
 ZOOM = 16
 GEN, YUK = 760, 380                # 2x retina; sitede 380x190 gösteriliyor
 UA = {"User-Agent": "ParkArdesenAVM-SiteBuild/1.0 (muhasebe@parkardesen.com)"}

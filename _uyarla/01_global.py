@@ -29,7 +29,7 @@ TEL_HREF   = "tel:+904647153030"
 EPOSTA     = "muhasebe@parkardesen.com"
 ADRES_HTML = ("Cumhuriyet Mah. Sultan Alparslan Cad. No: 2/1,<br/>\n"
               "53400 Ardeşen / Rize<br/>\nTürkiye")
-ENLEM, BOYLAM = 41.190868, 40.987404
+ENLEM, BOYLAM = 41.1913335, 40.9864215   # PARKARDEŞEN AVM (Google Haritalar)
 HARITA     = "https://www.google.com/maps/search/?api=1&query=Park+Arde%C5%9Fen+AVM+Cumhuriyet+Mah.+Sultan+Alparslan+Cad.+Arde%C5%9Fen+Rize"
 INSTAGRAM  = "https://www.instagram.com/parkardesenavm/"
 FACEBOOK   = "https://www.facebook.com/parkardesen"
